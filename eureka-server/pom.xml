@@ -8,7 +8,7 @@
         <version>3.2.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>org.casino</groupId>
+    <groupId>com.casino</groupId>
     <artifactId>eureka-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>eureka-server</name>
