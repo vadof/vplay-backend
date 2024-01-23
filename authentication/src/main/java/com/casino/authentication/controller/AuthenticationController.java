@@ -1,23 +1,18 @@
 package com.casino.authentication.controller;
 
 
+import com.casino.authentication.dto.*;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import com.casino.authentication.dto.AuthenticationRequest;
-import com.casino.authentication.dto.AuthenticationResponse;
-import com.casino.authentication.dto.UserDto;
 import com.casino.authentication.service.AuthenticationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/auth")
 @AllArgsConstructor
 @Validated
 @Slf4j
@@ -33,9 +28,15 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody @Valid AuthenticationRequest request) {
         log.info("REST request to login {}", request.getUsername());
         return ResponseEntity.ok().body(authenticationService.authenticate(request));
     }
 
+    @PostMapping("/refresh_token")
+    public ResponseEntity<TokenRefreshResponse> refreshToken(@RequestBody @Valid TokenRefreshRequest request) {
+        log.info("REST request to refresh token {}", request.getRefreshToken());
+        TokenRefreshResponse response = authenticationService.refreshToken(request);
+        return ResponseEntity.ok().body(response);
+    }
 }

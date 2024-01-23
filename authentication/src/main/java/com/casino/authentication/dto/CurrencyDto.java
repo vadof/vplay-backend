@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CurrencyDto {
     private Long id;
-    private String value;
+    private String code;
 }

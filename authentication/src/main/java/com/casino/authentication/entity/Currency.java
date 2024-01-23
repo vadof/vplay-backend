@@ -18,6 +18,6 @@ public class Currency {
     private Long id;
 
     @Column(nullable = false)
-    private String value;
+    private String code;
 
 }

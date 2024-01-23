@@ -53,6 +53,9 @@ public class User implements UserDetails {
     @Column(columnDefinition = "DECIMAL(14,2)")
     private BigDecimal balance;
 
+    @Column(columnDefinition = "DECIMAL(14,2)")
+    private BigDecimal profit;
+
     @DateTimeFormat(pattern="dd/MM/yyyy")
     private LocalDate registerDate;
 

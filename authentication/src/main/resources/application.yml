@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: authentication
+    name: auth-service
   datasource:
     url: jdbc:postgresql://localhost:5432/casino
     username: postgres
@@ -24,6 +24,6 @@ eureka:
       defaultZone: http://localhost:8761/eureka
 
 jwt:
-  secret:
-    key: fhsjwHWjhwqLxTgpV+nBMpM3XB0jgETR0vWsyRFV9oQ=
-  expiration: 1209600000
+  secret: fhsjwHWjhwqLxTgpV+nBMpM3XB0jgETR0vWsyRFV9oQ=
+  expirationMs: 900000 # 15min
+  refreshExpirationMs: 86400000 # 1day
