@@ -6,11 +6,11 @@ import com.vcasino.authentication.dto.TokenRefreshRequest;
 import com.vcasino.authentication.dto.TokenRefreshResponse;
 import com.vcasino.authentication.dto.UserDto;
 import com.vcasino.authentication.entity.RefreshToken;
+import com.vcasino.authentication.entity.Role;
 import com.vcasino.authentication.entity.User;
+import com.vcasino.authentication.exception.AppException;
 import com.vcasino.authentication.mapper.UserMapper;
 import com.vcasino.authentication.repository.UserRepository;
-import com.vcasino.entities.Role;
-import com.vcasino.exceptions.AppException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -36,10 +36,13 @@ public class AuthenticationService {
 
     @Transactional
     public AuthenticationResponse register(UserDto userDto) {
+        System.out.println(userDto);
         validateEmail(userDto.getEmail());
         validateUniqueUsername(userDto.getUsername());
 
         User user = userMapper.toEntity(userDto);
+
+        System.out.println(user);
 
         user.setRegisterDate(LocalDate.now());
         user.setRole(Role.USER);

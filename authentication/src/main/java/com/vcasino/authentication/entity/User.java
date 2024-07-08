@@ -1,8 +1,6 @@
 package com.vcasino.authentication.entity;
 
 
-import com.vcasino.entities.Country;
-import com.vcasino.entities.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

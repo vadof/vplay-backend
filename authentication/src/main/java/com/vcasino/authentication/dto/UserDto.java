@@ -1,7 +1,6 @@
 package com.vcasino.authentication.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vcasino.dto.CountryDto;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -16,7 +16,6 @@
         <module>eureka-server</module>
         <module>user</module>
         <module>config</module>
-        <module>common</module>
     </modules>
 
     <properties>
