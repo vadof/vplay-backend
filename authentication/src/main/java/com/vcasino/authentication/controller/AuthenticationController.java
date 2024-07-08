@@ -1,14 +1,21 @@
 package com.vcasino.authentication.controller;
 
 
-import com.vcasino.authentication.dto.*;
+import com.vcasino.authentication.dto.AuthenticationRequest;
+import com.vcasino.authentication.dto.AuthenticationResponse;
+import com.vcasino.authentication.dto.TokenRefreshRequest;
+import com.vcasino.authentication.dto.TokenRefreshResponse;
+import com.vcasino.authentication.dto.UserDto;
+import com.vcasino.authentication.service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import com.vcasino.authentication.service.AuthenticationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController

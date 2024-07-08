@@ -1,29 +1,16 @@
 server:
   port: 8080
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
-
 spring:
   application:
     name: api-gateway
   cloud:
-    gateway:
-      discovery:
-        locator:
-          enabled: true
-          lower-case-service-id: true
-      globalcors:
-        cors-configurations:
-          '[/**]':
-            allowedOrigins: '*'
-            allowedHeaders: '*'
-            allowedMethods:
-              - GET
-              - POST
+    config:
+      uri: http://localhost:8888
+      profile: default  # Profile to use, can be adjusted as needed
+      label: main  # Branch name, if using a specific branch in your Git repo
 
-jwt:
-  secret:
-    key: fhsjwHWjhwqLxTgpV+nBMpM3XB0jgETR0vWsyRFV9oQ=
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka

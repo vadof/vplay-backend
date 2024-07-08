@@ -5,6 +5,7 @@ import com.vcasino.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,12 @@ import java.math.BigDecimal;
 public class UserController {
 
     private final UserService userService;
+
+    @GetMapping
+    public ResponseEntity<String> get(@Value("${jwt.secret.key}") String val) {
+        log.info("REQUEST");
+        return ResponseEntity.ok().body(val);
+    }
 
     @PatchMapping("/deposit")
     public ResponseEntity<UserDto> deposit(@RequestParam BigDecimal value,

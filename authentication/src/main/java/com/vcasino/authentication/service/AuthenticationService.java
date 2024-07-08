@@ -1,14 +1,18 @@
 package com.vcasino.authentication.service;
 
-import com.vcasino.authentication.dto.*;
+import com.vcasino.authentication.dto.AuthenticationRequest;
+import com.vcasino.authentication.dto.AuthenticationResponse;
+import com.vcasino.authentication.dto.TokenRefreshRequest;
+import com.vcasino.authentication.dto.TokenRefreshResponse;
+import com.vcasino.authentication.dto.UserDto;
 import com.vcasino.authentication.entity.RefreshToken;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import com.vcasino.authentication.entity.Role;
 import com.vcasino.authentication.entity.User;
-import com.vcasino.authentication.exceptions.AppException;
 import com.vcasino.authentication.mapper.UserMapper;
 import com.vcasino.authentication.repository.UserRepository;
+import com.vcasino.entities.Role;
+import com.vcasino.exceptions.AppException;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,7 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Service
@@ -39,8 +42,6 @@ public class AuthenticationService {
         User user = userMapper.toEntity(userDto);
 
         user.setRegisterDate(LocalDate.now());
-        user.setBalance(new BigDecimal(0));
-        user.setProfit(new BigDecimal(0));
         user.setRole(Role.USER);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 

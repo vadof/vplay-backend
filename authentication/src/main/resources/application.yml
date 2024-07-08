@@ -4,26 +4,13 @@ server:
 spring:
   application:
     name: auth-service
-  datasource:
-    url: jdbc:postgresql://localhost:5432/casino
-    username: postgres
-    password: admin
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: none
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-  liquibase:
-    change-log: classpath:db/changelog/changelog-master.xml
+  cloud:
+    config:
+      uri: http://localhost:8888
+      profile: default  # Profile to use, can be adjusted as needed
+      label: main  # Branch name, if using a specific branch in your Git repo
 
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
-
-jwt:
-  secret: fhsjwHWjhwqLxTgpV+nBMpM3XB0jgETR0vWsyRFV9oQ=
-  expirationMs: 900000 # 15min
-  refreshExpirationMs: 86400000 # 1day

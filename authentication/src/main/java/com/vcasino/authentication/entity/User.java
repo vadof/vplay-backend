@@ -1,14 +1,29 @@
 package com.vcasino.authentication.entity;
 
 
-import jakarta.persistence.*;
-import lombok.*;
+import com.vcasino.entities.Country;
+import com.vcasino.entities.Role;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -42,19 +57,9 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @JoinColumn(nullable = false, name = "country_id")
+    @JoinColumn(nullable = false, name = "country_code")
     @ManyToOne(fetch = FetchType.EAGER)
     private Country country;
-
-    @JoinColumn(nullable = false, name = "currency_id")
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Currency currency;
-
-    @Column(columnDefinition = "DECIMAL(14,2)")
-    private BigDecimal balance;
-
-    @Column(columnDefinition = "DECIMAL(14,2)")
-    private BigDecimal profit;
 
     @DateTimeFormat(pattern="dd/MM/yyyy")
     private LocalDate registerDate;

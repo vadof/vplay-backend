@@ -1,6 +1,6 @@
 package com.vcasino.authentication.controller;
 
-import com.vcasino.authentication.exceptions.AppException;
+import com.vcasino.exceptions.AppException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -21,6 +21,7 @@ public class GlobalExceptionHandlerController {
         return new ResponseEntity<>(getErrors(e), HttpStatus.BAD_REQUEST);
     }
 
+    // todo REWRITE
     private Map<String, Map<String, List<String>>> getErrors(MethodArgumentNotValidException e) {
         Map<String, Map<String, List<String>>> response = new HashMap<>();
         Map<String, List<String>> errors = new HashMap<>();

@@ -1,6 +1,7 @@
 package com.vcasino.user.entity;
 
 
+import com.vcasino.entities.Country;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -37,13 +38,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @JoinColumn(nullable = false, name = "country_id")
+    @JoinColumn(nullable = false, name = "country_code")
     @ManyToOne(fetch = FetchType.EAGER)
     private Country country;
-
-    @JoinColumn(nullable = false, name = "currency_id")
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Currency currency;
 
     @Column(columnDefinition = "DECIMAL(14,2)")
     private BigDecimal balance;

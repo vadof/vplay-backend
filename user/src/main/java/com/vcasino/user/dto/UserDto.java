@@ -1,13 +1,10 @@
 package com.vcasino.user.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
@@ -15,16 +12,17 @@ import java.math.BigDecimal;
 @Builder
 public class UserDto {
 
+    @NotNull(message = "Field cannot be null")
     private String firstname;
-    private String lastname;
-    private String username;
-    private String email;
-
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private BigDecimal balance;
 
     @NotNull(message = "Field cannot be null")
-    private CurrencyDto currency;
+    private String lastname;
+
+    @NotNull(message = "Field cannot be null")
+    private String username;
+
+    @NotNull(message = "Field cannot be null")
+    private String email;
 
     @NotNull(message = "Field cannot be null")
     private CountryDto country;

@@ -2,7 +2,7 @@ package com.vcasino.authentication.service;
 
 import com.vcasino.authentication.entity.RefreshToken;
 import com.vcasino.authentication.entity.User;
-import com.vcasino.authentication.exceptions.AppException;
+import com.vcasino.exceptions.AppException;
 import com.vcasino.authentication.repository.RefreshTokenRepository;
 import com.vcasino.authentication.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
