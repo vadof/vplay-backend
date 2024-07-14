@@ -26,10 +26,8 @@ public class AuthFilter implements GatewayFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        System.out.println("HERE");
         ServerHttpRequest request = null;
         if (routeValidator.isSecured.test(exchange.getRequest())) {
-            System.out.println("HERE 2");
             if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
                 return onError(exchange, HttpStatus.UNAUTHORIZED);
             }
@@ -40,7 +38,10 @@ public class AuthFilter implements GatewayFilter {
             }
 
             try {
+                System.out.println("VALIDATING");
                 jwtUtil.validateToken(token);
+                System.out.println("VALIDATE SUCCESS");
+
 
                 request = exchange.getRequest()
                         .mutate()

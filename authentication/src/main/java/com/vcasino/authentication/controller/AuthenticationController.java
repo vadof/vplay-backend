@@ -40,7 +40,7 @@ public class AuthenticationController {
         return ResponseEntity.ok().body(authenticationService.authenticate(request));
     }
 
-    @PostMapping("/refresh_token")
+    @PostMapping("/refreshToken")
     public ResponseEntity<TokenRefreshResponse> refreshToken(@RequestBody @Valid TokenRefreshRequest request) {
         log.info("REST request to refresh token {}", request.getRefreshToken());
         TokenRefreshResponse response = authenticationService.refreshToken(request);

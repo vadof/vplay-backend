@@ -36,13 +36,10 @@ public class AuthenticationService {
 
     @Transactional
     public AuthenticationResponse register(UserDto userDto) {
-        System.out.println(userDto);
         validateEmail(userDto.getEmail());
         validateUniqueUsername(userDto.getUsername());
 
         User user = userMapper.toEntity(userDto);
-
-        System.out.println(user);
 
         user.setRegisterDate(LocalDate.now());
         user.setRole(Role.USER);

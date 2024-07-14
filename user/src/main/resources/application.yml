@@ -1,5 +1,5 @@
 server:
-  port: 301
+  port: 0
 
 spring:
   application:
@@ -14,3 +14,6 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
+  instance:
+    preferIpAddress: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}

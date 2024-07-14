@@ -1,6 +1,7 @@
 package com.vcasino.user.controller;
 
 import com.vcasino.user.exception.AppException;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -17,24 +18,45 @@ import java.util.Map;
 public class GlobalExceptionHandlerController {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Map<String, List<String>>>> handleConstraintViolationException(MethodArgumentNotValidException e) {
-        return new ResponseEntity<>(getErrors(e), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<FieldErrorResponse> handleConstraintViolationException(MethodArgumentNotValidException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new FieldErrorResponse("Invalid Fields", getErrors(e)));
     }
 
-    private Map<String, Map<String, List<String>>> getErrors(MethodArgumentNotValidException e) {
-        Map<String, Map<String, List<String>>> response = new HashMap<>();
+    private Map<String, List<String>> getErrors(MethodArgumentNotValidException e) {
         Map<String, List<String>> errors = new HashMap<>();
         for (FieldError err : e.getBindingResult().getFieldErrors()) {
             List<String> fieldErrors = errors.getOrDefault(err.getField(), new ArrayList<>());
             fieldErrors.add(err.getDefaultMessage());
             errors.put(err.getField(), fieldErrors);
         }
-        response.put("errors", errors);
-        return response;
+
+        return errors;
     }
 
     @ExceptionHandler(AppException.class)
-    public ResponseEntity<String> handleAppException(AppException appException) {
-        return ResponseEntity.status(appException.getHttpStatus()).body(appException.getMessage());
+    public ResponseEntity<ErrorResponse> handleAppException(AppException appException) {
+        return ResponseEntity.status(appException.getHttpStatus())
+                .body(new ErrorResponse(appException.getMessage()));
+    }
+
+    @Getter
+    public static class FieldErrorResponse {
+        String message;
+        Map<String, List<String>> errors;
+
+        FieldErrorResponse(String message, Map<String, List<String>> errors) {
+            this.message = message;
+            this.errors = errors;
+        }
+    }
+
+    @Getter
+    public static class ErrorResponse {
+        String message;
+
+        ErrorResponse(String message) {
+            this.message = message;
+        }
     }
 }
