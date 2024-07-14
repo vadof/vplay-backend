@@ -38,10 +38,7 @@ public class AuthFilter implements GatewayFilter {
             }
 
             try {
-                System.out.println("VALIDATING");
                 jwtUtil.validateToken(token);
-                System.out.println("VALIDATE SUCCESS");
-
 
                 request = exchange.getRequest()
                         .mutate()
