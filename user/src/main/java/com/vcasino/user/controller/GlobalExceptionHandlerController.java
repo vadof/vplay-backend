@@ -1,6 +1,6 @@
 package com.vcasino.user.controller;
 
-import com.vcasino.exceptions.AppException;
+import com.vcasino.user.exception.AppException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;

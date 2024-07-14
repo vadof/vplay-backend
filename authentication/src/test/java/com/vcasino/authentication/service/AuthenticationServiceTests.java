@@ -1,27 +1,18 @@
 package com.vcasino.authentication.service;
 
-import com.vcasino.authentication.dto.*;
-import com.vcasino.authentication.entity.Country;
 import com.vcasino.authentication.entity.User;
-import com.vcasino.authentication.exception.AppException;
-import com.vcasino.authentication.mapper.*;
+import com.vcasino.authentication.mapper.UserMapper;
+import com.vcasino.authentication.mapper.UserMapperImpl;
 import com.vcasino.authentication.repository.UserRepository;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.util.ReflectionTestUtils;
-
-import java.math.BigDecimal;
-import java.util.Optional;
-
-import static org.junit.Assert.assertThrows;
 
 @SpringBootTest
 @AutoConfigureMockMvc

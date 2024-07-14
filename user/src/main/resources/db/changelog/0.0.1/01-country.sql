@@ -4,7 +4,5 @@ CREATE TABLE country
     name VARCHAR(100) NOT NULL
 );
 
-INSERT INTO country (code, name)
-VALUES (('EST', 'Estonia'),
-        ('RU', 'Russia'));
-
+INSERT INTO country (code, name) VALUES ('EST', 'Estonia');
+INSERT INTO country (code, name) VALUES ('RUS', 'Russia');

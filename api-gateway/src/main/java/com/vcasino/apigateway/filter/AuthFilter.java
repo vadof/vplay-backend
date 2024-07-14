@@ -1,6 +1,6 @@
 package com.vcasino.apigateway.filter;
 
-import com.vcasino.apigateway.utril.JwtUtil;
+import com.vcasino.apigateway.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;

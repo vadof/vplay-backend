@@ -1,10 +1,11 @@
 package com.vcasino.user.mapper;
 
-import com.vcasino.mapper.CountryMapper;
-import com.vcasino.mapper.EntityMapper;
 import com.vcasino.user.dto.UserDto;
 import com.vcasino.user.entity.User;
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE,
         uses = {CountryMapper.class})

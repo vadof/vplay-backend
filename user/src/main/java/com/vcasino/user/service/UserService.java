@@ -2,7 +2,7 @@ package com.vcasino.user.service;
 
 import com.vcasino.user.dto.UserDto;
 import com.vcasino.user.entity.User;
-import com.vcasino.exceptions.AppException;
+import com.vcasino.user.exception.AppException;
 import com.vcasino.user.mapper.UserMapper;
 import com.vcasino.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
