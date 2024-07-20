@@ -5,12 +5,26 @@ spring:
   application:
     name: api-gateway
   cloud:
-    config:
-      uri: http://localhost:8888
-      profile: default  # Profile to use, can be adjusted as needed
-      label: main  # Branch name, if using a specific branch in your Git repo
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+  #      globalcors:
+  #        cors-configurations:
+  #          '[/**]':
+  #            allowedOrigins: '*'
+  #            allowedHeaders: '*'
+  #            allowedMethods:
+  #              - GET
+  #              - POST
 
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
+
+jwt:
+  secret: fhsjwHWjhwqLxTgpV+nBMpM3XB0jgETR0vWsyRFV9oQ=
+  expirationMs: 900000 # 15min
+  refreshExpirationMs: 86400000 # 1day

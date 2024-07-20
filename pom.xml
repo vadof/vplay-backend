@@ -15,7 +15,6 @@
         <module>authentication</module>
         <module>eureka-server</module>
         <module>user</module>
-        <module>config</module>
     </modules>
 
     <properties>

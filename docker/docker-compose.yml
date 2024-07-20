@@ -40,33 +40,6 @@ services:
       start_period: 10s
 
 
-  config:
-    container_name: ${CONFIG_CONTAINER_NAME}
-    networks:
-      - vcasino
-    build: ../config/.
-    ports:
-      - '${CONFIG_PORT}:${CONFIG_PORT}'
-    environment:
-      - SPRING_CLOUD_CONFIG_SERVER_GIT_URI=${CONFIG_SPRING_CLOUD_CONFIG_SERVER_GIT_URI}
-      - SPRING_CLOUD_CONFIG_SERVER_GIT_USERNAME=${CONFIG_SPRING_CLOUD_CONFIG_SERVER_GIT_USERNAME}
-      - SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD=${CONFIG_SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD}
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://${EUREKA_INSTANCE_HOSTNAME}:${EUREKA_PORT}/eureka
-#      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:${POSTGRES_PORT}/${POSTGRES_DB}
-#      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
-#      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
-#      - EUREKA_INSTANCE_HOSTNAME=${EUREKA_INSTANCE_HOSTNAME}
-    depends_on:
-      eureka-server:
-        condition: service_healthy
-    healthcheck:
-      test: [ "CMD-SHELL", "curl --fail http://config:${CONFIG_PORT}/actuator/health | grep UP || exit 1" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-
-
   authentication:
     container_name: ${AUTHENTICATION_CONTAINER_NAME}
     build: ../authentication/.
@@ -77,12 +50,23 @@ services:
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://${EUREKA_INSTANCE_HOSTNAME}:${EUREKA_PORT}/eureka
-      - SPRING_CLOUD_CONFIG_URI=http://config:${CONFIG_PORT}
-#      - EUREKA_INSTANCE_HOSTNAME=${EUREKA_INSTANCE_HOSTNAME}
     depends_on:
       postgres:
         condition: service_healthy
-      config:
+      eureka-server:
+        condition: service_healthy
+
+  api-gateway:
+    container_name: ${API_GATEWAY_CONTAINER_NAME}
+    build: ../api-gateway/.
+    networks:
+      - vcasino
+    ports:
+      - '${API_GATEWAY_PORT}:${API_GATEWAY_PORT}'
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://${EUREKA_INSTANCE_HOSTNAME}:${EUREKA_PORT}/eureka
+    depends_on:
+      eureka-server:
         condition: service_healthy
 
 networks:
@@ -94,8 +78,3 @@ volumes:
     driver: local
   test:
     driver: local
-
-#SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/postgres
-# POSTGRES_USER=postgres
-# POSTGRES_PASSWORD=admin
-# POSTGRES_DB=vcasino
