@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: auth-service
+    name: authentication-service
   datasource:
     url: jdbc:postgresql://localhost:5432/vcasino
     username: postgres

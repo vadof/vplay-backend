@@ -12,9 +12,9 @@
 
     <modules>
         <module>api-gateway</module>
-        <module>authentication</module>
+        <module>authentication-service</module>
         <module>eureka-server</module>
-        <module>user</module>
+        <module>user-service</module>
     </modules>
 
     <properties>
