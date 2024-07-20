@@ -1,6 +1,7 @@
 package com.vcasino.apigateway.filter;
 
 import com.vcasino.apigateway.util.JwtUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -13,6 +14,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @Component
+@Slf4j
 public class AuthFilter implements GatewayFilter {
 
     private final RouteValidator routeValidator;
@@ -26,7 +28,8 @@ public class AuthFilter implements GatewayFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        ServerHttpRequest request = null;
+        ServerHttpRequest request = exchange.getRequest();
+        log.info("{} request to {}", exchange.getRequest().getMethod(), exchange.getRequest().getURI());
         if (routeValidator.isSecured.test(exchange.getRequest())) {
             if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
                 return onError(exchange, HttpStatus.UNAUTHORIZED);
@@ -40,8 +43,7 @@ public class AuthFilter implements GatewayFilter {
             try {
                 jwtUtil.validateToken(token);
 
-                request = exchange.getRequest()
-                        .mutate()
+                request = request.mutate()
                         .header("loggedInUser", jwtUtil.extractUsername(token))
                         .build();
             } catch (Exception e) {
