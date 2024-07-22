@@ -1,0 +1,27 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <include file="db/changelog/table/country.sql"/>
+    <include file="db/changelog/table/user.sql"/>
+    <include file="db/changelog/table/refresh-token.sql"/>
+    <include file="db/changelog/table/user-wallet.sql"/>
+    <include file="db/changelog/table/transaction.sql"/>
+    <include file="db/changelog/table/report.sql"/>
+    <include file="db/changelog/table/clicker-account.sql"/>
+    <include file="db/changelog/table/condition.sql"/>
+    <include file="db/changelog/table/upgrade.sql"/>
+    <include file="db/changelog/modification/upgrade-fk.sql"/>
+    <include file="db/changelog/modification/condition-fk.sql"/>
+    <include file="db/changelog/table/user-upgrade.sql"/>
+    <include file="db/changelog/table/boost.sql"/>
+    <include file="db/changelog/modification/boost-fk.sql"/>
+    <include file="db/changelog/table/level.sql"/>
+    <include file="db/changelog/data/country.sql"/>
+    <include file="db/changelog/data/upgrade.sql"/>
+    <include file="db/changelog/data/condition.sql"/>
+    <include file="db/changelog/data/upgrade-condition.sql"/>
+    <include file="db/changelog/data/boost.sql"/>
+    <include file="db/changelog/data/level.sql"/>
+
+</databaseChangeLog>
