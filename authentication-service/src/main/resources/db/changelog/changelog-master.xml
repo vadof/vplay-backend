@@ -10,6 +10,7 @@
     <include file="db/changelog/table/report.sql"/>
     <include file="db/changelog/table/clicker-account.sql"/>
     <include file="db/changelog/table/condition.sql"/>
+    <include file="db/changelog/table/section.sql"/>
     <include file="db/changelog/table/upgrade.sql"/>
     <include file="db/changelog/modification/upgrade-fk.sql"/>
     <include file="db/changelog/modification/condition-fk.sql"/>
@@ -18,7 +19,18 @@
     <include file="db/changelog/modification/boost-fk.sql"/>
     <include file="db/changelog/table/level.sql"/>
     <include file="db/changelog/data/country.sql"/>
-    <include file="db/changelog/data/upgrade.sql"/>
+    <include file="db/changelog/data/section.sql"/>
+    <include file="db/changelog/data/upgrade/social/x.sql"/>
+    <include file="db/changelog/data/upgrade/social/reddit.sql"/>
+    <include file="db/changelog/data/upgrade/social/snapchat.sql"/>
+    <include file="db/changelog/data/upgrade/social/telegram.sql"/>
+    <include file="db/changelog/data/upgrade/social/tiktok.sql"/>
+    <include file="db/changelog/data/upgrade/social/wechat.sql"/>
+    <include file="db/changelog/data/upgrade/social/instagram.sql"/>
+    <include file="db/changelog/data/upgrade/social/whatsapp.sql"/>
+    <include file="db/changelog/data/upgrade/social/youtube.sql"/>
+    <include file="db/changelog/data/upgrade/social/facebook.sql"/>
+<!--    <include file="db/changelog/data/upgrade.sql"/>-->
     <include file="db/changelog/data/condition.sql"/>
     <include file="db/changelog/data/upgrade-condition.sql"/>
     <include file="db/changelog/data/boost.sql"/>

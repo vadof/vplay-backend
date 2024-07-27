@@ -137,5 +137,83 @@
 
 # Clicker
 
-Максимальное значение 
+User can change 1000 vcoins to 1$ <br>
+User can change 1$ to 900 vcoins (10% commission) <br>
+Last user level - 10 (Net worth: 1_000_000_000)
 
+## Upgrades
+
+Maximum possible earn per hour 1,000,000 vcoins -> 1,000$<br>
+100/200/200/500 -> 1,000$
+
+Price for upgrade is determined based on earn per hour
+<i>profit_per_hour_delta</i> * <i>hours_to_payback</i><br>
+
+| Level | Days to payback | Hours to payback |
+|-------|:---------------:|:----------------:|
+| 0-9   |        7        |       168        |
+| 5-7   |       10        |       240        |
+| 8-9   |       14        |       336        |
+
+**Social section maximum earn per hour:**
+
+| Name      | Max level | Earn per hour |
+|-----------|:---------:|:-------------:|
+| X         |    10     |     2,000     |
+| Reddit    |    10     |     4,000     |
+| Snapchat  |    10     |     5,000     |
+| Telegram  |    10     |     6,000     |
+| TikTok    |    10     |     8,000     |
+| WeChat    |    10     |    10,000     |
+| Instagram |    10     |    12,000     |
+| WhatsApp  |    10     |    15,000     |
+| YouTube   |    10     |    18,000     |
+| Facebook  |    10     |    20,000     |
+| **Total** |           |    100,000    |
+
+**? section maximum earn per hour:**
+
+| Name      | Max level | Earn per hour |
+|-----------|:---------:|:-------------:|
+| ?         |    10     |     3,000     |
+| ?         |    10     |     6,000     |
+| ?         |    10     |    12,000     |
+| ?         |    10     |    15,000     |
+| ?         |    10     |    18,000     |
+| ?         |    10     |    21,000     |
+| ?         |    10     |    24,000     |
+| ?         |    10     |    30,000     |
+| ?         |    10     |    62,000     |
+| **Total** |           |    200,000    |
+
+**? section maximum earn per hour:**
+
+| Name      | Max level | Earn per hour |
+|-----------|:---------:|:-------------:|
+| ?         |    10     |     4,000     |
+| ?         |    10     |     7,000     |
+| ?         |    10     |    10,000     |
+| ?         |    10     |    13,000     |
+| ?         |    10     |    16,000     |
+| ?         |    10     |    19,000     |
+| ?         |    10     |    22,000     |
+| ?         |    10     |    25,000     |
+| ?         |    10     |    29,000     |
+| ?         |    10     |    55,000     |
+| **Total** |           |    200,000    |
+
+**IT section maximum earn per hour:**
+
+| Name      | Max level | Earn per hour |
+|-----------|:---------:|:-------------:|
+| Adobe     |    10     |     5,000     |
+| Netflix   |    10     |    10,000     |
+| Samsung   |    10     |    20,000     |
+| Tesla     |    10     |    30,000     |
+| Meta      |    10     |    40,000     |
+| Amazon    |    10     |    50,000     |
+| Google    |    10     |    60,000     |
+| NVIDIA    |    10     |    70,000     |
+| Microsoft |    10     |    80,000     |
+| Apple     |    10     |    135,000    |
+| **Total** |           |    500,000    |
