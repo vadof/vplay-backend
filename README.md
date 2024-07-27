@@ -149,11 +149,20 @@ Maximum possible earn per hour 1,000,000 vcoins -> 1,000$<br>
 Price for upgrade is determined based on earn per hour
 <i>profit_per_hour_delta</i> * <i>hours_to_payback</i><br>
 
-| Level | Days to payback | Hours to payback |
-|-------|:---------------:|:----------------:|
-| 0-5   |        7        |       168        |
-| 6-7   |       10        |       240        |
-| 8-9   |       14        |       336        |
+| Section        | Level | Days to payback | Hours to payback |
+|----------------|:-----:|:---------------:|:----------------:|
+| Social         |  0-5  |        7        |       168        |
+| Social         |  6-7  |       10        |       240        |
+| Social         |  8-9  |       14        |       336        |
+| Airlines       |  0-5  |        8        |       192        |
+| Airlines       |  6-7  |       12        |       288        |
+| Airlines       |  8-9  |       14        |       336        |
+| Pharmaceutical |  0-5  |        8        |       192        |
+| Pharmaceutical |  6-7  |       11        |       264        |
+| Pharmaceutical |  8-9  |       15        |       360        |
+| IT             |  0-4  |       10        |       240        |
+| IT             |  5-7  |       14        |       336        |
+| IT             |  8-9  |       21        |       504        |
 
 **Social section maximum earn per hour:**
 
@@ -171,36 +180,37 @@ Price for upgrade is determined based on earn per hour
 | Facebook  |    10     |    20,000     |
 | **Total** |           |    100,000    |
 
-**? section maximum earn per hour:**
+**Airlines section maximum earn per hour:**
 
-| Name      | Max level | Earn per hour |
-|-----------|:---------:|:-------------:|
-| ?         |    10     |     3,000     |
-| ?         |    10     |     6,000     |
-| ?         |    10     |    12,000     |
-| ?         |    10     |    15,000     |
-| ?         |    10     |    18,000     |
-| ?         |    10     |    21,000     |
-| ?         |    10     |    24,000     |
-| ?         |    10     |    30,000     |
-| ?         |    10     |    62,000     |
-| **Total** |           |    200,000    |
+| Name                   | Max level | Earn per hour |
+|------------------------|:---------:|:-------------:|
+| Lufthansa              |    10     |     4,000     |
+| InterGlobe Aviation    |    10     |     7,000     |
+| Singapore Airlines     |    10     |    10,000     |
+| American Airlines      |    10     |    13,000     |
+| China Eastern Airlines |    10     |    16,000     |
+| China Western Airlines |    10     |    19,000     |
+| Emirates               |    10     |    22,000     |
+| Southwest Airlines     |    10     |    25,000     |
+| Ryanair                |    10     |    29,000     |
+| Delta Airlines         |    10     |    55,000     |
+| **Total**              |           |    200,000    |
 
-**? section maximum earn per hour:**
+**Pharmaceutical section maximum earn per hour:**
 
-| Name      | Max level | Earn per hour |
-|-----------|:---------:|:-------------:|
-| ?         |    10     |     4,000     |
-| ?         |    10     |     7,000     |
-| ?         |    10     |    10,000     |
-| ?         |    10     |    13,000     |
-| ?         |    10     |    16,000     |
-| ?         |    10     |    19,000     |
-| ?         |    10     |    22,000     |
-| ?         |    10     |    25,000     |
-| ?         |    10     |    29,000     |
-| ?         |    10     |    55,000     |
-| **Total** |           |    200,000    |
+| Name              | Max level | Earn per hour |
+|-------------------|:---------:|:-------------:|
+| AstraZeneca       |    10     |     3,000     |
+| Sanofi            |    10     |     6,000     |
+| Merck & Co.       |    10     |     9,000     |
+| Bayer             |    10     |    12,000     |
+| Novartis          |    10     |    15,000     |
+| AbbVie            |    10     |    18,000     |
+| Roche Holding     |    10     |    21,000     |
+| Sinopharm         |    10     |    24,000     |
+| Pfizer            |    10     |    30,000     |
+| Johnson & Johnson |    10     |    62,000     |
+| **Total**         |           |    200,000    |
 
 **IT section maximum earn per hour:**
 
