@@ -151,8 +151,8 @@ Price for upgrade is determined based on earn per hour
 
 | Level | Days to payback | Hours to payback |
 |-------|:---------------:|:----------------:|
-| 0-9   |        7        |       168        |
-| 5-7   |       10        |       240        |
+| 0-5   |        7        |       168        |
+| 6-7   |       10        |       240        |
 | 8-9   |       14        |       336        |
 
 **Social section maximum earn per hour:**

@@ -1,12 +1,12 @@
 INSERT INTO upgrade (name, section, level, profit_per_hour, profit_per_hour_delta, price_to_upgrade, condition_id, max_level)
-VALUES ('Reddit', 'Social', 0, 0, 75, 12600, null, FALSE),
-       ('Reddit', 'Social', 1, 75, 125, 21000, null, FALSE),
-       ('Reddit', 'Social', 2, 200, 180, 30240, null, FALSE),
-       ('Reddit', 'Social', 3, 380, 380, 63840, null, FALSE),
-       ('Reddit', 'Social', 4, 760, 440, 73920, null, FALSE),
-       ('Reddit', 'Social', 5, 1200, 450, 75600, null, FALSE),
-       ('Reddit', 'Social', 6, 1650, 650, 156000, null, FALSE),
-       ('Reddit', 'Social', 7, 2400, 540, 129600, null, FALSE),
-       ('Reddit', 'Social', 8, 2940, 460, 154560, null, FALSE),
-       ('Reddit', 'Social', 9, 3400, 600, 201600, null, FALSE),
-       ('Reddit', 'Social', 10, 4000, null, null, null, TRUE);
+VALUES ('Reddit', 'Social', 0, 0, 40, 6720, NULL, FALSE),
+       ('Reddit', 'Social', 1, 40, 120, 20160, NULL, FALSE),
+       ('Reddit', 'Social', 2, 160, 200, 33600, NULL, FALSE),
+       ('Reddit', 'Social', 3, 360, 280, 47040, NULL, FALSE),
+       ('Reddit', 'Social', 4, 640, 360, 60480, NULL, FALSE),
+       ('Reddit', 'Social', 5, 1000, 440, 73920, NULL, FALSE),
+       ('Reddit', 'Social', 6, 1440, 520, 124800, NULL, FALSE),
+       ('Reddit', 'Social', 7, 1960, 600, 144000, NULL, FALSE),
+       ('Reddit', 'Social', 8, 2560, 680, 228480, NULL, FALSE),
+       ('Reddit', 'Social', 9, 3240, 760, 255360, NULL, FALSE),
+       ('Reddit', 'Social', 10, 4000, NULL, NULL, NULL, TRUE);
