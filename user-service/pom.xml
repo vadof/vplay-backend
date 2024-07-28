@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.vcasino</groupId>
-    <artifactId>user-service</artifactId>
+    <artifactId>user</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>User Service</name>
+    <name>user-service</name>
     <description>User Service</description>
     <properties>
         <spring-boot.version>3.3.1</spring-boot.version>
