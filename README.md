@@ -4,6 +4,9 @@
 - **Local environment setup**
 - **Clicker**
 
+# Local environment setup
+
+Run `vcasino-backend/docker/postgres/docker-compose.yml`
 
 # Services:
 

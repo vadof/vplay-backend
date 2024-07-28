@@ -7,12 +7,11 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=admin
-      - POSTGRES_DB=vcasino
     ports:
       - '5432:5432'
     volumes:
+      - ./init:/docker-entrypoint-initdb.d
       - db:/var/lib/postgresql/data
-
 volumes:
   db:
     driver: local

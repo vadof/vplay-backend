@@ -3,9 +3,9 @@ server:
 
 spring:
   application:
-    name: user-service
+    name: clicker-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/user_service
+    url: jdbc:postgresql://localhost:5432/clicker_service
     username: postgres
     password: admin
     driver-class-name: org.postgresql.Driver
@@ -25,8 +25,3 @@ eureka:
   instance:
     preferIpAddress: true
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
-
-jwt:
-  secret: fhsjwHWjhwqLxTgpV+nBMpM3XB0jgETR0vWsyRFV9oQ=
-  expirationMs: 900000 # 15min
-  refreshExpirationMs: 86400000 # 1day
