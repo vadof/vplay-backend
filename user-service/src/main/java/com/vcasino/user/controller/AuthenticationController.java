@@ -30,14 +30,15 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody @Valid UserDto userDto) {
         log.info("REST request to register User");
-        AuthenticationResponse res = authenticationService.register(userDto);
-        return ResponseEntity.ok().body(res);
+        AuthenticationResponse response = authenticationService.register(userDto);
+        return ResponseEntity.ok().body(response);
     }
 
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody @Valid AuthenticationRequest request) {
         log.info("REST request to login {}", request.getUsername());
-        return ResponseEntity.ok().body(authenticationService.authenticate(request));
+        AuthenticationResponse response = authenticationService.authenticate(request);
+        return ResponseEntity.ok().body(response);
     }
 
     @PostMapping("/refreshToken")
