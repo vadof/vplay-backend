@@ -17,10 +17,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -30,42 +33,68 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "firstname", nullable = false)
     private String firstname;
 
-    @Column(nullable = false)
+    @Column(name = "lastname", nullable = false)
     private String lastname;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
 
-    @Column(unique = true)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @JoinColumn(nullable = false, name = "country_code")
+    @JoinColumn(name = "country_code", nullable = false)
     @ManyToOne(fetch = FetchType.EAGER)
     private Country country;
 
-    @Column(columnDefinition = "DECIMAL(14,2)")
-    private BigDecimal balance;
+    @Column(name = "register_date", nullable = false)
+    private LocalDateTime registerDate;
 
-    @Column(columnDefinition = "DECIMAL(14,2)")
-    private BigDecimal profit;
+    @Column(name = "modified_at", nullable = false)
+    private LocalDateTime modifiedAt;
 
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private LocalDate registerDate;
-
+    @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Column(name = "frozen", nullable = false)
+    private Boolean frozen;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 
     @Override
     public boolean equals(Object o) {

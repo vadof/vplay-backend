@@ -11,3 +11,4 @@
 /api-gateway/mvnw.cmd
 /finance/mvnw.cmd
 /user/mvnw.cmd
+/db/target/**

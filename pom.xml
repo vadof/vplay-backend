@@ -12,9 +12,8 @@
 
     <modules>
         <module>api-gateway</module>
-        <module>authentication-service</module>
-        <module>eureka-server</module>
         <module>user-service</module>
+        <module>eureka-server</module>
     </modules>
 
     <properties>

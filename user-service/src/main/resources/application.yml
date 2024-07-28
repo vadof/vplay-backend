@@ -16,7 +16,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   liquibase:
-    change-log: classpath:db/changelog/db.changelog-master.yaml
+    change-log: classpath:db/changelog/changelog-master.xml
 
 eureka:
   client:
@@ -25,3 +25,8 @@ eureka:
   instance:
     preferIpAddress: true
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+jwt:
+  secret: fhsjwHWjhwqLxTgpV+nBMpM3XB0jgETR0vWsyRFV9oQ=
+  expirationMs: 900000 # 15min
+  refreshExpirationMs: 86400000 # 1day

@@ -1,6 +1,10 @@
 package com.vcasino.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,17 +16,23 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserDto {
 
-    @NotNull(message = "Field cannot be null")
+    @NotEmpty(message = "Field cannot be empty")
     private String firstname;
 
-    @NotNull(message = "Field cannot be null")
+    @NotEmpty(message = "Field cannot be empty")
     private String lastname;
 
-    @NotNull(message = "Field cannot be null")
+    @NotEmpty(message = "Field cannot be empty")
     private String username;
 
-    @NotNull(message = "Field cannot be null")
+    @NotEmpty(message = "Field cannot be empty")
+    @Email(message = "Invalid email")
     private String email;
+
+    @Size(min = 8, message = "Min password length is 8")
+    @NotEmpty(message = "Field cannot be empty")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String password;
 
     @NotNull(message = "Field cannot be null")
     private CountryDto country;
