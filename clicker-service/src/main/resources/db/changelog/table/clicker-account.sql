@@ -1,6 +1,7 @@
-CREATE TABLE clicker_account
+CREATE TABLE account
 (
-    user_id                   BIGINT,
+    id                        BIGINT GENERATED ALWAYS AS IDENTITY,
+    user_id                   BIGINT    NOT NULL,
     level                     SMALLINT  NOT NULL DEFAULT 1,
     net_worth                 BIGINT    NOT NULL DEFAULT 0,
     balance_coins             BIGINT    NOT NULL DEFAULT 0,
@@ -13,8 +14,8 @@ CREATE TABLE clicker_account
     suspicious_actions_number SMALLINT  NOT NULL DEFAULT 0,
     frozen                    BOOLEAN   NOT NULL DEFAULT FALSE,
 
-    CONSTRAINT pk_clicker_account PRIMARY KEY (user_id),
-    CONSTRAINT fk_clicker_account_user_id FOREIGN KEY (user_id) REFERENCES my_user (id),
+    CONSTRAINT pk_clicker_account PRIMARY KEY (id),
+    CONSTRAINT unq_clicker_account_user_id UNIQUE (user_id),
     CONSTRAINT chk_clicker_account_not_negative CHECK (
         level > 0 AND net_worth >= 0 AND balance_coins >= 0 AND available_taps >= 0
             AND max_taps >= 0 AND earn_per_tap >= 0 AND taps_recover_per_sec >= 0

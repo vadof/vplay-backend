@@ -6,7 +6,7 @@
 
 # Local environment setup
 
-Run `vcasino-backend/docker/postgres/docker-compose.yml`
+For PostgreSQL run `vcasino-backend/docker/postgres/docker-compose.yml`
 
 # Services:
 
