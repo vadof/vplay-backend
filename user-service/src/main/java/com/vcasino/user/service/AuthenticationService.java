@@ -2,6 +2,7 @@ package com.vcasino.user.service;
 
 import com.vcasino.user.dto.AuthenticationRequest;
 import com.vcasino.user.dto.AuthenticationResponse;
+import com.vcasino.user.dto.CountryDto;
 import com.vcasino.user.dto.TokenRefreshRequest;
 import com.vcasino.user.dto.TokenRefreshResponse;
 import com.vcasino.user.dto.UserDto;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -33,11 +35,16 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final UserMapper userMapper;
     private final RefreshTokenService refreshTokenService;
+    private final CountryService countryService;
+
+    public List<CountryDto> getCountries() {
+        return countryService.getCountries();
+    }
 
     @Transactional
     public AuthenticationResponse register(UserDto userDto) {
         validateEmail(userDto.getEmail());
-        validateUniqueUsername(userDto.getUsername());
+        validateUsername(userDto.getUsername());
 
         User user = userMapper.toEntity(userDto);
 
@@ -80,7 +87,7 @@ public class AuthenticationService {
         return new TokenRefreshResponse(token, request.getRefreshToken());
     }
 
-    private void validateUniqueUsername(String username) {
+    private void validateUsername(String username) {
         if (userRepository.findByUsername(username).isPresent()) {
             throw new AppException("Username already exists", HttpStatus.BAD_REQUEST);
         }

@@ -10,14 +10,6 @@ spring:
         locator:
           enabled: true
           lower-case-service-id: true
-  #      globalcors:
-  #        cors-configurations:
-  #          '[/**]':
-  #            allowedOrigins: '*'
-  #            allowedHeaders: '*'
-  #            allowedMethods:
-  #              - GET
-  #              - POST
 
 eureka:
   client:
