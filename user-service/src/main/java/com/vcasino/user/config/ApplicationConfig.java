@@ -1,5 +1,6 @@
 package com.vcasino.user.config;
 
+import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import com.vcasino.user.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +13,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.TimeZone;
 
 @Configuration
 @AllArgsConstructor
@@ -44,4 +47,8 @@ public class ApplicationConfig {
         return new BCryptPasswordEncoder();
     }
 
+    @PostConstruct
+    public void setApplicationTimezone() {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+    }
 }

@@ -23,6 +23,9 @@ public class GatewayConfig {
                 .route("user-service", r -> r.path("/api/*/users/**")
                         .filters(f -> f.filter(authFilter))
                         .uri("lb://user-service"))
+                .route("clicker-service", r -> r.path("/api/*/clicker/**")
+                        .filters(f -> f.filter(authFilter))
+                        .uri("lb://clicker-service"))
                 .build();
     }
 
