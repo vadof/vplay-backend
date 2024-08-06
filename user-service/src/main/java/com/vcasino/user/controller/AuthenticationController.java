@@ -7,7 +7,9 @@ import com.vcasino.user.dto.CountryDto;
 import com.vcasino.user.dto.TokenRefreshRequest;
 import com.vcasino.user.dto.TokenRefreshResponse;
 import com.vcasino.user.dto.UserDto;
+import com.vcasino.user.entity.Role;
 import com.vcasino.user.service.AuthenticationService;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -54,7 +56,15 @@ public class AuthenticationController {
     @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AuthenticationResponse> register(@RequestBody @Valid UserDto userDto) {
         log.info("REST request to register User");
-        AuthenticationResponse response = authenticationService.register(userDto);
+        AuthenticationResponse response = authenticationService.register(userDto, Role.USER);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @Hidden
+    @PostMapping(value = "/admin/register", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AuthenticationResponse> registerAdmin(@RequestBody @Valid UserDto userDto) {
+        log.info("REST request to register Admin");
+        AuthenticationResponse response = authenticationService.register(userDto, Role.ADMIN);
         return ResponseEntity.ok().body(response);
     }
 

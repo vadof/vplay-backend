@@ -1,13 +1,16 @@
 package com.vcasino.user.service;
 
+import com.vcasino.user.config.securiy.JwtService;
 import com.vcasino.user.dto.AuthenticationRequest;
 import com.vcasino.user.dto.AuthenticationResponse;
 import com.vcasino.user.dto.TokenRefreshRequest;
 import com.vcasino.user.dto.TokenRefreshResponse;
 import com.vcasino.user.dto.UserDto;
 import com.vcasino.user.entity.RefreshToken;
+import com.vcasino.user.entity.Role;
 import com.vcasino.user.entity.User;
 import com.vcasino.user.exception.AppException;
+import com.vcasino.user.kafka.producer.UserProducer;
 import com.vcasino.user.mapper.CountryMapper;
 import com.vcasino.user.mapper.CountryMapperImpl;
 import com.vcasino.user.mapper.UserMapper;
@@ -58,6 +61,9 @@ public class AuthenticationServiceTests {
     private UserRepository userRepository;
 
     @Mock
+    private UserProducer userProducer;
+
+    @Mock
     private JwtService jwtService;
 
     @Spy
@@ -86,18 +92,20 @@ public class AuthenticationServiceTests {
         RefreshToken refreshToken = getRefreshTokenMock();
         when(refreshTokenService.createRefreshToken(any())).thenReturn(refreshToken);
         when(jwtService.generateToken(any())).thenReturn("token");
+        when(userRepository.saveAndFlush(any())).thenReturn(getUserMock());
 
-        AuthenticationResponse response = authenticationService.register(toSave);
+        AuthenticationResponse response = authenticationService.register(toSave, Role.USER);
 
-        verify(userRepository, times(1)).save(userArgumentCaptor.capture());
+        verify(userRepository, times(1)).saveAndFlush(userArgumentCaptor.capture());
 
         User saved = userArgumentCaptor.getValue();
 
         verify(userMapper, times(1)).toEntity(toSave);
         verify(userMapper, times(1)).toDto(saved);
-        verify(userRepository, times(1)).save(saved);
+        verify(userRepository, times(1)).saveAndFlush(saved);
         verify(jwtService, times(1)).generateToken(saved);
         verify(refreshTokenService, times(1)).createRefreshToken(any());
+        verify(userProducer, times(1)).sendUserCreated(saved.getId());
 
         assertEquals(toSave.getEmail(), response.getUser().getEmail());
         assertEquals(toSave.getUsername(), response.getUser().getUsername());
@@ -113,7 +121,7 @@ public class AuthenticationServiceTests {
 
         when(userRepository.findByUsername(toSave.getUsername())).thenReturn(Optional.of(getUserMock()));
 
-        AppException exception = assertThrows(AppException.class, () -> authenticationService.register(toSave));
+        AppException exception = assertThrows(AppException.class, () -> authenticationService.register(toSave, Role.USER));
 
         assertTrue(exception.getMessage().contains("Username"));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
@@ -126,7 +134,7 @@ public class AuthenticationServiceTests {
 
         when(userRepository.findByEmail(toSave.getEmail())).thenReturn(Optional.of(getUserMock()));
 
-        AppException exception = assertThrows(AppException.class, () -> authenticationService.register(toSave));
+        AppException exception = assertThrows(AppException.class, () -> authenticationService.register(toSave, Role.USER));
 
         assertTrue(exception.getMessage().contains("Email"));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());

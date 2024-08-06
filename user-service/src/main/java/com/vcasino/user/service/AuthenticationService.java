@@ -1,5 +1,6 @@
 package com.vcasino.user.service;
 
+import com.vcasino.user.config.securiy.JwtService;
 import com.vcasino.user.dto.AuthenticationRequest;
 import com.vcasino.user.dto.AuthenticationResponse;
 import com.vcasino.user.dto.CountryDto;
@@ -41,13 +42,11 @@ public class AuthenticationService {
     private final RefreshTokenService refreshTokenService;
     private final CountryService countryService;
 
-
     public List<CountryDto> getCountries() {
         return countryService.getCountries();
     }
 
-    @Transactional
-    public AuthenticationResponse register(UserDto userDto) {
+    public AuthenticationResponse register(UserDto userDto, Role role) {
         validateEmail(userDto.getEmail());
         validateUsername(userDto.getUsername());
 
@@ -56,7 +55,7 @@ public class AuthenticationService {
         user.setRegisterDate(LocalDateTime.now());
         user.setModifiedAt(LocalDateTime.now());
         user.setFrozen(false);
-        user.setRole(Role.USER);
+        user.setRole(role);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         user = userRepository.saveAndFlush(user);

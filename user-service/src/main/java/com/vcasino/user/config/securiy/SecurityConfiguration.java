@@ -24,13 +24,28 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request ->
-                        request.requestMatchers("/api/v1/users/auth/**", "/swagger-ui/**",
-                                        "/v3/api-docs", "/v3/api-docs/swagger-config").permitAll()
+                        request.requestMatchers(permittedEndpoints()).permitAll()
+                                .requestMatchers(adminEndpoints()).hasRole("ADMIN")
                                 .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
+    }
+
+    private String[] permittedEndpoints() {
+        return new String[]{
+                "/api/*/users/auth/*",
+                "/swagger-ui/**",
+                "/v3/api-docs",
+                "/v3/api-docs/swagger-config"
+        };
+    }
+
+    private String[] adminEndpoints() {
+        return new String[]{
+                "/api/*/users/auth/admin/**"
+        };
     }
 
 }
