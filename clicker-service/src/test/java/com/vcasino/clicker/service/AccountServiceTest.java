@@ -1,6 +1,8 @@
 package com.vcasino.clicker.service;
 
+import com.google.gson.internal.LinkedTreeMap;
 import com.vcasino.clicker.dto.AccountDto;
+import com.vcasino.clicker.dto.UpgradeDto;
 import com.vcasino.clicker.entity.Account;
 import com.vcasino.clicker.entity.Upgrade;
 import com.vcasino.clicker.mapper.AccountMapper;
@@ -12,6 +14,7 @@ import com.vcasino.clicker.mapper.SectionMapperImpl;
 import com.vcasino.clicker.mapper.UpgradeMapper;
 import com.vcasino.clicker.mapper.UpgradeMapperImpl;
 import com.vcasino.clicker.mock.AccountMocks;
+import com.vcasino.clicker.mock.ConditionMocks;
 import com.vcasino.clicker.mock.LevelMocks;
 import com.vcasino.clicker.mock.UpgradeMocks;
 import com.vcasino.clicker.repository.AccountRepository;
@@ -25,9 +28,12 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -91,5 +97,38 @@ public class AccountServiceTest {
         assertEquals(mockedAccount.getMaxTaps(), response.getMaxTaps());
         assertEquals(mockedAccount.getEarnPerTap(), response.getEarnPerTap());
         assertEquals(mockedAccount.getTapsRecoverPerSec(), response.getTapsRecoverPerSec());
+    }
+
+    @Test
+    @DisplayName("Mapper sets the available field correctly")
+    void accountMapperWorksCorrectly() {
+        Upgrade mockedUpgrade = UpgradeMocks.getUpgradeMock("X", 0);
+        Upgrade mockedUpgradeWithCondition = UpgradeMocks.getUpgradeMock("Facebook", 0);
+        mockedUpgradeWithCondition.setCondition(ConditionMocks.getConditionMock("X", 1));
+
+        List<Upgrade> upgrades = List.of(mockedUpgrade, mockedUpgradeWithCondition);
+
+        when(upgradeService.getInitialUpgrades()).thenReturn(upgrades);
+        when(levelService.getLevelAccordingNetWorth(0L)).thenReturn(LevelMocks.getLevelMock());
+
+        Account mockedAccount = AccountMocks.getAccountMock(1L);
+        mockedAccount.setUpgrades(upgrades);
+
+        when(accountRepository.saveAndFlush(any(Account.class))).thenReturn(mockedAccount);
+
+        AccountDto response = accountService.createAccount(1L);
+
+        verify(accountMapper, times(1)).toDto(any(Account.class));
+
+        assertEquals(upgrades.size(), response.getUpgrades().size());
+
+        Map<String, Boolean> responseUpgrades = new HashMap<>();
+        response.getUpgrades().forEach(u -> responseUpgrades.put(u.getName(), u.getAvailable()));
+
+        assertTrue(responseUpgrades.containsKey("X"));
+        assertTrue(responseUpgrades.containsKey("Facebook"));
+
+        assertTrue(responseUpgrades.get("X"), "X should be available, but it is not");
+        assertFalse(responseUpgrades.get("Facebook"), "Facebook shouldn't be available, but it is");
     }
 }

@@ -4,7 +4,7 @@ import com.vcasino.clicker.dto.ConditionDto;
 import com.vcasino.clicker.entity.Condition;
 import com.vcasino.clicker.entity.ConditionType;
 
-public class CondtionMocks {
+public class ConditionMocks {
 
     public static Condition getConditionMock(String upgradeName, Integer level) {
         return Condition.builder()
