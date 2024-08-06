@@ -1,6 +1,7 @@
 package com.vcasino.user.kafka.producer;
 
-import com.vcasino.user.kafka.message.UserCreated;
+import com.vcasino.user.config.kafka.Topic;
+import com.vcasino.user.kafka.message.UserCreate;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +13,8 @@ public class UserProducer extends AbstractProducer {
     }
 
     public void sendUserCreated(Long userId) {
-        log.info("Send User#{} created", userId);
-        send("user-topic", new UserCreated(userId));
+        log.info("Send user-create event - User#{}", userId);
+        send(Topic.USER_CREATE.getName(), new UserCreate(userId));
     }
 
 }

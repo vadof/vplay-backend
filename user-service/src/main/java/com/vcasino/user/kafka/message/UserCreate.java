@@ -1,4 +1,4 @@
 package com.vcasino.user.kafka.message;
 
-public record UserCreated(Long userId) {
+public record UserCreate(Long userId) {
 }

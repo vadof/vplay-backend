@@ -36,7 +36,7 @@ public class LevelService {
 
     @PostConstruct
     private void cacheLevels() {
-        List<Level> levels = levelRepository.findAll();
+        levels = levelRepository.findAll();
         levels.sort(Comparator.comparingLong(Level::getNetWorth));
         log.info("Cached {} levels", levels.size());
     }

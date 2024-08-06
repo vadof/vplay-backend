@@ -1,4 +1,4 @@
-package com.vcasino.clicker.configuration;
+package com.vcasino.clicker.config;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Configuration;

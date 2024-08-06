@@ -1,5 +1,5 @@
 server:
-  port: 0
+  port: 8111
 
 spring:
   application:
@@ -17,6 +17,8 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   liquibase:
     change-log: classpath:db/changelog/changelog-master.xml
+  kafka:
+    bootstrap-servers: localhost:29092
 
 eureka:
   client:
@@ -24,4 +26,4 @@ eureka:
       defaultZone: http://localhost:8761/eureka
   instance:
     preferIpAddress: true
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+#    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
