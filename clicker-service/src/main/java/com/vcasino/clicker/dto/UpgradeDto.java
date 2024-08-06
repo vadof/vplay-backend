@@ -21,4 +21,5 @@ public class UpgradeDto {
     Integer priceToUpdate;
     ConditionDto condition;
     Boolean maxLevel;
+    Boolean available;
 }

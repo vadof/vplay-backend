@@ -1,5 +1,6 @@
 package com.vcasino.clicker.dto;
 
+import com.vcasino.clicker.entity.ConditionType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ConditionDto {
-    String type;
+    ConditionType type;
     String upgradeName;
     Integer level;
 }

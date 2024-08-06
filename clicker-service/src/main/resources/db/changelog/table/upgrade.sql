@@ -8,7 +8,6 @@ CREATE TABLE upgrade
     price_to_upgrade      INTEGER     NULL,
     condition_id          SMALLINT    NULL,
     max_level             BOOLEAN     NOT NULL,
-    --     available                  BOOLEAN      NOT NULL, -- ADD AS JAVA CONDITION
 
     CONSTRAINT pk_upgrade PRIMARY KEY (name, level),
     CONSTRAINT fk_upgrade_section FOREIGN KEY (section) REFERENCES section (name),

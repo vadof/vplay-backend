@@ -2,6 +2,7 @@ package com.vcasino.clicker.service;
 
 import com.vcasino.clicker.dto.AccountDto;
 import com.vcasino.clicker.entity.Account;
+import com.vcasino.clicker.entity.Level;
 import com.vcasino.clicker.entity.Upgrade;
 import com.vcasino.clicker.mapper.AccountMapper;
 import com.vcasino.clicker.repository.AccountRepository;
@@ -21,18 +22,27 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
 
+    private final LevelService levelService;
     private final UpgradeService upgradeService;
 
     public AccountDto createAccount(Long userId) {
-        List<Upgrade> upgrades = upgradeService.getInitialUpgrades();
+        Account account = buildAccount(userId);
+        account = accountRepository.saveAndFlush(account);
+        log.info("Account#{} saved to database", account.getId());
+        return accountMapper.toDto(account);
+    }
 
-        Account account = Account.builder()
+    private Account buildAccount(Long userId) {
+        List<Upgrade> upgrades = upgradeService.getInitialUpgrades();
+        Level level = levelService.getLevelAccordingNetWorth(0L);
+
+        return Account.builder()
                 .userId(userId)
-                .level(1)
+                .level(level.getValue())
                 .balanceCoins(0L)
                 .netWorth(0L)
                 .upgrades(upgrades)
-                .earnPassivePerHour(calculatePassiveEarnPerHour(upgrades))
+                .earnPassivePerHour(upgradeService.calculatePassiveEarnPerHour(upgrades))
                 .availableTaps(100)
                 .maxTaps(100)
                 .earnPerTap(1)
@@ -41,15 +51,5 @@ public class AccountService {
                 .suspiciousActionsNumber(0)
                 .frozen(false)
                 .build();
-
-        account = accountRepository.saveAndFlush(account);
-
-        return accountMapper.toDto(account);
-    }
-
-    private Integer calculatePassiveEarnPerHour(List<Upgrade> upgrades) {
-        return upgrades.stream()
-                .mapToInt(Upgrade::getProfitPerHour)
-                .sum();
     }
 }

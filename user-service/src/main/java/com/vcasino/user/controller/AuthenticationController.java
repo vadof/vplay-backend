@@ -68,7 +68,7 @@ public class AuthenticationController {
         return ResponseEntity.ok().body(response);
     }
 
-    @Operation(summary = "Login to account")
+    @Operation(summary = "Refresh token")
     @ApiResponse(responseCode = "200", description = "Token refreshed",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = TokenRefreshResponse.class)))
     @PostMapping(value = "/refreshToken", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)

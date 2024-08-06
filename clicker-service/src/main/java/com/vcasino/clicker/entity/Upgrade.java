@@ -35,7 +35,7 @@ public class Upgrade {
     Integer level;
 
     @ManyToOne
-    @JoinColumn(name = "section", nullable = false)
+    @JoinColumn(name = "section", referencedColumnName = "name")
     Section section;
 
     @Column(name = "profit_per_hour")

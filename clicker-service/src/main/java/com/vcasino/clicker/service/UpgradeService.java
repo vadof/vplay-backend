@@ -19,4 +19,10 @@ public class UpgradeService {
         return upgradeRepository.findAllByLevel(0);
     }
 
+    public Integer calculatePassiveEarnPerHour(List<Upgrade> upgrades) {
+        return upgrades.stream()
+                .mapToInt(Upgrade::getProfitPerHour)
+                .sum();
+    }
+
 }

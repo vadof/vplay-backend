@@ -76,7 +76,10 @@ public class Account {
     @JoinTable(
             name = "account_upgrade",
             joinColumns = @JoinColumn(name = "account_id"),
-            inverseJoinColumns = @JoinColumn(name = "upgrade_name", referencedColumnName = "name")
+            inverseJoinColumns = {
+                    @JoinColumn(name = "upgrade_name", referencedColumnName = "name"),
+                    @JoinColumn(name = "upgrade_level", referencedColumnName = "level")
+            }
     )
     List<Upgrade> upgrades;
 }
