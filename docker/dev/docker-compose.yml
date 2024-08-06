@@ -1,0 +1,87 @@
+version: '3.9'
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:16rc1
+    networks:
+      - vcasino
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+      - db:/var/lib/postgresql/data
+
+  zookeeper:
+    container_name: zookeeper
+    image: zookeeper:3.9.2
+    networks:
+      - vcasino
+    restart: no
+    ports:
+      - "2181:2181"
+    healthcheck:
+      test: nc -z 127.0.0.1 2181 || exit -1
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+
+  kafka:
+    container_name: kafka
+    image: confluentinc/cp-kafka:7.7.0
+    networks:
+      - vcasino
+    restart: no
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
+    healthcheck:
+      test: kafka-topics --bootstrap-server localhost:9092 --list
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+
+  kafkaui:
+    container_name: kafka-ui
+    image: provectuslabs/kafka-ui:v0.7.2
+    networks:
+      - vcasino
+    restart: no
+    ports:
+      - "8989:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:8080/actuator/health || exit -1
+      interval: 10s
+      timeout: 5s
+      start_period: 60s
+      retries: 5
+
+volumes:
+  db:
+    driver: local
+  kafka_data:
+    driver: local
+
+networks:
+  vcasino:
+    driver: bridge

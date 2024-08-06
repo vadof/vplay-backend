@@ -1,2 +1,0 @@
-Test: docker-compose --env-file .env.test up --build
-Prod: docker-compose --env-file .env.prod up --build

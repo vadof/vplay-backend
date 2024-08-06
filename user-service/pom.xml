@@ -29,6 +29,7 @@
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <junit.version>4.13.2</junit.version>
         <springdoc.version>2.3.0</springdoc.version>
+        <kafka.version>3.2.1</kafka.version>
     </properties>
     <dependencies>
         <dependency>
@@ -60,6 +61,12 @@
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>${org.mapstruct.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+            <version>${kafka.version}</version>
         </dependency>
 
         <dependency>

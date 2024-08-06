@@ -10,6 +10,7 @@ import com.vcasino.user.entity.RefreshToken;
 import com.vcasino.user.entity.Role;
 import com.vcasino.user.entity.User;
 import com.vcasino.user.exception.AppException;
+import com.vcasino.user.kafka.producer.UserProducer;
 import com.vcasino.user.mapper.UserMapper;
 import com.vcasino.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -30,12 +31,16 @@ import java.util.List;
 public class AuthenticationService {
 
     private final UserRepository userRepository;
+    private final UserProducer userProducer;
+    private final UserMapper userMapper;
+
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    private final UserMapper userMapper;
+
     private final RefreshTokenService refreshTokenService;
     private final CountryService countryService;
+
 
     public List<CountryDto> getCountries() {
         return countryService.getCountries();
@@ -54,13 +59,15 @@ public class AuthenticationService {
         user.setRole(Role.USER);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        userRepository.save(user);
+        user = userRepository.saveAndFlush(user);
 
         String jwtToken = jwtService.generateToken(user);
 
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
 
         log.info(String.format("User with username \"%s\" saved to database", user.getUsername()));
+
+        userProducer.sendUserCreated(user.getId());
 
         return new AuthenticationResponse(jwtToken, refreshToken.getToken(), userMapper.toDto(user));
     }

@@ -1,4 +1,4 @@
-package com.vcasino.user.config;
+package com.vcasino.user.config.securiy;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

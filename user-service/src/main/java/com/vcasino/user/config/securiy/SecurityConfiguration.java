@@ -1,4 +1,4 @@
-package com.vcasino.user.config;
+package com.vcasino.user.config.securiy;
 
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
