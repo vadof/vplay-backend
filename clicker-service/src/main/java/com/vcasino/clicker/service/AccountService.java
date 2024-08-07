@@ -4,11 +4,13 @@ import com.vcasino.clicker.dto.AccountDto;
 import com.vcasino.clicker.entity.Account;
 import com.vcasino.clicker.entity.Level;
 import com.vcasino.clicker.entity.Upgrade;
+import com.vcasino.clicker.exception.AppException;
 import com.vcasino.clicker.mapper.AccountMapper;
 import com.vcasino.clicker.repository.AccountRepository;
 import com.vcasino.clicker.utils.TimeUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -51,5 +53,22 @@ public class AccountService {
                 .suspiciousActionsNumber(0)
                 .frozen(false)
                 .build();
+    }
+
+    public Account getById(Long id) {
+        return accountRepository.findById(id).orElseThrow(()
+                -> new AppException("User#" + id + " not found", HttpStatus.NOT_FOUND));
+    }
+
+    public void addCoins(Account account, Long amount) {
+        log.info("Add {} coins to Account#{}", amount, account.getId());
+        if (amount < 0) {
+            throw new IllegalArgumentException("Amount cannot be negative");
+        }
+
+        account.setBalanceCoins(account.getBalanceCoins() + amount);
+        account.setNetWorth(account.getNetWorth() + amount);
+        Level level = levelService.getLevelAccordingNetWorth(account.getNetWorth());
+        account.setLevel(level.getValue());
     }
 }
