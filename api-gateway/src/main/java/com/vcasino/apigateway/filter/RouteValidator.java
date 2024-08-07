@@ -1,6 +1,5 @@
 package com.vcasino.apigateway.filter;
 
-import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,8 +15,7 @@ public class RouteValidator {
             "/eureka"
     );
 
-    public Predicate<ServerHttpRequest> isSecured =
-            request -> openApiEndpoints
-                    .stream()
-                    .noneMatch(uri -> request.getURI().getPath().contains(uri));
+    public Predicate<String> isSecured =
+            path -> openApiEndpoints.stream()
+                    .noneMatch(path::equals);
 }

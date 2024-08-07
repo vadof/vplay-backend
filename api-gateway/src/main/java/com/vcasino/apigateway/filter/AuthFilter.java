@@ -1,6 +1,7 @@
 package com.vcasino.apigateway.filter;
 
 import com.vcasino.apigateway.util.JwtUtil;
+import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -12,6 +13,9 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+
+import java.net.URI;
+import java.util.ArrayList;
 
 @Component
 @Slf4j
@@ -29,22 +33,33 @@ public class AuthFilter implements GatewayFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
-        log.info("{} request to {}", exchange.getRequest().getMethod(), exchange.getRequest().getURI());
-        if (routeValidator.isSecured.test(exchange.getRequest())) {
-            if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
+        URI uri = request.getURI();
+        log.info("{} request to {}", request.getMethod(), uri);
+
+        String path = uri.getPath();
+
+        if (routeValidator.isSecured.test(path)) {
+            if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
                 return onError(exchange, HttpStatus.UNAUTHORIZED);
             }
 
-            String token = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
+            String token = request.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
             if (token != null && token.startsWith("Bearer ")) {
                 token = token.substring(7);
             }
 
             try {
+                Claims claims = jwtUtil.extractAllClaims(token);
+
+                if (path.contains("admin") && !hasAdminRole(claims)) {
+                    return onError(exchange, HttpStatus.FORBIDDEN);
+                }
+
                 jwtUtil.validateToken(token);
 
                 request = request.mutate()
-                        .header("loggedInUser", jwtUtil.extractUsername(token))
+                        .header("loggedInUser", claims.getSubject())
+                        .header("userRole", getRole(claims))
                         .build();
             } catch (Exception e) {
                 return onError(exchange, HttpStatus.UNAUTHORIZED);
@@ -57,5 +72,14 @@ public class AuthFilter implements GatewayFilter {
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(httpStatus);
         return response.setComplete();
+    }
+
+    private boolean hasAdminRole(Claims claims) {
+        return claims.get("roles", ArrayList.class)
+                .contains("ROLE_ADMIN");
+    }
+
+    private String getRole(Claims claims) {
+        return (String) claims.get("roles", ArrayList.class).get(0);
     }
 }
