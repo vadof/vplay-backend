@@ -1,5 +1,6 @@
 package com.vcasino.clicker.controller;
 
+import com.vcasino.clicker.controller.common.GenericController;
 import com.vcasino.clicker.dto.Tap;
 import com.vcasino.clicker.entity.Account;
 import com.vcasino.clicker.service.ClickerService;
@@ -8,8 +9,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,20 +23,24 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Authentication", description = "API operations with Clicker")
 @RestController
 @RequestMapping("/api/v1/clicker")
-@AllArgsConstructor
 @Validated
 @Slf4j
-public class ClickerController {
+public class ClickerController extends GenericController {
 
     private final ClickerService clickerService;
+
+    public ClickerController(HttpServletRequest request, ClickerService clickerService) {
+        super(request);
+        this.clickerService = clickerService;
+    }
 
     @Operation(summary = "Send info about taps")
     @ApiResponse(responseCode = "200", description = "Return updated account",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Account.class)))
     @PostMapping(value = "/tap", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Account> tap(@Valid @RequestBody Tap tap) {
-        log.info("REST request to tap");
-        Account account = clickerService.tap(tap);
+        log.info("loggedUser {}", getUserId());
+        Account account = clickerService.tap(tap, getUserId());
         return ResponseEntity.ok().body(account);
     }
 

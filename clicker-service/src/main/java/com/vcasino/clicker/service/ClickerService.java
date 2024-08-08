@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class ClickerService {
 
-    public Account tap(Tap tap) {
+    public Account tap(Tap tap, Long userId) {
         return null;
     }
 }
