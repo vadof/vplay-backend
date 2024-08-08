@@ -58,7 +58,7 @@ public class AuthFilter implements GatewayFilter {
                 jwtUtil.validateToken(token);
 
                 request = request.mutate()
-                        .header("loggedInUser", claims.getSubject())
+                        .header("loggedInUser", getUserId(claims))
                         .header("userRole", getRole(claims))
                         .build();
             } catch (Exception e) {
@@ -81,5 +81,9 @@ public class AuthFilter implements GatewayFilter {
 
     private String getRole(Claims claims) {
         return (String) claims.get("roles", ArrayList.class).get(0);
+    }
+
+    private String getUserId(Claims claims) {
+        return String.valueOf(claims.get("id"));
     }
 }
