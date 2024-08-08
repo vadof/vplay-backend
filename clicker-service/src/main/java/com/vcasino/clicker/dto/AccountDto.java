@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -16,12 +17,12 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AccountDto {
     Integer level;
-    Long netWorth;
-    Long balanceCoins;
+    BigDecimal netWorth;
+    BigDecimal balanceCoins;
     Integer availableTaps;
     Integer maxTaps;
     Integer earnPerTap;
     Integer tapsRecoverPerSec;
-    Integer earnPassivePerHour;
+    Integer passiveEarnPerHour;
     List<UpgradeDto> upgrades;
 }

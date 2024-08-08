@@ -1,4 +1,4 @@
-package com.vcasino.clicker.config;
+package com.vcasino.clicker.config.constants;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

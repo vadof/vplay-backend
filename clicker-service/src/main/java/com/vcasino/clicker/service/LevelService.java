@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
 
@@ -32,6 +33,10 @@ public class LevelService {
         }
 
         throw new AppException("Level not found for net worth: " + netWorth, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    public Level getLevelAccordingNetWorth(BigDecimal netWorth) {
+        return getLevelAccordingNetWorth(netWorth.longValue());
     }
 
     @PostConstruct

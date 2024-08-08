@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -42,11 +43,11 @@ public class Account {
     @Column(name = "level", nullable = false)
     Integer level;
 
-    @Column(name = "net_worth", nullable = false)
-    Long netWorth;
+    @Column(name = "net_worth", nullable = false, columnDefinition = "DECIMAL(21,3)")
+    BigDecimal netWorth;
 
-    @Column(name = "balance_coins", nullable = false)
-    Long balanceCoins;
+    @Column(name = "balance_coins", nullable = false, columnDefinition = "DECIMAL(21,3)")
+    BigDecimal balanceCoins;
 
     @Column(name = "available_taps", nullable = false)
     Integer availableTaps;
@@ -60,8 +61,8 @@ public class Account {
     @Column(name = "taps_recover_per_sec", nullable = false)
     Integer tapsRecoverPerSec;
 
-    @Column(name = "earn_passive_per_hour", nullable = false)
-    Integer earnPassivePerHour;
+    @Column(name = "passive_earn_per_hour", nullable = false)
+    Integer passiveEarnPerHour;
 
     @Column(name = "last_sync_date", nullable = false)
     Timestamp lastSyncDate;

@@ -1,5 +1,6 @@
 package com.vcasino.clicker.service;
 
+import com.vcasino.clicker.config.constants.AccountConstants;
 import com.vcasino.clicker.dto.AccountDto;
 import com.vcasino.clicker.entity.Account;
 import com.vcasino.clicker.entity.Level;
@@ -13,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.List;
 
 
@@ -36,19 +39,19 @@ public class AccountService {
 
     private Account buildAccount(Long userId) {
         List<Upgrade> upgrades = upgradeService.getInitialUpgrades();
-        Level level = levelService.getLevelAccordingNetWorth(0L);
+        Level level = levelService.getLevelAccordingNetWorth(AccountConstants.BALANCE_COINS);
 
         return Account.builder()
                 .userId(userId)
                 .level(level.getValue())
-                .balanceCoins(0L)
-                .netWorth(0L)
+                .balanceCoins(AccountConstants.BALANCE_COINS)
+                .netWorth(AccountConstants.BALANCE_COINS)
                 .upgrades(upgrades)
-                .earnPassivePerHour(upgradeService.calculatePassiveEarnPerHour(upgrades))
-                .availableTaps(100)
-                .maxTaps(100)
-                .earnPerTap(1)
-                .tapsRecoverPerSec(3)
+                .passiveEarnPerHour(upgradeService.calculatePassiveEarnPerHour(upgrades))
+                .availableTaps(AccountConstants.MAX_TAPS)
+                .maxTaps(AccountConstants.MAX_TAPS)
+                .earnPerTap(AccountConstants.EARN_PER_TAP)
+                .tapsRecoverPerSec(AccountConstants.TAPS_RECOVER_PER_SEC)
                 .lastSyncDate(TimeUtil.getCurrentTimestamp())
                 .suspiciousActionsNumber(0)
                 .frozen(false)
@@ -57,7 +60,12 @@ public class AccountService {
 
     public Account getById(Long id) {
         return accountRepository.findById(id).orElseThrow(()
-                -> new AppException("User#" + id + " not found", HttpStatus.NOT_FOUND));
+                -> new AppException("Account#" + id + " not found", HttpStatus.NOT_FOUND));
+    }
+
+    public Account getByUserId(Long userId) {
+        return accountRepository.findByUserId(userId).orElseThrow(()
+                -> new AppException("Account with userId#" + userId + " not found", HttpStatus.NOT_FOUND));
     }
 
     public void addCoins(Account account, Long amount) {
@@ -66,9 +74,50 @@ public class AccountService {
             throw new IllegalArgumentException("Amount cannot be negative");
         }
 
-        account.setBalanceCoins(account.getBalanceCoins() + amount);
-        account.setNetWorth(account.getNetWorth() + amount);
-        Level level = levelService.getLevelAccordingNetWorth(account.getNetWorth());
+        account.setBalanceCoins(account.getBalanceCoins().add(new BigDecimal(amount)));
+        account.setNetWorth(account.getNetWorth().add(new BigDecimal(amount)));
+        Level level = levelService.getLevelAccordingNetWorth(account.getNetWorth().longValue());
         account.setLevel(level.getValue());
+    }
+
+    public AccountDto getAccount(Long userId) {
+        Account account = getByUserId(userId);
+        updateAccount(account);
+        return accountMapper.toDto(account);
+    }
+
+    public void updateAccount(Account account) {
+        Timestamp lastSync = account.getLastSyncDate();
+        Timestamp now = TimeUtil.getCurrentTimestamp();
+        Long secondsDiff = TimeUtil.getDifferenceInSeconds(lastSync, now);
+
+        BigDecimal passiveEarn = calculatePassiveEarn(account.getPassiveEarnPerHour(), secondsDiff);
+        updateAccountBalance(account, passiveEarn);
+        updateAccountTaps(account, secondsDiff);
+        account.setLastSyncDate(now);
+        accountRepository.saveAndFlush(account);
+    }
+
+    private void updateAccountBalance(Account account, BigDecimal earned) {
+        account.setBalanceCoins(account.getBalanceCoins().add(earned));
+        account.setNetWorth(account.getNetWorth().add(earned));
+    }
+
+    private void updateAccountTaps(Account account, Long differenceInSecond) {
+        long newTapsValue = differenceInSecond * account.getTapsRecoverPerSec() + account.getAvailableTaps();
+        if (newTapsValue > Integer.MAX_VALUE) {
+             account.setAvailableTaps(account.getMaxTaps());
+        } else {
+            account.setAvailableTaps(Math.min((int) newTapsValue, account.getMaxTaps()));
+        }
+    }
+
+    public BigDecimal calculatePassiveEarn(Integer passiveEarnPerHour, Long differenceInSeconds) {
+        double earned = getPassiveEarnPerSecond(passiveEarnPerHour) * differenceInSeconds;
+        return new BigDecimal(earned);
+    }
+
+    public Double getPassiveEarnPerSecond(Integer passiveEarnPerHour) {
+        return passiveEarnPerHour / 3600d;
     }
 }

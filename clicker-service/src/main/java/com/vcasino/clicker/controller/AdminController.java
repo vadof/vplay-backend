@@ -39,5 +39,4 @@ public class AdminController extends GenericController {
         return ResponseEntity.ok().body(account);
     }
 
-
 }

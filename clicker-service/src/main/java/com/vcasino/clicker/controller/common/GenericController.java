@@ -1,6 +1,6 @@
 package com.vcasino.clicker.controller.common;
 
-import com.vcasino.clicker.config.CustomHeader;
+import com.vcasino.clicker.config.constants.CustomHeader;
 import com.vcasino.clicker.exception.AppException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
