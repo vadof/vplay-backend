@@ -1,5 +1,6 @@
 package com.vcasino.user.config.securiy;
 
+import com.vcasino.user.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -34,11 +35,11 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        List<String> roles = userDetails.getAuthorities().stream()
+    public String generateToken(User user) {
+        List<String> roles = user.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .toList();
-        return generateToken(Map.of("roles", roles), userDetails);
+        return generateToken(Map.of("roles", roles, "id", user.getId()), user);
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
