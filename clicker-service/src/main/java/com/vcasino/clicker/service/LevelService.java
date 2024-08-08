@@ -23,8 +23,6 @@ public class LevelService {
     private final LevelRepository levelRepository;
 
     public Level getLevelAccordingNetWorth(Long netWorth) {
-        log.info("Get level for {} net worth", netWorth);
-
         for (int i = levels.size() - 1; i >= 0; i--) {
             Level level = levels.get(i);
             if (netWorth >= level.getNetWorth()) {

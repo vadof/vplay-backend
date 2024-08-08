@@ -32,7 +32,7 @@ public class AccountService {
 
     public AccountDto createAccount(Long userId) {
         Account account = buildAccount(userId);
-        account = accountRepository.saveAndFlush(account);
+        account = save(account);
         log.info("Account#{} saved to database", account.getId());
         return accountMapper.toDto(account);
     }
@@ -59,13 +59,32 @@ public class AccountService {
     }
 
     public Account getById(Long id) {
-        return accountRepository.findById(id).orElseThrow(()
+        Account account = accountRepository.findById(id).orElseThrow(()
                 -> new AppException("Account#" + id + " not found", HttpStatus.NOT_FOUND));
+        handleFrozenAccount(account);
+        return account;
     }
 
     public Account getByUserId(Long userId) {
-        return accountRepository.findByUserId(userId).orElseThrow(()
-                -> new AppException("Account with userId#" + userId + " not found", HttpStatus.NOT_FOUND));
+        Account account = accountRepository.findByUserId(userId).orElseThrow(
+                () -> new AppException("Account with userId#" + userId + " not found", HttpStatus.NOT_FOUND));
+        handleFrozenAccount(account);
+        return account;
+    }
+
+    public void handleFrozenAccount(Account account) {
+        if (account.getFrozen()) {
+            throw new AppException(AccountConstants.ACCOUNT_FROZEN_DISPLAY_MESSAGE, HttpStatus.LOCKED);
+        }
+    }
+
+    public Account save(Account account) {
+        account = accountRepository.saveAndFlush(account);
+        return account;
+    }
+
+    public AccountDto toDto(Account account) {
+        return accountMapper.toDto(account);
     }
 
     public void addCoins(Account account, Long amount) {
@@ -95,7 +114,7 @@ public class AccountService {
         updateAccountBalance(account, passiveEarn);
         updateAccountTaps(account, secondsDiff);
         account.setLastSyncDate(now);
-        accountRepository.saveAndFlush(account);
+        save(account);
     }
 
     private void updateAccountBalance(Account account, BigDecimal earned) {

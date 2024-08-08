@@ -1,6 +1,7 @@
 package com.vcasino.clicker.controller;
 
 import com.vcasino.clicker.controller.common.GenericController;
+import com.vcasino.clicker.dto.AccountDto;
 import com.vcasino.clicker.dto.Tap;
 import com.vcasino.clicker.entity.Account;
 import com.vcasino.clicker.service.ClickerService;
@@ -38,9 +39,9 @@ public class ClickerController extends GenericController {
     @ApiResponse(responseCode = "200", description = "Return updated account",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Account.class)))
     @PostMapping(value = "/tap", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Account> tap(@Valid @RequestBody Tap tap) {
-        log.info("loggedUser {}", getUserId());
-        Account account = clickerService.tap(tap, getUserId());
+    public ResponseEntity<AccountDto> tap(@Valid @RequestBody Tap tap) {
+        log.info("Rest request to tap");
+        AccountDto account = clickerService.tap(tap, getUserId());
         return ResponseEntity.ok().body(account);
     }
 

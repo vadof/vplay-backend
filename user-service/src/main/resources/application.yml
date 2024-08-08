@@ -30,5 +30,6 @@ eureka:
 
 jwt:
   secret: fhsjwHWjhwqLxTgpV+nBMpM3XB0jgETR0vWsyRFV9oQ=
-  expirationMs: 900000 # 15min
+#  expirationMs: 900000 # 15min
+  expirationMs: 86400000 # 1day
   refreshExpirationMs: 86400000 # 1day

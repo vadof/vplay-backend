@@ -28,12 +28,12 @@ public class TimeUtil {
         return Timestamp.from(instant);
     }
 
-    public static Timestamp getCurrentTimestamp() {
-        return Timestamp.from(getCurrentInstant());
+    public static Timestamp toTimestamp(Long unixTime) {
+        return new Timestamp(unixTime * 1000);
     }
 
-    public static Long getCurrentUnixTime() {
-        return getCurrentInstant().getEpochSecond();
+    public static Timestamp getCurrentTimestamp() {
+        return Timestamp.from(getCurrentInstant());
     }
 
     public static LocalDateTime toLocalDateTime(Instant instant) {
@@ -46,6 +46,26 @@ public class TimeUtil {
 
     public static String format(LocalDateTime localDateTime) {
         return localDateTime.format(formatter);
+    }
+
+    public static Long toUnixTime(Timestamp timestamp) {
+        return timestamp.getTime() / 1000;
+    }
+
+    public static Long getCurrentUnixTime() {
+        return getCurrentInstant().getEpochSecond();
+    }
+
+    public static Long getDifferenceInSeconds(Long unixStartTime, Long unixEndTime) {
+        return unixEndTime - unixStartTime;
+    }
+
+    public static Long getDifferenceInMinutes(Long unixStartTime, Long unixEndTime) {
+        return (unixEndTime - unixStartTime) / 60;
+    }
+
+    public static Long getDifferenceInHours(Long unixStartTime, Long unixEndTime) {
+        return (unixEndTime - unixStartTime) / 3600;
     }
 
     public static Long getDifferenceInSeconds(Timestamp start, Timestamp end) {
