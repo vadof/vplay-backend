@@ -92,7 +92,10 @@ public class AuthenticationServiceTests {
         RefreshToken refreshToken = getRefreshTokenMock();
         when(refreshTokenService.createRefreshToken(any())).thenReturn(refreshToken);
         when(jwtService.generateToken(any())).thenReturn("token");
-        when(userRepository.saveAndFlush(any())).thenReturn(getUserMock());
+
+        User userMock = getUserMock();
+        userMock.setRole(Role.USER);
+        when(userRepository.saveAndFlush(any())).thenReturn(userMock);
 
         AuthenticationResponse response = authenticationService.register(toSave, Role.USER);
 
@@ -107,6 +110,41 @@ public class AuthenticationServiceTests {
         verify(refreshTokenService, times(1)).createRefreshToken(any());
         verify(userProducer, times(1)).sendUserCreated(saved.getId());
 
+        assertEquals(userMock.getRole(), saved.getRole());
+        assertEquals(toSave.getEmail(), response.getUser().getEmail());
+        assertEquals(toSave.getUsername(), response.getUser().getUsername());
+        assertEquals(toSave.getCountry().getCode(), response.getUser().getCountry().getCode());
+        assertNotNull(response.getRefreshToken());
+        assertNotNull(response.getToken());
+    }
+
+    @Test
+    @DisplayName("Register admin")
+    void registerAdmin() {
+        UserDto toSave = getUserDtoMock();
+
+        RefreshToken refreshToken = getRefreshTokenMock();
+        when(refreshTokenService.createRefreshToken(any())).thenReturn(refreshToken);
+        when(jwtService.generateToken(any())).thenReturn("token");
+
+        User adminMock = getUserMock();
+        adminMock.setRole(Role.ADMIN);
+        when(userRepository.saveAndFlush(any())).thenReturn(adminMock);
+
+        AuthenticationResponse response = authenticationService.register(toSave, Role.ADMIN);
+
+        verify(userRepository, times(1)).saveAndFlush(userArgumentCaptor.capture());
+
+        User saved = userArgumentCaptor.getValue();
+
+        verify(userMapper, times(1)).toEntity(toSave);
+        verify(userMapper, times(1)).toDto(saved);
+        verify(userRepository, times(1)).saveAndFlush(saved);
+        verify(jwtService, times(1)).generateToken(saved);
+        verify(refreshTokenService, times(1)).createRefreshToken(any());
+        verify(userProducer, times(1)).sendUserCreated(saved.getId());
+
+        assertEquals(adminMock.getRole(), saved.getRole());
         assertEquals(toSave.getEmail(), response.getUser().getEmail());
         assertEquals(toSave.getUsername(), response.getUser().getUsername());
         assertEquals(toSave.getCountry().getCode(), response.getUser().getCountry().getCode());
