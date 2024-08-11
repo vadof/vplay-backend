@@ -1,4 +1,4 @@
-INSERT INTO upgrade (name, section, level, profit_per_hour, profit_per_hour_delta, price_to_upgrade, condition_id, max_level)
+INSERT INTO upgrade (name, section, level, profit_per_hour, profit_per_hour_delta, price, condition_id, max_level)
 VALUES ('Delta Airlines', 'Airlines', 0, 0, 550, 105600, NULL, FALSE),
        ('Delta Airlines', 'Airlines', 1, 550, 1650, 316800, NULL, FALSE),
        ('Delta Airlines', 'Airlines', 2, 2200, 2750, 528000, NULL, FALSE),

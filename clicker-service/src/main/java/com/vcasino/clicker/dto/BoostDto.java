@@ -17,6 +17,6 @@ public class BoostDto {
     Integer level;
     Integer currentValue;
     ConditionDto condition;
-    String priceToUpgrade;
+    String price;
     Boolean maxLevel;
 }

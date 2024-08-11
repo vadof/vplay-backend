@@ -43,8 +43,8 @@ public class Boost {
     @JoinColumn(name = "condition_id")
     Condition condition;
 
-    @Column(name = "price_to_upgrade")
-    String priceToUpgrade;
+    @Column(name = "price")
+    String price;
 
     @Column(name = "max_level", nullable = false)
     Boolean maxLevel;

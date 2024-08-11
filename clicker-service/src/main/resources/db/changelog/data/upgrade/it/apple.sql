@@ -1,4 +1,4 @@
-INSERT INTO upgrade (name, section, level, profit_per_hour, profit_per_hour_delta, price_to_upgrade, condition_id, max_level)
+INSERT INTO upgrade (name, section, level, profit_per_hour, profit_per_hour_delta, price, condition_id, max_level)
 VALUES ('Apple', 'IT', 0, 0, 1350, 324000, NULL, FALSE),
        ('Apple', 'IT', 1, 1350, 4050, 972000, NULL, FALSE),
        ('Apple', 'IT', 2, 5400, 6750, 1620000, NULL, FALSE),

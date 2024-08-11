@@ -1,9 +1,9 @@
 package com.vcasino.clicker.entity;
 
+import com.vcasino.clicker.entity.converter.ConditionTypeConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -31,7 +31,7 @@ public class Condition {
     Integer id;
 
     @Column(name = "type", nullable = false)
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = ConditionTypeConverter.class)
     ConditionType type;
 
     @Column(name = "upgrade_name")

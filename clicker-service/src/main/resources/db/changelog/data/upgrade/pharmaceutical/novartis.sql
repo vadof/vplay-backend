@@ -1,4 +1,4 @@
-INSERT INTO upgrade (name, section, level, profit_per_hour, profit_per_hour_delta, price_to_upgrade, condition_id, max_level)
+INSERT INTO upgrade (name, section, level, profit_per_hour, profit_per_hour_delta, price, condition_id, max_level)
 VALUES ('Novartis', 'Pharmaceutical', 0, 0, 150, 28800, NULL, FALSE),
        ('Novartis', 'Pharmaceutical', 1, 150, 450, 86400, NULL, FALSE),
        ('Novartis', 'Pharmaceutical', 2, 600, 750, 144000, NULL, FALSE),

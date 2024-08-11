@@ -13,4 +13,21 @@ import org.mapstruct.ReportingPolicy;
         unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public interface SectionMapper extends EntityMapper<Section, SectionDto> {
+
+    default Section toSection(String section) {
+        if (section != null) {
+            Section s = new Section();
+            s.setName(section);
+            return s;
+        }
+        return null;
+    }
+
+    default String toSection(Section section) {
+        if (section != null) {
+            return section.getName();
+        }
+        return null;
+    }
+
 }

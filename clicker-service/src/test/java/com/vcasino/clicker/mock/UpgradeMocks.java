@@ -12,7 +12,7 @@ public class UpgradeMocks {
                 .level(level)
                 .profitPerHour(0)
                 .profitPerHourDelta(200)
-                .priceToUpdate(1000)
+                .price(1000)
                 .condition(null)
                 .maxLevel(false)
                 .build();
@@ -25,7 +25,7 @@ public class UpgradeMocks {
                 .level(level)
                 .profitPerHour(profitPerHour)
                 .profitPerHourDelta(200)
-                .priceToUpdate(1000)
+                .price(1000)
                 .condition(null)
                 .maxLevel(false)
                 .build();
@@ -34,11 +34,11 @@ public class UpgradeMocks {
     public static UpgradeDto getUpgradeDtoMock(String name, Integer level) {
         return UpgradeDto.builder()
                 .name(name)
-                .section(SectionMocks.getSectionDtoMock())
+                .section(SectionMocks.getSectionDtoMock().getName())
                 .level(level)
                 .profitPerHour(0)
                 .profitPerHourDelta(200)
-                .priceToUpdate(1000)
+                .price(1000)
                 .condition(null)
                 .maxLevel(false)
                 .available(true)

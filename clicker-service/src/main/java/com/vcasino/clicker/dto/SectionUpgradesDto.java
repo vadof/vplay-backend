@@ -7,19 +7,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UpgradeDto {
-    String name;
-    Integer level;
+public class SectionUpgradesDto {
+    Integer order;
     String section;
-    Integer profitPerHour;
-    Integer profitPerHourDelta;
-    Integer price;
-    ConditionDto condition;
-    Boolean maxLevel;
-    Boolean available;
+    List<UpgradeDto> upgrades;
 }

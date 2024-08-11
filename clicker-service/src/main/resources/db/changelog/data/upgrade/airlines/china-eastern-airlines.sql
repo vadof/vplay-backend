@@ -1,4 +1,4 @@
-INSERT INTO upgrade (name, section, level, profit_per_hour, profit_per_hour_delta, price_to_upgrade, condition_id, max_level)
+INSERT INTO upgrade (name, section, level, profit_per_hour, profit_per_hour_delta, price, condition_id, max_level)
 VALUES ('China Eastern Airlines', 'Airlines', 0, 0, 160, 30720, NULL, FALSE),
        ('China Eastern Airlines', 'Airlines', 1, 160, 480, 92160, NULL, FALSE),
        ('China Eastern Airlines', 'Airlines', 2, 640, 800, 153600, NULL, FALSE),

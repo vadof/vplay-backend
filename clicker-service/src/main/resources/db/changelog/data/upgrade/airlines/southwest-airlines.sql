@@ -1,4 +1,4 @@
-INSERT INTO upgrade (name, section, level, profit_per_hour, profit_per_hour_delta, price_to_upgrade, condition_id, max_level)
+INSERT INTO upgrade (name, section, level, profit_per_hour, profit_per_hour_delta, price, condition_id, max_level)
 VALUES ('Southwest Airlines', 'Airlines', 0, 0, 250, 48000, NULL, FALSE),
        ('Southwest Airlines', 'Airlines', 1, 250, 750, 144000, NULL, FALSE),
        ('Southwest Airlines', 'Airlines', 2, 1000, 1250, 240000, NULL, FALSE),

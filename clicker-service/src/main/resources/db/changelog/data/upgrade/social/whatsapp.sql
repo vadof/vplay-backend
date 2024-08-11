@@ -1,4 +1,4 @@
-INSERT INTO upgrade (name, section, level, profit_per_hour, profit_per_hour_delta, price_to_upgrade, condition_id, max_level)
+INSERT INTO upgrade (name, section, level, profit_per_hour, profit_per_hour_delta, price, condition_id, max_level)
 VALUES ('WhatsApp', 'Social', 0, 0, 150, 25200, NULL, FALSE),
        ('WhatsApp', 'Social', 1, 150, 450, 75600, NULL, FALSE),
        ('WhatsApp', 'Social', 2, 600, 750, 126000, NULL, FALSE),

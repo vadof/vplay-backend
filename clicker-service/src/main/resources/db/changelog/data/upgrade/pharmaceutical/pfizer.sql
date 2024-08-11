@@ -1,4 +1,4 @@
-INSERT INTO upgrade (name, section, level, profit_per_hour, profit_per_hour_delta, price_to_upgrade, condition_id, max_level)
+INSERT INTO upgrade (name, section, level, profit_per_hour, profit_per_hour_delta, price, condition_id, max_level)
 VALUES ('Pfizer', 'Pharmaceutical', 0, 0, 300, 57600, NULL, FALSE),
        ('Pfizer', 'Pharmaceutical', 1, 300, 900, 172800, NULL, FALSE),
        ('Pfizer', 'Pharmaceutical', 2, 1200, 1500, 288000, NULL, FALSE),

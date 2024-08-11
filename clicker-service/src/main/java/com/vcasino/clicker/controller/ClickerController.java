@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Authentication", description = "API operations with Clicker")
+@Tag(name = "Clicker", description = "API operations with Clicker")
 @RestController
 @RequestMapping("/api/v1/clicker")
 @Validated

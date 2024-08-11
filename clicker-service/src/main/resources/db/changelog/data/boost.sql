@@ -1,4 +1,4 @@
-INSERT INTO boost (name, level, current_value, condition_id, price_to_upgrade, max_level)
+INSERT INTO boost (name, level, current_value, condition_id, price, max_level)
 VALUES ('Multitap', 0, 1,    null, 5000, FALSE),
        ('Multitap', 1, 2,    null, 5000, FALSE),
        ('Multitap', 2, 3,    null, 5000, FALSE),

@@ -1,0 +1,4405 @@
+{
+  "config": {
+    "guidLink": {
+      "ru": "https://hamster-kombat.notion.site/Hamster-Kombat-b14906aba45243c58c9f634ce1b38d1e",
+      "en": "https://hamster-kombat.notion.site/Hamster-Kombat-manual-7e53c342eef143de8bc9c8262ea3a36d"
+    },
+    "urlForWebApp": "https://hamsterkombat.io/clicker",
+    "subscribeChannelUrl": "https://t.me/hamster_kombat",
+    "telegramAuditory": 53,
+    "taskStreakDayInterval": {
+      "unit": "day",
+      "days": 1
+    },
+    "tg": {
+      "channel": {
+        "id": -1002075341442,
+        "link": "https://t.me/hamster_kombat"
+      },
+      "chat": {
+        "id": -1002122872676,
+        "link": "https://t.me/hamster_kombat_chat"
+      },
+      "webAppName": "start"
+    },
+    "maxPassiveDtSeconds": 10800,
+    "userLevels_balanceCoins": [
+      {
+        "level": 1,
+        "coinsToLeveUp": 5000
+      },
+      {
+        "level": 2,
+        "coinsToLeveUp": 25000
+      },
+      {
+        "level": 3,
+        "coinsToLeveUp": 100000
+      },
+      {
+        "level": 4,
+        "coinsToLeveUp": 1000000
+      },
+      {
+        "level": 5,
+        "coinsToLeveUp": 2000000
+      },
+      {
+        "level": 6,
+        "coinsToLeveUp": 10000000
+      },
+      {
+        "level": 7,
+        "coinsToLeveUp": 50000000
+      },
+      {
+        "level": 8,
+        "coinsToLeveUp": 100000000
+      },
+      {
+        "level": 9,
+        "coinsToLeveUp": 1000000000
+      },
+      {
+        "level": 10,
+        "coinsToLeveUp": 18000000000
+      },
+      {
+        "level": 11,
+        "coinsToLeveUp": null
+      }
+    ],
+    "boosts": [
+      {
+        "id": "BoostEarnPerTap",
+        "price": 2000,
+        "earnPerTap": 1,
+        "maxTaps": 0
+      },
+      {
+        "id": "BoostMaxTaps",
+        "price": 2000,
+        "earnPerTap": 0,
+        "maxTaps": 500
+      },
+      {
+        "id": "BoostFullAvailableTaps",
+        "price": 0,
+        "earnPerTap": 0,
+        "maxTaps": 0,
+        "maxLevel": 6,
+        "cooldownSeconds": 3600
+      }
+    ],
+    "tasks": [
+      {
+        "id": "hamster_youtube_global_video_e4",
+        "type": "WithLink",
+        "condition": "None",
+        "link": "https://youtu.be/4IAWCDjyid0",
+        "rewardCoins": 100000,
+        "periodicity": "Once",
+        "toggle": {
+          "enableAt": "2024-08-09T20:00:00.000Z"
+        },
+        "name": {
+          "en": "FTX’s $12.7 billion settlement. Billions to be paid!",
+          "de": "FTXs $12,7 Milliarden Vergleich. Milliarden müssen gezahlt werden!",
+          "es": "Acuerdo de $12.7 mil millones de FTX. ¡Se pagarán miles de millones!",
+          "fr": "Règlement de 12,7 milliards de dollars de FTX. Des milliards à payer !",
+          "hi": "FTX का $12.7 बिलियन का समझौता। अरबों का भुगतान किया जाना है!",
+          "id": "Penyelesaian $12,7 miliar FTX. Miliaran akan dibayar!",
+          "pt": "Acordo de $12,7 bilhões da FTX. Bilhões a serem pagos!",
+          "ru": "Соглашение FTX на $12,7 миллиарда. Миллиарды к выплате!",
+          "th": "ข้อตกลง 12.7 พันล้านดอลลาร์ของ FTX ต้องจ่ายเป็นพันล้าน!",
+          "tl": "Pag-aayos ng $12.7 bilyon ng FTX. Bilyon ang babayaran!",
+          "tr": "FTX'in 12,7 milyar dolarlık anlaşması. Milyarlarca ödenecek!",
+          "uz": "FTXning $12,7 milliardlik kelishuvi. Toʻlanadigan milliardlar!",
+          "vi": "Thỏa thuận 12,7 tỷ đô la của FTX. Hàng tỷ đô la sẽ được thanh toán!"
+        },
+        "modalDescription": {
+          "en": "FTX’s $12.7B settlement, Crypto4Harris backed by Cuban, TON soars on Binance ⚡️ Hamster News",
+          "de": "FTXs $12,7 Milliarden Vergleich, Crypto4Harris unterstützt von Cuban, TON steigt bei Binance ⚡️ Hamster News",
+          "es": "Acuerdo de $12.7 mil millones de FTX, Crypto4Harris respaldado por Cuban, TON sube en Binance ⚡️ Hamster News",
+          "fr": "Règlement de 12,7 milliards de dollars de FTX, Crypto4Harris soutenu par Cuban, TON décolle sur Binance ⚡️ Hamster News",
+          "hi": "FTX का $12.7B समझौता, क्यूबन द्वारा समर्थित Crypto4Harris, Binance पर TON बढ़ता है ⚡️ Hamster News",
+          "id": "Penyelesaian $12,7 miliar FTX, Crypto4Harris didukung oleh Cuban, TON melonjak di Binance ⚡️ Hamster News",
+          "pt": "Acordo de $12,7 bilhões da FTX, Crypto4Harris apoiado por Cuban, TON dispara na Binance ⚡️ Hamster News",
+          "ru": "Соглашение FTX на $12,7 млрд, поддержка Crypto4Harris от Кубы, TON взлетает на Binance ⚡️ Hamster News",
+          "th": "ข้อตกลง 12.7 พันล้านดอลลาร์ของ FTX, Crypto4Harris ที่ได้รับการสนับสนุนโดย Cuban, TON พุ่งสูงขึ้นบน Binance ⚡️ Hamster News",
+          "tl": "Pag-aayos ng $12.7B ng FTX, Crypto4Harris na sinusuportahan ni Cuban, TON ay tumataas sa Binance ⚡️ Hamster News",
+          "tr": "FTX'in 12,7 milyar dolarlık anlaşması, Cuban tarafından desteklenen Crypto4Harris, Binance'te TON yükseliyor ⚡️ Hamster News",
+          "uz": "FTXning $12,7 milliardlik kelishuvi, Kuban tomonidan qo'llab-quvvatlangan Crypto4Harris, Binance-da TON oʻsmoqda ⚡️ Hamster News",
+          "vi": "Thỏa thuận trị giá 12,7 tỷ đô la của FTX, Crypto4Harris được Cuban ủng hộ, TON tăng vọt trên Binance ⚡️ Hamster News"
+        },
+        "modalLinkButton": {
+          "en": "Watch video",
+          "de": "Video ansehen",
+          "es": "Ver video",
+          "fr": "Regarder la vidéo",
+          "hi": "वीडियो देखें",
+          "id": "Tonton video",
+          "pt": "Assista ao vídeo",
+          "ru": "Смотреть видео",
+          "th": "ดูวิดีโอ",
+          "tl": "Manood ng video",
+          "tr": "Video izle",
+          "uz": "Videoni tomosha qiling",
+          "vi": "Xem video"
+        },
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/earn/youtube.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/earn/youtube.webp"
+        },
+        "rewardDelaySeconds": 3600
+      },
+      {
+        "id": "hamster_youtube_local_video_e19",
+        "condition": "None",
+        "type": "WithLocaleLink",
+        "linksWithLocales": {
+          "en": "https://www.youtube.com/watch?v=gv5LZHmY9Kc",
+          "ar": "https://www.youtube.com/watch?v=nJdJylTqtL8",
+          "hi": "https://www.youtube.com/watch?v=Gfbx5Gvmp_o",
+          "it": "https://www.youtube.com/watch?v=x0j7P7BFQzE",
+          "ru": "https://www.youtube.com/watch?v=MKgDjZUQ0DQ",
+          "th": "https://www.youtube.com/watch?v=LNfsevHOm5Q",
+          "pt": "https://www.youtube.com/watch?v=-EnjEPFXfNY",
+          "es": "https://www.youtube.com/watch?v=YjzNTockiDI",
+          "tr": "https://www.youtube.com/watch?v=MOb4MZieX0o",
+          "fr": "https://www.youtube.com/watch?v=73K0LHbsfU4",
+          "id": "https://www.youtube.com/watch?v=u5HqzFNaa_M",
+          "ja": "https://www.youtube.com/watch?v=WYdFwfSFQxY",
+          "ko": "https://www.youtube.com/watch?v=Czz9fuJofzY",
+          "pl": "https://www.youtube.com/watch?v=d3uDwt8O9-A",
+          "vi": "https://www.youtube.com/watch?v=kgC-yqZTLlc",
+          "de": "https://www.youtube.com/watch?v=rct-PeLWKNA",
+          "zh": "https://www.youtube.com/watch?v=2z4VuuovhKc"
+        },
+        "rewardCoins": 100000,
+        "periodicity": "Once",
+        "toggle": {
+          "enableAt": "2024-08-09T16:00:00.000Z"
+        },
+        "name": {
+          "en": "From Fiat to Crypto",
+          "de": "Von Fiat zu Krypto",
+          "es": "De Fiat a Cripto",
+          "fr": "De Fiat à Crypto",
+          "hi": "फिएट से क्रिप्टो तक",
+          "id": "Dari Fiat ke Crypto",
+          "pt": "De Fiat para Cripto",
+          "ru": "От фиатных денег к криптовалюте",
+          "th": "จาก Fiat สู่ Crypto",
+          "tl": "Mula sa Fiat hanggang Crypto",
+          "tr": "Fiat'tan Kripto'ya",
+          "uz": "Fiatdan Kriptoga",
+          "vi": "Từ Fiat đến Crypto"
+        },
+        "modalDescription": {
+          "en": "From Fiat to Crypto: Understanding and Transitioning Safely",
+          "de": "Von Fiat zu Krypto: Verstehen und sicher umsteigen",
+          "es": "De Fiat a Cripto: Comprender y hacer la transición de manera segura",
+          "fr": "De Fiat à Crypto : Comprendre et effectuer la transition en toute sécurité",
+          "hi": "फिएट से क्रिप्टो तक: सुरक्षित रूप से समझना और परिवर्तन करना",
+          "id": "Dari Fiat ke Crypto: Memahami dan Bertransisi dengan Aman",
+          "pt": "De Fiat para Cripto: Entendendo e Transicionando com Segurança",
+          "ru": "От фиата к криптовалюте: понимание и безопасный переход",
+          "th": "จาก Fiat สู่ Crypto: ทำความเข้าใจและเปลี่ยนแปลงอย่างปลอดภัย",
+          "tl": "Mula sa Fiat hanggang Crypto: Pag-unawa at Paglipat ng Ligtas",
+          "tr": "Fiat'tan Kripto'ya: Güvenli Anlama ve Geçiş",
+          "uz": "Fiatdan Kriptoga: Xavfsiz o'tishni tushunish va amalga oshirish",
+          "vi": "Từ Fiat đến Crypto: Hiểu và Chuyển đổi An toàn"
+        },
+        "modalLinkButton": {
+          "en": "Watch video",
+          "de": "Video ansehen",
+          "es": "Ver video",
+          "fr": "Regarder la vidéo",
+          "hi": "वीडियो देखें",
+          "id": "Tonton video",
+          "pt": "Assista ao vídeo",
+          "ru": "Смотреть видео",
+          "th": "ดูวิดีโอ",
+          "tl": "Manood ng video",
+          "tr": "Video izle",
+          "uz": "Videoni tomosha qiling",
+          "vi": "Xem video"
+        },
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/earn/youtube.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/earn/youtube.webp"
+        },
+        "rewardDelaySeconds": 3600
+      },
+      {
+        "id": "subscribe_telegram_cryptofam",
+        "type": "WithLocaleLink",
+        "condition": "None",
+        "linksWithLocales": {
+          "en": "https://t.me/cryptofam_eng",
+          "fr": "https://t.me/cryptofam_fr",
+          "de": "https://t.me/cryptofam_de"
+        },
+        "rewardCoins": 100000,
+        "periodicity": "Once",
+        "name": {
+          "en": "Join crypto news channel",
+          "de": "Treten Sie dem Kryptonachrichtenkanal bei",
+          "es": "Únete al canal de noticias cripto",
+          "fr": "Rejoignez le canal de nouvelles crypto",
+          "hi": "क्रिप्टो समाचार चैनल से जुड़ें",
+          "id": "Bergabunglah dengan saluran berita kripto",
+          "pt": "Junte-se ao canal de notícias cripto",
+          "ru": "Присоединяйтесь к крипто новостному каналу",
+          "th": "เข้าร่วมช่องข่าวคริปโต",
+          "tl": "Sumali sa crypto news channel",
+          "tr": "Kripto haber kanalına katılın",
+          "uz": "Kripto yangiliklar kanaliga qo'shiling",
+          "vi": "Tham gia kênh tin tức tiền điện tử"
+        },
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/earn/telegram_group.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/earn/telegram_group.webp"
+        },
+        "availableOnLocale": [
+          "fr",
+          "de"
+        ]
+      },
+      {
+        "id": "subscribe_telegram_channel",
+        "type": "TelegramSubscribe",
+        "condition": "Custom",
+        "link": "https://t.me/hamster_kombat",
+        "channelId": -1002075341442,
+        "rewardCoins": 5000,
+        "periodicity": "Once",
+        "name": {
+          "en": "Join our TG channel",
+          "de": "Treten Sie unserem TG-Kanal bei",
+          "es": "Únete a nuestro canal TG",
+          "fr": "Rejoins notre châine TG",
+          "hi": "हमारे TG चैनल से जुड़ें",
+          "id": "Bergabunglah dengan saluran TG kami",
+          "pt": "unte-se ao nosso canal TG",
+          "ru": "Присоединяйся к нашему Telegram каналу",
+          "tr": "TG kanalımıza katılın",
+          "uz": "TG kanalimizga qo'shiling",
+          "vi": "Tham gia kênh TG của chúng tôi"
+        },
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/earn/telegram_channel.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/earn/telegram_channel.webp"
+        }
+      },
+      {
+        "id": "subscribe_x_account",
+        "type": "WithLink",
+        "condition": "None",
+        "link": "https://twitter.com/hamster_kombat",
+        "rewardCoins": 5000,
+        "periodicity": "Once",
+        "name": {
+          "en": "Follow our X account",
+          "de": "Folgen Sie unserem X-Account",
+          "es": "Sigue nuestra cuenta X",
+          "fr": "Suis notre compte X",
+          "hi": "हमारे X खाते का पालन करें",
+          "id": "Ikuti akun X kami",
+          "pt": "Siga nossa conta X",
+          "ru": "Следи за нашим аккаунтом в Х",
+          "uz": "X hisobimizni kuzatib boring",
+          "vi": "Theo dõi tài khoản X của chúng tôi"
+        },
+        "modalButton": {
+          "en": "Follow X",
+          "de": "Folge X",
+          "es": "Seguir a X",
+          "fr": "Suivre X",
+          "hi": "X का पालन करें",
+          "id": "Ikuti X",
+          "pt": "Seguir X",
+          "ru": "Подписаться на X",
+          "th": "ติดตาม X",
+          "tl": "Sundan si X",
+          "tr": "X Takip Et",
+          "uz": "X ga ergashish",
+          "vi": "Theo dõi X"
+        },
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/earn/x.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/earn/x.webp"
+        },
+        "rewardDelaySeconds": 3600
+      },
+      {
+        "id": "select_exchange",
+        "type": "Default",
+        "condition": "Custom",
+        "rewardCoins": 5000,
+        "periodicity": "Once",
+        "name": {
+          "en": "Choose your exchange",
+          "de": "Wählen Sie Ihre Börse",
+          "es": "Elige tu intercambio",
+          "fr": "Choisis ta platephorme d'échange",
+          "hi": "अपना विनिमय चुनें",
+          "id": "Pilih pertukaran Anda",
+          "pt": "Escolha sua Exchange",
+          "ru": "Выбери биржу",
+          "tr": "Borsayı seçin",
+          "uz": "Birjangizni tanlang",
+          "vi": "Chọn sàn giao dịch của bạn"
+        },
+        "modalLinkButton": {
+          "en": "Choose your exchange",
+          "de": "Wählen Sie Ihre Börse",
+          "es": "Elige tu intercambio",
+          "fr": "Choisis ta platephorme d'échange",
+          "hi": "अपना विनिमय चुनें",
+          "id": "Pilih pertukaran Anda",
+          "pt": "Escolha sua Exchange",
+          "ru": "Выбери биржу",
+          "tr": "Borsayı seçin",
+          "uz": "Birjangizni tanlang",
+          "vi": "Chọn sàn giao dịch của bạn"
+        },
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/earn/hamster.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/earn/hamster.webp"
+        }
+      },
+      {
+        "id": "invite_friends",
+        "type": "Default",
+        "condition": "Custom",
+        "rewardCoins": 25000,
+        "periodicity": "Once",
+        "name": {
+          "en": "Invite 3 friends",
+          "de": "Laden Sie 3 Freunde ein",
+          "fr": "Invitez 3 amis",
+          "hi": "3 दोस्तों को आमंत्रित करें",
+          "id": "Undang 3 teman",
+          "pt": "Convide 3 amigos",
+          "ru": "Пригласи 3 друзей",
+          "uz": "3 ta do'stingizni taklif qiling",
+          "vi": "Mời 3 người bạn"
+        },
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/earn/friends.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/earn/friends.webp"
+        }
+      },
+      {
+        "id": "streak_days",
+        "type": "StreakDay",
+        "condition": "Custom",
+        "rewardsByDays": [
+          {
+            "days": 1,
+            "rewardCoins": 500
+          },
+          {
+            "days": 2,
+            "rewardCoins": 1000
+          },
+          {
+            "days": 3,
+            "rewardCoins": 2500
+          },
+          {
+            "days": 4,
+            "rewardCoins": 5000
+          },
+          {
+            "days": 5,
+            "rewardCoins": 15000
+          },
+          {
+            "days": 6,
+            "rewardCoins": 25000
+          },
+          {
+            "days": 7,
+            "rewardCoins": 100000
+          },
+          {
+            "days": 8,
+            "rewardCoins": 500000
+          },
+          {
+            "days": 9,
+            "rewardCoins": 1000000
+          },
+          {
+            "days": 10,
+            "rewardCoins": 5000000
+          }
+        ],
+        "rewardCoins": 0,
+        "periodicity": "Repeatedly",
+        "name": {
+          "en": "Daily reward",
+          "de": "Tägliche Belohnung",
+          "es": "Lista de tareas",
+          "fr": "Récompense quotidienne",
+          "hi": "दैनिक पुरस्कार",
+          "id": "Daftar tugas",
+          "pt": "Lista de tarefas",
+          "ru": "Ежедневная награда",
+          "uz": "Vazifalar ro'yxati",
+          "vi": "Danh sách nhiệm vụ"
+        },
+        "modalTitle": {
+          "en": "Daily reward",
+          "de": "Tägliche Belohnung",
+          "es": "Recompensa diaria",
+          "fr": "Récompense quotidienne",
+          "hi": "दैनिक पुरस्कार",
+          "id": "Hadiah harian",
+          "pt": "Recompensa diária",
+          "ru": "Ежедневная награда",
+          "uz": "Kunlik mukofot",
+          "vi": "Phần thưởng hàng ngày"
+        },
+        "modalDescription": {
+          "en": "Accrue coins for logging into the game daily without skipping",
+          "de": "Erhalten Sie Münzen für aufeinanderfolgende Logins. Sie müssen täglich die Holen-Button drücken, sonst wird der Tageszähler zurückgesetzt",
+          "es": "Acumula monedas por iniciar sesión en el juego diariamente sin saltar. El botón \"Reclamar\" debe presionarse diariamente; de   lo contrario, el conteo de días comenzará nuevamente",
+          "fr": "Prenez vos pièces pour une connexion quotidienne au jeu sans manquer un jour. Appuyez sur le bouton \"Réclamer\" chaque jour ; sinon, le compteur de jours recommencera",
+          "hi": "प्रतिदिन गेम में लॉग इन करने के लिए सिक्के प्राप्त करें",
+          "id": "Kumpulkan koin untuk masuk ke dalam game setiap hari tanpa melewatkannya. Tombol \"Klaim\" harus ditekan setiap hari, jika tidak, penghitungan harian akan dimulai kembali",
+          "pt": "Acumule moedas para entrar no jogo diariamente sem pular. O botão “Claim” deve ser pressionado diariamente, caso contrário a contagem dos dias recomeçará",
+          "ru": "Забирайте монеты за ежедневный вход в игру без пропусков. Кнопку \"Забрать\" нужно нажимать ежедневно, иначе счетчик дней начнется заново",
+          "uz": "O'yinga har kuni o'tkazib yubormasdan kirish uchun tangalarni yig'ing. \"Da'vo\" tugmasini har kuni bosish kerak, aks holda kunlarni hisoblash yana boshlanadi",
+          "vi": "Tích lũy xu khi đăng nhập vào trò chơi hàng ngày mà không cần bỏ qua. Nút \"thu thập\" phải được nhấn hàng ngày, nếu không việc đếm ngày sẽ bắt đầu lại"
+        },
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/earn/calendar.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/earn/calendar.webp"
+        }
+      }
+    ],
+    "airdropTasks": [
+      {
+        "id": "airdrop_connect_ton_wallet",
+        "rewardTickets": 0,
+        "periodicity": "Once"
+      }
+    ],
+    "upgrades": [
+      {
+        "id": "ceo",
+        "name": "CEO",
+        "price": 1000,
+        "profitPerHour": 100,
+        "condition": null,
+        "section": "PR&Team"
+      },
+      {
+        "id": "marketing",
+        "name": "Marketing",
+        "price": 1000,
+        "profitPerHour": 70,
+        "condition": null,
+        "section": "PR&Team"
+      },
+      {
+        "id": "it_team",
+        "name": "IT team",
+        "price": 2000,
+        "profitPerHour": 240,
+        "condition": null,
+        "section": "PR&Team"
+      },
+      {
+        "id": "support_team",
+        "name": "Support team",
+        "price": 750,
+        "profitPerHour": 70,
+        "condition": null,
+        "section": "PR&Team"
+      },
+      {
+        "id": "facebook_ads",
+        "name": "HamsterBook",
+        "price": 500,
+        "profitPerHour": 70,
+        "condition": null,
+        "section": "PR&Team"
+      },
+      {
+        "id": "youtube",
+        "name": "HamsterTube",
+        "price": 600,
+        "profitPerHour": 90,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "facebook_ads",
+          "level": 5
+        },
+        "section": "PR&Team"
+      },
+      {
+        "id": "x",
+        "name": "X",
+        "price": 550,
+        "profitPerHour": 80,
+        "condition": null,
+        "section": "PR&Team"
+      },
+      {
+        "id": "medium",
+        "name": "Cointelegraph",
+        "price": 350,
+        "profitPerHour": 40,
+        "condition": null,
+        "section": "PR&Team"
+      },
+      {
+        "id": "instagram",
+        "name": "HamsterGram",
+        "price": 500,
+        "profitPerHour": 50,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "youtube",
+          "level": 8
+        },
+        "section": "PR&Team"
+      },
+      {
+        "id": "tiktok",
+        "name": "TikTok",
+        "price": 750,
+        "profitPerHour": 100,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "instagram",
+          "level": 3
+        },
+        "section": "PR&Team"
+      },
+      {
+        "id": "reddit",
+        "name": "Сoindesk",
+        "price": 1000,
+        "profitPerHour": 80,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "medium",
+          "level": 10
+        },
+        "section": "PR&Team"
+      },
+      {
+        "id": "influencers",
+        "name": "Influencers",
+        "price": 2500,
+        "profitPerHour": 270,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "x",
+          "level": 5
+        },
+        "section": "PR&Team"
+      },
+      {
+        "id": "partnership_program",
+        "name": "Partnership program",
+        "price": 500,
+        "profitPerHour": 70,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "influencers",
+          "level": 7
+        },
+        "section": "PR&Team"
+      },
+      {
+        "id": "product_team",
+        "name": "Product team",
+        "price": 1000,
+        "profitPerHour": 100,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "ceo",
+          "level": 2
+        },
+        "section": "PR&Team"
+      },
+      {
+        "id": "bisdev_team",
+        "name": "BisDev team",
+        "price": 500,
+        "profitPerHour": 50,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "marketing",
+          "level": 2
+        },
+        "section": "PR&Team"
+      },
+      {
+        "id": "two_factor_authentication",
+        "name": "Two factor authentication",
+        "price": 1000,
+        "profitPerHour": 125,
+        "condition": {
+          "_type": "MoreReferralsCount",
+          "moreReferralsCount": 1
+        },
+        "section": "PR&Team"
+      },
+      {
+        "id": "ux_ui_team",
+        "name": "UX and UI team",
+        "price": 760,
+        "profitPerHour": 175,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "ceo",
+          "level": 5
+        },
+        "section": "PR&Team"
+      },
+      {
+        "id": "security_team",
+        "name": "Security team",
+        "price": 1000,
+        "profitPerHour": 200,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "two_factor_authentication",
+          "level": 13
+        },
+        "section": "PR&Team"
+      },
+      {
+        "id": "qa_team",
+        "name": "QA team",
+        "price": 1275,
+        "profitPerHour": 190,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "it_team",
+          "level": 3
+        },
+        "section": "PR&Team"
+      },
+      {
+        "id": "antihacking_shield",
+        "name": "Antihacking shield",
+        "price": 2000,
+        "profitPerHour": 110,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "qa_team",
+          "level": 5
+        },
+        "section": "PR&Team"
+      },
+      {
+        "id": "risk_management_team",
+        "name": "Risk management team",
+        "price": 2000,
+        "profitPerHour": 265,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "ceo",
+          "level": 8
+        },
+        "section": "PR&Team"
+      },
+      {
+        "id": "security_audition",
+        "name": "Security Audition",
+        "price": 3000,
+        "profitPerHour": 100,
+        "condition": null,
+        "section": "PR&Team"
+      },
+      {
+        "id": "anonymous_transactions_ban",
+        "name": "Anonymous transactions ban",
+        "price": 900,
+        "profitPerHour": 300,
+        "condition": {
+          "_type": "MoreReferralsCount",
+          "moreReferralsCount": 1
+        },
+        "section": "PR&Team"
+      },
+      {
+        "id": "blocking_suspicious_accounts",
+        "name": "Blocking suspicious accounts",
+        "price": 1250,
+        "profitPerHour": 160,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "anonymous_transactions_ban",
+          "level": 7
+        },
+        "section": "PR&Team"
+      },
+      {
+        "id": "tokenomics_expert",
+        "name": "Tokenomics expert",
+        "price": 5000,
+        "profitPerHour": 500,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "bisdev_team",
+          "level": 3
+        },
+        "section": "PR&Team"
+      },
+      {
+        "id": "consensys_explorer_pass",
+        "name": "Consensus Explorer pass",
+        "price": 25000,
+        "profitPerHour": 1500,
+        "condition": null,
+        "section": "PR&Team"
+      },
+      {
+        "id": "vc_labs",
+        "name": "VC Labs",
+        "price": 15500,
+        "profitPerHour": 500,
+        "condition": null,
+        "section": "PR&Team"
+      },
+      {
+        "id": "compliance_officer",
+        "name": "Compliance officer",
+        "price": 3500,
+        "profitPerHour": 120,
+        "condition": null,
+        "section": "PR&Team"
+      },
+      {
+        "id": "money_20_20",
+        "name": "Welcome to Amsterdam",
+        "price": 3000,
+        "profitPerHour": 325,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "usdt_on_ton",
+          "level": 3
+        },
+        "section": "PR&Team"
+      },
+      {
+        "id": "development_hub_mumbai",
+        "name": "Development Hub Mumbai",
+        "releaseAt": "2024-07-02T11:00:00.000Z",
+        "price": 90000,
+        "profitPerHour": 4000,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "it_team",
+          "level": 15
+        },
+        "section": "PR&Team"
+      },
+      {
+        "id": "data_center_tokyo",
+        "name": "Data Сenter Tokyo",
+        "releaseAt": "2024-07-05T11:00:00.000Z",
+        "price": 200000,
+        "profitPerHour": 6500,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "dubai_office",
+          "level": 1
+        },
+        "section": "PR&Team"
+      },
+      {
+        "id": "leaderboards",
+        "name": "Leaderboards",
+        "releaseAt": "2024-07-07T11:00:00.000Z",
+        "price": 20000,
+        "profitPerHour": 750,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "kyc",
+          "level": 15
+        },
+        "section": "PR&Team"
+      },
+      {
+        "id": "mini_game",
+        "name": "Minigame",
+        "releaseAt": "2024-07-23T11:00:00.000Z",
+        "price": 40000,
+        "profitPerHour": 1000,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "gamefi_tokens",
+          "level": 17
+        },
+        "section": "PR&Team"
+      },
+      {
+        "id": "fan_tokens",
+        "name": "Fan tokens",
+        "price": 10000,
+        "profitPerHour": 950,
+        "condition": null,
+        "section": "Markets"
+      },
+      {
+        "id": "staking",
+        "name": "Staking",
+        "price": 3500,
+        "profitPerHour": 600,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "kyc",
+          "level": 7
+        },
+        "section": "Markets"
+      },
+      {
+        "id": "btc_pairs",
+        "name": "BTC pairs",
+        "price": 250,
+        "profitPerHour": 40,
+        "condition": null,
+        "section": "Markets"
+      },
+      {
+        "id": "eth_pairs",
+        "name": "ETH pairs",
+        "price": 300,
+        "profitPerHour": 40,
+        "condition": null,
+        "section": "Markets"
+      },
+      {
+        "id": "top_10_cmc_pairs",
+        "name": "Top 10 cmc pairs",
+        "price": 1000,
+        "profitPerHour": 80,
+        "condition": null,
+        "section": "Markets"
+      },
+      {
+        "id": "gamefi_tokens",
+        "name": "GameFi tokens",
+        "price": 500,
+        "profitPerHour": 70,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "youtube",
+          "level": 4
+        },
+        "section": "Markets"
+      },
+      {
+        "id": "defi2.0_tokens",
+        "name": "Defi2.0 tokens",
+        "price": 500,
+        "profitPerHour": 40,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "ceo",
+          "level": 2
+        },
+        "section": "Markets"
+      },
+      {
+        "id": "socialfi_tokens",
+        "name": "SocialFi tokens",
+        "price": 500,
+        "profitPerHour": 50,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "gamefi_tokens",
+          "level": 11
+        },
+        "section": "Markets"
+      },
+      {
+        "id": "meme_coins",
+        "name": "Meme coins",
+        "price": 2000,
+        "profitPerHour": 110,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "influencers",
+          "level": 10
+        },
+        "section": "Markets"
+      },
+      {
+        "id": "shit_coins",
+        "name": "Shit coins",
+        "price": 5000,
+        "profitPerHour": 590,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "kyb",
+          "level": 3
+        },
+        "section": "Markets"
+      },
+      {
+        "id": "margin_trading_x10",
+        "name": "Margin trading x10",
+        "price": 2500,
+        "profitPerHour": 275,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "shit_coins",
+          "level": 5
+        },
+        "section": "Markets"
+      },
+      {
+        "id": "margin_trading_x20",
+        "name": "Margin trading x20",
+        "price": 2500,
+        "profitPerHour": 350,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "margin_trading_x10",
+          "level": 5
+        },
+        "section": "Markets"
+      },
+      {
+        "id": "margin_trading_x30",
+        "name": "Margin trading x30",
+        "price": 3500,
+        "profitPerHour": 500,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "legal_opinion",
+          "level": 6
+        },
+        "section": "Markets"
+      },
+      {
+        "id": "margin_trading_x50",
+        "name": "Margin trading x50",
+        "price": 10000,
+        "profitPerHour": 1100,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "margin_trading_x30",
+          "level": 8
+        },
+        "section": "Markets"
+      },
+      {
+        "id": "margin_trading_x75",
+        "name": "Margin trading x75",
+        "price": 7500,
+        "profitPerHour": 1100,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "short_squeeze",
+          "level": 10
+        },
+        "section": "Markets"
+      },
+      {
+        "id": "margin_trading_x100",
+        "name": "Margin trading x100",
+        "price": 5000,
+        "profitPerHour": 975,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "short_squeeze",
+          "level": 3
+        },
+        "section": "Markets"
+      },
+      {
+        "id": "derivatives",
+        "name": "Derivatives",
+        "price": 2500,
+        "profitPerHour": 495,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "margin_trading_x20",
+          "level": 9
+        },
+        "section": "Markets"
+      },
+      {
+        "id": "prediction_markets",
+        "name": "Prediction markets",
+        "price": 1750,
+        "profitPerHour": 345,
+        "condition": {
+          "_type": "ReferralCount",
+          "referralCount": 2
+        },
+        "section": "Markets"
+      },
+      {
+        "id": "web3_integration",
+        "name": "Web3 integration",
+        "price": 6500,
+        "profitPerHour": 790,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "anti_money_loundering",
+          "level": 8
+        },
+        "section": "Markets"
+      },
+      {
+        "id": "dao",
+        "name": "DAO",
+        "price": 1000,
+        "profitPerHour": 230,
+        "condition": {
+          "_type": "ReferralCount",
+          "referralCount": 4
+        },
+        "section": "Markets"
+      },
+      {
+        "id": "p2p_trading",
+        "name": "P2P trading",
+        "price": 4200,
+        "profitPerHour": 390,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "kyc",
+          "level": 7
+        },
+        "section": "Markets"
+      },
+      {
+        "id": "trading_bots",
+        "name": "Trading bots",
+        "price": 2100,
+        "profitPerHour": 195,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "it_team",
+          "level": 9
+        },
+        "section": "Markets"
+      },
+      {
+        "id": "layerzero_listing",
+        "name": "LayerZero Listing",
+        "price": 10000,
+        "profitPerHour": 900,
+        "condition": null,
+        "section": "Markets"
+      },
+      {
+        "id": "kyc",
+        "name": "KYC",
+        "price": 100,
+        "profitPerHour": 10,
+        "condition": null,
+        "section": "Legal"
+      },
+      {
+        "id": "kyb",
+        "name": "KYB",
+        "price": 500,
+        "profitPerHour": 60,
+        "condition": null,
+        "section": "Legal"
+      },
+      {
+        "id": "legal_opinion",
+        "name": "Legal opinion",
+        "price": 1000,
+        "profitPerHour": 60,
+        "condition": null,
+        "section": "Legal"
+      },
+      {
+        "id": "sec_transparancy",
+        "name": "SEC transparancy",
+        "price": 1200,
+        "profitPerHour": 60,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "legal_opinion",
+          "level": 5
+        },
+        "section": "Legal"
+      },
+      {
+        "id": "anti_money_loundering",
+        "name": "Anti money loundering",
+        "price": 3000,
+        "profitPerHour": 280,
+        "condition": null,
+        "section": "Legal"
+      },
+      {
+        "id": "licence_uae",
+        "name": "Licence UAE",
+        "price": 5000,
+        "profitPerHour": 560,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "kyc",
+          "level": 5
+        },
+        "section": "Legal"
+      },
+      {
+        "id": "licence_europe",
+        "name": "Licence Europe",
+        "price": 5000,
+        "profitPerHour": 720,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "kyc",
+          "level": 5
+        },
+        "section": "Legal"
+      },
+      {
+        "id": "licence_asia",
+        "name": "Licence Asia",
+        "price": 5000,
+        "profitPerHour": 370,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "kyc",
+          "level": 5
+        },
+        "section": "Legal"
+      },
+      {
+        "id": "licence_south_america",
+        "name": "Licence South America",
+        "price": 5000,
+        "profitPerHour": 390,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "kyc",
+          "level": 5
+        },
+        "section": "Legal"
+      },
+      {
+        "id": "licence_australia",
+        "name": "Licence Australia",
+        "price": 5000,
+        "profitPerHour": 680,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "kyc",
+          "level": 5
+        },
+        "section": "Legal"
+      },
+      {
+        "id": "licence_north_america",
+        "name": "Licence North America",
+        "price": 10000,
+        "profitPerHour": 960,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "sec_transparancy",
+          "level": 10
+        },
+        "section": "Legal"
+      },
+      {
+        "id": "licence_nigeria",
+        "name": "Licence Nigeria",
+        "price": 1500,
+        "profitPerHour": 170,
+        "condition": null,
+        "section": "Legal"
+      },
+      {
+        "id": "licence_japan",
+        "name": "Licence Japan",
+        "price": 50000,
+        "profitPerHour": 2600,
+        "condition": {
+          "_type": "MoreReferralsCount",
+          "moreReferralsCount": 1
+        },
+        "section": "Legal"
+      },
+      {
+        "id": "licence_ethiopia",
+        "name": "Licence Ethiopia",
+        "price": 35000,
+        "profitPerHour": 1800,
+        "condition": {
+          "_type": "ReferralCount",
+          "referralCount": 2
+        },
+        "section": "Legal"
+      },
+      {
+        "id": "licence_india",
+        "name": "Licence India",
+        "price": 45000,
+        "profitPerHour": 2500,
+        "condition": {
+          "_type": "ReferralCount",
+          "referralCount": 3
+        },
+        "section": "Legal"
+      },
+      {
+        "id": "licence_bangladesh",
+        "name": "Licence Bangladesh",
+        "price": 70000,
+        "profitPerHour": 3500,
+        "condition": {
+          "_type": "ReferralCount",
+          "referralCount": 4
+        },
+        "section": "Legal"
+      },
+      {
+        "id": "licence_indonesia",
+        "name": "Licence Indonesia",
+        "price": 100000,
+        "profitPerHour": 5000,
+        "condition": {
+          "_type": "ReferralCount",
+          "referralCount": 4
+        },
+        "section": "Legal"
+      },
+      {
+        "id": "licence_vietnam",
+        "name": "Licence Vietnam",
+        "releaseAt": "2024-06-23T11:00:00.000Z",
+        "price": 85000,
+        "profitPerHour": 4000,
+        "condition": {
+          "_type": "MoreReferralsCount",
+          "moreReferralsCount": 1
+        },
+        "section": "Legal"
+      },
+      {
+        "id": "licence_turkey",
+        "name": "Licence Turkey",
+        "releaseAt": "2024-06-25T11:00:00.000Z",
+        "price": 75000,
+        "profitPerHour": 3000,
+        "condition": {
+          "_type": "MoreReferralsCount",
+          "moreReferralsCount": 1
+        },
+        "section": "Legal"
+      },
+      {
+        "id": "licence_philippines",
+        "name": "Licence Philippines",
+        "releaseAt": "2024-06-27T11:00:00.000Z",
+        "price": 150000,
+        "profitPerHour": 6500,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "top10_global",
+          "level": 3
+        },
+        "section": "Legal"
+      },
+      {
+        "id": "dex",
+        "name": "DEX",
+        "releaseAt": "2024-07-09T11:00:00.000Z",
+        "price": 75000,
+        "profitPerHour": 3000,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "btc_pairs",
+          "level": 10
+        },
+        "section": "Web3"
+      },
+      {
+        "id": "oracle",
+        "name": "Oracle",
+        "releaseAt": "2024-07-10T11:00:00.000Z",
+        "price": 17500,
+        "profitPerHour": 800,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "web3_integration",
+          "level": 5
+        },
+        "section": "Web3"
+      },
+      {
+        "id": "vesting_smartcontracts",
+        "name": "Vesting Smartcontracts",
+        "releaseAt": "2024-07-11T11:00:00.000Z",
+        "price": 41000,
+        "profitPerHour": 1200,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "web3_integration",
+          "level": 7
+        },
+        "section": "Web3"
+      },
+      {
+        "id": "launchpad",
+        "name": "Launchpad",
+        "releaseAt": "2024-07-12T11:00:00.000Z",
+        "price": 95000,
+        "profitPerHour": 3000,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "vc_labs",
+          "level": 15
+        },
+        "section": "Web3"
+      },
+      {
+        "id": "nft_marketplace",
+        "name": "NFT Marketplace",
+        "releaseAt": "2024-07-13T11:00:00.000Z",
+        "price": 78000,
+        "profitPerHour": 2000,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "nft_collection_launch",
+          "level": 5
+        },
+        "section": "Web3"
+      },
+      {
+        "id": "grant_developers",
+        "name": "Grant for Developers",
+        "releaseAt": "2024-07-28T11:00:00.000Z",
+        "price": 100000,
+        "profitPerHour": 4000,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "product_team",
+          "level": 10
+        },
+        "section": "Web3"
+      },
+      {
+        "id": "nft_metaverse",
+        "name": "NFT Metaverse",
+        "releaseAt": "2024-07-29T11:00:00.000Z",
+        "price": 500000,
+        "profitPerHour": 2000,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "x",
+          "level": 7
+        },
+        "section": "Web3"
+      },
+      {
+        "id": "crypto_farming",
+        "name": "Crypto Farming",
+        "releaseAt": "2024-07-30T11:00:00.000Z",
+        "price": 150000,
+        "profitPerHour": 3000,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "youtube",
+          "level": 8
+        },
+        "section": "Web3"
+      },
+      {
+        "id": "sport_marketplace",
+        "name": "Sport Collectibles Marketplace",
+        "releaseAt": "2024-07-31T11:00:00.000Z",
+        "price": 15000,
+        "profitPerHour": 700,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "fan_tokens",
+          "level": 10
+        },
+        "section": "Web3"
+      },
+      {
+        "id": "market_making",
+        "name": "Market Making",
+        "releaseAt": "2024-08-01T11:00:00.000Z",
+        "price": 17000,
+        "profitPerHour": 600,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "prediction_markets",
+          "level": 12
+        },
+        "section": "Web3"
+      },
+      {
+        "id": "web3_advertising",
+        "name": "Web3 Advertising Platform",
+        "releaseAt": "2024-08-02T11:00:00.000Z",
+        "price": 13000,
+        "profitPerHour": 400,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "influencers",
+          "level": 10
+        },
+        "section": "Web3"
+      },
+      {
+        "id": "sports_integration",
+        "name": "Sports integration",
+        "expiresAt": "2024-07-02T09:00:00.000Z",
+        "price": 35000,
+        "profitPerHour": 3000,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "sports_integration_0207",
+        "name": "Sports integration",
+        "expiresAt": "2024-07-03T09:00:00.000Z",
+        "price": 35000,
+        "profitPerHour": 3000,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "sports_integration_0507",
+        "name": "Sports integration",
+        "expiresAt": "2024-07-05T09:00:00.000Z",
+        "price": 35000,
+        "profitPerHour": 3000,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "riyadh_masters_2024",
+        "name": "Riyadh Masters 2024",
+        "expiresAt": "2024-07-05T09:00:00.000Z",
+        "price": 35000,
+        "profitPerHour": 3000,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "sports_integration_0607",
+        "name": "Quaterfinals are coming",
+        "expiresAt": "2024-07-06T09:00:00.000Z",
+        "price": 35000,
+        "profitPerHour": 3000,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "sports_integration_0707",
+        "name": "Quaterfinals are coming",
+        "releaseAt": "2024-07-06T09:00:00.000Z",
+        "expiresAt": "2024-07-07T09:00:00.000Z",
+        "price": 35000,
+        "profitPerHour": 3000,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "sports_integration_0807",
+        "name": "Only 4 best left",
+        "releaseAt": "2024-07-07T09:00:00.000Z",
+        "expiresAt": "2024-07-09T09:00:00.000Z",
+        "price": 35000,
+        "profitPerHour": 3000,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "sports_integration_0907",
+        "name": "Semi-final Spain vs France",
+        "releaseAt": "2024-07-09T09:00:00.000Z",
+        "expiresAt": "2024-07-10T09:00:00.000Z",
+        "price": 35000,
+        "profitPerHour": 3000,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "sports_integration_1007",
+        "name": "Semi-final England vs Netherlands",
+        "releaseAt": "2024-07-10T09:00:00.000Z",
+        "expiresAt": "2024-07-11T09:00:00.000Z",
+        "price": 35000,
+        "profitPerHour": 3000,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "sports_integration_1407",
+        "name": "Final England vs Spain",
+        "releaseAt": "2024-07-14T09:30:00.000Z",
+        "expiresAt": "2024-07-15T04:00:00.000Z",
+        "price": 35000,
+        "profitPerHour": 3000,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "usdt_on_ton",
+        "name": "USDT on TON",
+        "price": 10000,
+        "profitPerHour": 1350,
+        "condition": {
+          "_type": "ReferralCount",
+          "referralCount": 3
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "blockchain_life_2024",
+        "name": "Blockchain Life 2024",
+        "expiresAt": "2024-04-17T15:00:00.000Z",
+        "price": 200000,
+        "profitPerHour": 14000,
+        "condition": {
+          "_type": "ReferralCount",
+          "referralCount": 5
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "save_hamsters_from_drowning",
+        "name": "Save hamsters from drowning",
+        "maxLevel": 1,
+        "expiresAt": "2024-04-23T15:00:00.000Z",
+        "price": 0,
+        "profitPerHour": 0,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "taker_carlson_interview",
+        "name": "Tooker Carlson interview",
+        "expiresAt": "2024-04-23T15:00:00.000Z",
+        "maxLevel": 1,
+        "price": 5000000,
+        "profitPerHour": 0,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "token2049",
+        "name": "Token2049",
+        "expiresAt": "2024-04-23T15:00:00.000Z",
+        "price": 100000,
+        "profitPerHour": 1500,
+        "condition": {
+          "_type": "ReferralCount",
+          "referralCount": 7
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "bogdanoff",
+        "name": "Bogdanoff is calling",
+        "price": 5000,
+        "profitPerHour": 475,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "margin_trading_x50",
+          "level": 15
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "apps_center_listing",
+        "name": "Apps Center Listing",
+        "price": 15000,
+        "profitPerHour": 1000,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "villa_for_dev_team",
+        "name": "Villa for the DEV team",
+        "price": 2000,
+        "profitPerHour": 450,
+        "condition": {
+          "_type": "ReferralCount",
+          "referralCount": 5
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "long_squeeze",
+        "name": "Long squeeze",
+        "price": 30000,
+        "profitPerHour": 2000,
+        "condition": {
+          "_type": "ReferralCount",
+          "referralCount": 9
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "success_with_tucker",
+        "name": "Success with Tooker",
+        "maxLevel": 1,
+        "price": 0,
+        "welcomeCoins": 7500000,
+        "profitPerHour": 0,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "taker_carlson_interview",
+          "level": 1
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "forbes",
+        "name": "You inspire millions",
+        "maxLevel": 1,
+        "price": 0,
+        "welcomeCoins": 2500000,
+        "profitPerHour": 0,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "save_hamsters_from_drowning",
+          "level": 1
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "two_chairs",
+        "name": "There are two chairs...",
+        "price": 50000,
+        "profitPerHour": 2000,
+        "condition": {
+          "_type": "MoreReferralsCount",
+          "moreReferralsCount": 1
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "short_squeeze",
+        "name": "Short squeeze",
+        "price": 35000,
+        "profitPerHour": 1000,
+        "condition": {
+          "_type": "MoreReferralsCount",
+          "moreReferralsCount": 3
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "special_hamster_conference",
+        "name": "Special Hamster Conference",
+        "price": 5000,
+        "profitPerHour": 900,
+        "condition": {
+          "_type": "SubscribeTelegramChannel",
+          "link": "https://t.me/+kK14mIuJR2hlMmNi",
+          "channelId": -1002075341442
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "contract_with_football_club",
+        "name": "Ad contract with a football club",
+        "expiresAt": "2024-06-01T16:00:00.000Z",
+        "price": 25000,
+        "profitPerHour": 1750,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "fan_tokens",
+          "level": 8
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "dubai_office",
+        "name": "Dubai office",
+        "maxLevel": 1,
+        "price": 1000000,
+        "profitPerHour": 0,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "licence_uae",
+          "level": 15
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "joe_rogan_podcast",
+        "name": "Joe Roogan Podcast",
+        "maxLevel": 1,
+        "price": 1000000,
+        "profitPerHour": 0,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "venom_blockchain",
+        "name": "Venom Blockchain",
+        "expiresAt": "2024-05-22T15:00:00.000Z",
+        "price": 15000,
+        "profitPerHour": 1550,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "notcoin_listing",
+        "name": "Notcoin listing",
+        "expiresAt": "2024-05-19T12:00:00.000Z",
+        "price": 20000,
+        "profitPerHour": 2400,
+        "condition": {
+          "_type": "MoreReferralsCount",
+          "moreReferralsCount": 1
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "hamster_ai",
+        "name": "Hamster AI",
+        "expiresAt": "2024-05-21T15:00:00.000Z",
+        "price": 3700,
+        "profitPerHour": 650,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "x",
+          "level": 3
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "nft_collection_launch",
+        "name": "NFT Collection Launch",
+        "price": 17000,
+        "profitPerHour": 1200,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "margin_trading_x100",
+          "level": 10
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "top10_global",
+        "name": "Top 10 Global Ranking",
+        "price": 10000,
+        "profitPerHour": 1200,
+        "condition": {
+          "_type": "SubscribeTelegramChannel",
+          "link": "https://t.me/+_uqfAor-9TFkOWNi",
+          "channelId": -1002075341442
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "bitcoin_pizza_day",
+        "name": "Bitcoin Pizza Day",
+        "price": 1000,
+        "profitPerHour": 100,
+        "condition": {
+          "_type": "SubscribeTelegramChannel",
+          "link": "https://t.me/+BKxnK5qrA7JhN2Uy",
+          "channelId": -1002075341442
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "ceo_21m",
+        "name": "21,000,000 CEOs",
+        "expiresAt": "2024-05-25T12:00:00.000Z",
+        "price": 2500,
+        "profitPerHour": 300,
+        "condition": {
+          "_type": "MoreReferralsCount",
+          "moreReferralsCount": 1
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "hamster_daily_show",
+        "name": "Hamster daily show",
+        "expiresAt": "2024-06-01T16:00:00.000Z",
+        "price": 2000,
+        "profitPerHour": 200,
+        "condition": {
+          "_type": "LinkWithoutCheck",
+          "link": "http://twitter.com/hamster_kombat"
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "hamster_youtube_channel",
+        "name": "Hamster YouTube Channel",
+        "price": 1500,
+        "profitPerHour": 250,
+        "condition": {
+          "_type": "LinkWithoutCheck",
+          "link": "https://youtube.com/@hamsterkombat_official"
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "hamster_youtube_gold_button",
+        "name": "YouTube Gold Button",
+        "price": 2500,
+        "profitPerHour": 275,
+        "condition": {
+          "_type": "LinksToUpgradeLevel",
+          "subscribeLink": "https://www.youtube.com/@HamsterKombat_Official?sub_confirmation=1",
+          "links": [
+            "https://www.youtube.com/shorts/FW-GpTr-FcU",
+            "https://www.youtube.com/shorts/a_gHYwMsjh0",
+            "https://www.youtube.com/shorts/bISprviSSxg",
+            "https://www.youtube.com/shorts/S9_T6LokFNc",
+            "https://www.youtube.com/shorts/uefHXh7Dvms",
+            "https://www.youtube.com/shorts/825u1acydv4"
+          ]
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "web3_academy_launch",
+        "name": "Web3 academy launch",
+        "price": 11000,
+        "profitPerHour": 1500,
+        "condition": {
+          "_type": "LinksToUpgradeLevel",
+          "subscribeLink": "https://www.youtube.com/@HamsterKombat_Official?sub_confirmation=1",
+          "links": [
+            "https://www.youtube.com/shorts/Sg437HhohRQ",
+            "https://www.youtube.com/shorts/JL6ljxjN74w",
+            "https://www.youtube.com/shorts/59aBxaH3pT0",
+            "https://www.youtube.com/shorts/_pnavaIStX0",
+            "https://www.youtube.com/shorts/Ut6xIBjyRhI",
+            "https://www.youtube.com/shorts/PZp9eGzwI70",
+            "https://www.youtube.com/shorts/FW-GpTr-FcU",
+            "https://www.youtube.com/shorts/a_gHYwMsjh0"
+          ]
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "lambo_for_ceo",
+        "name": "Lambo for a Hamster CEO",
+        "maxLevel": 1,
+        "price": 1000000,
+        "profitPerHour": 0,
+        "condition": {
+          "_type": "SubscribeTelegramChannel",
+          "link": "https://t.me/+JhbcPnebm4JiY2My",
+          "channelId": -1002075341442
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "consensys_piranja_pass",
+        "name": "Consensus Piranha Pass",
+        "price": 50000,
+        "profitPerHour": 1900,
+        "condition": {
+          "_type": "SubscribeTelegramChannel",
+          "link": "https://t.me/+e52PfDAw_w1lMzNi",
+          "channelId": -1002075341442
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "partner_announce",
+        "name": "TON + Hamster Kombat = Success",
+        "price": 1000000,
+        "profitPerHour": 5000,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "football_club_winner",
+        "name": "Your partner football club is a winner",
+        "maxLevel": 1,
+        "price": 0,
+        "welcomeCoins": 3500000,
+        "profitPerHour": 0,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "contract_with_football_club",
+          "level": 1
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "hamster_drop",
+        "name": "Hamster Kombat merch",
+        "price": 3000,
+        "profitPerHour": 100,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "premarket_launch",
+        "name": "Premarket Launch",
+        "price": 1000000,
+        "profitPerHour": 7500,
+        "condition": {
+          "_type": "MoreReferralsCount",
+          "moreReferralsCount": 1
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "tg_leaders",
+        "name": "TG Leaders",
+        "price": 22000,
+        "profitPerHour": 2300,
+        "condition": {
+          "_type": "SubscribeTelegramChannel",
+          "link": "https://t.me/+e52PfDAw_w1lMzNi",
+          "channelId": -1002075341442
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "youtube_25_million",
+        "name": "YouTube 25 Million",
+        "releaseAt": "2024-06-22T11:00:00.000Z",
+        "price": 18000,
+        "profitPerHour": 2100,
+        "condition": {
+          "_type": "LinkWithoutCheck",
+          "link": "https://youtube.com/@hamsterkombat_official"
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "hamster_green_energy",
+        "name": "Hamster Green energy",
+        "releaseAt": "2024-06-24T11:00:00.000Z",
+        "price": 17000,
+        "profitPerHour": 2000,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "twitter_10_million",
+        "name": "X Network 10 Million",
+        "releaseAt": "2024-06-26T11:00:00.000Z",
+        "price": 7000,
+        "profitPerHour": 400,
+        "condition": {
+          "_type": "LinkWithoutCheck",
+          "link": "http://twitter.com/hamster_kombat"
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "web3_game_con",
+        "name": "Web3 Game Con",
+        "expiresAt": "2024-07-10T13:00:00.000Z",
+        "price": 30000,
+        "profitPerHour": 1200,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "hamster_break_records",
+        "name": "Hamsters break records",
+        "price": 500000,
+        "profitPerHour": 2750,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "tg_leaders",
+          "level": 1
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "cx_hub_istanbul",
+        "name": "CX Hub Istanbul",
+        "releaseAt": "2024-07-03T14:00:00.000Z",
+        "price": 55000,
+        "profitPerHour": 3000,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "support_team",
+          "level": 12
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "adv_integration_0907",
+        "name": "Percussion taps",
+        "expiresAt": "2024-07-13T09:00:00.000Z",
+        "price": 20000,
+        "profitPerHour": 1500,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "adv_integration_1307",
+        "name": "250M Hamster players",
+        "releaseAt": "2024-07-13T09:00:00.000Z",
+        "expiresAt": "2024-07-17T11:50:00.000Z",
+        "price": 20000,
+        "profitPerHour": 1500,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "business_jet",
+        "name": "Business jet",
+        "releaseAt": "2024-07-14T11:00:00.000Z",
+        "price": 12000000,
+        "profitPerHour": 3000,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "call_btc_rise",
+        "name": "Call for BTC to rise",
+        "releaseAt": "2024-07-15T11:00:00.000Z",
+        "price": 5000000,
+        "profitPerHour": 5000,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "rolex_soulmate",
+        "name": "HamsterWatch for soulmate",
+        "releaseAt": "2024-07-16T11:00:00.000Z",
+        "price": 1000000,
+        "profitPerHour": 1000,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "appstore_launch",
+        "name": "HamsterStore launch",
+        "releaseAt": "2024-07-17T11:00:00.000Z",
+        "price": 95000,
+        "profitPerHour": 5000,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "it_team",
+          "level": 15
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "fight_fight",
+        "name": "Fight fight fight",
+        "expiresAt": "2024-07-24T11:00:00.000Z",
+        "price": 1500000,
+        "profitPerHour": 10000,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "ceo",
+          "level": 17
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "telegram_50m",
+        "name": "50M Telegram channel",
+        "releaseAt": "2024-07-18T11:00:00.000Z",
+        "price": 50000,
+        "profitPerHour": 1000,
+        "condition": {
+          "_type": "SubscribeTelegramChannel",
+          "link": "https://t.me/+e52PfDAw_w1lMzNi",
+          "channelId": -1002075341442
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "google_analytics",
+        "name": "Hamster Analytics",
+        "releaseAt": "2024-07-19T11:00:00.000Z",
+        "price": 75000,
+        "profitPerHour": 2000,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "session_australia",
+        "name": "Strategic session in Australia",
+        "releaseAt": "2024-07-20T09:00:00.000Z",
+        "expiresAt": "2024-07-22T09:00:00.000Z",
+        "price": 100000,
+        "profitPerHour": 3500,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "telegram_miniapp_launch",
+        "name": "Telegram Miniapp Launch",
+        "releaseAt": "2024-07-24T11:00:00.000Z",
+        "price": 25000,
+        "profitPerHour": 1000,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "it_team",
+          "level": 15
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "telegram_stars_integration",
+        "name": "Telegram Stars integration",
+        "releaseAt": "2024-07-25T11:00:00.000Z",
+        "price": 17000,
+        "profitPerHour": 800,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "it_team",
+          "level": 16
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "hamsterbank",
+        "name": "HamsterBank",
+        "releaseAt": "2024-07-27T11:00:00.000Z",
+        "price": 300000,
+        "profitPerHour": 19000,
+        "condition": {
+          "_type": "ReferralCount",
+          "referralCount": 10
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "kamala_calling",
+        "name": "Kamala is calling",
+        "releaseAt": "2024-07-24T11:00:00.000Z",
+        "expiresAt": "2024-07-31T11:00:00.000Z",
+        "price": 50000,
+        "profitPerHour": 3500,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "bitcoin_conference_2024",
+        "name": "Bitcoin Conference 2024",
+        "releaseAt": "2024-07-25T11:00:00.000Z",
+        "expiresAt": "2024-08-01T11:00:00.000Z",
+        "price": 60000,
+        "profitPerHour": 2900,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "adv_integration_2607",
+        "name": "The water is clear",
+        "releaseAt": "2024-07-26T11:00:00.000Z",
+        "expiresAt": "2024-07-28T04:00:00.000Z",
+        "price": 35000,
+        "profitPerHour": 3000,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "welcome_to_ogames",
+        "name": "Carry it like it’s hot",
+        "releaseAt": "2024-07-26T11:00:00.000Z",
+        "expiresAt": "2024-08-02T17:30:00.000Z",
+        "price": 50000,
+        "profitPerHour": 2000,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "ethereum_bd",
+        "name": "Ethereum birthday",
+        "releaseAt": "2024-07-30T11:00:00.000Z",
+        "expiresAt": "2024-08-06T11:00:00.000Z",
+        "price": 90000,
+        "profitPerHour": 2500,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "adv_integration_3107",
+        "name": "This is fine",
+        "releaseAt": "2024-07-31T11:00:00.000Z",
+        "expiresAt": "2024-08-02T11:00:00.000Z",
+        "price": 35000,
+        "profitPerHour": 3000,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "adv_integration_0308",
+        "name": "Games in Paris",
+        "expiresAt": "2024-08-06T20:59:00.000Z",
+        "price": 35000,
+        "profitPerHour": 3000,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "hamstergpt",
+        "name": "HamsterGPT",
+        "releaseAt": "2024-08-03T11:00:00.000Z",
+        "price": 55000,
+        "profitPerHour": 1800,
+        "condition": {
+          "_type": "ByUpgrade",
+          "upgradeId": "security_team",
+          "level": 15
+        },
+        "section": "Specials"
+      },
+      {
+        "id": "sleeping_hamster",
+        "name": "Sleeping hamster",
+        "releaseAt": "2024-08-05T11:00:00.000Z",
+        "price": 15000,
+        "profitPerHour": 600,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "healthy_hamster",
+        "name": "Healthy nutrition hamster",
+        "releaseAt": "2024-08-06T11:00:00.000Z",
+        "price": 17000,
+        "profitPerHour": 800,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "gym_hamster",
+        "name": "Gym hamster",
+        "toggle": {
+          "enableAt": "2024-08-07T11:00:00.000Z"
+        },
+        "price": 12000,
+        "profitPerHour": 500,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "ton_listing",
+        "name": "TON listing on Binance",
+        "toggle": {
+          "enableAt": "2024-08-08T10:00:00.000Z"
+        },
+        "expiresAt": "2024-08-15T10:00:00.000Z",
+        "price": 90000,
+        "profitPerHour": 2500,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "university_hamster",
+        "name": "University hamster",
+        "toggle": {
+          "enableAt": "2024-08-08T11:00:00.000Z"
+        },
+        "price": 23000,
+        "profitPerHour": 1100,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "vipassana_hamster",
+        "name": "Vipassana hamster",
+        "toggle": {
+          "enableAt": "2024-08-09T11:00:00.000Z"
+        },
+        "price": 9000,
+        "profitPerHour": 600,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "adv_integration_0908",
+        "name": "Finals are approaching",
+        "toggle": {
+          "enableAt": "2024-08-09T16:33:00.000Z"
+        },
+        "expiresAt": "2024-08-12T20:00:00.000Z",
+        "price": 50000,
+        "profitPerHour": 4000,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "hamster_helps_whales",
+        "name": "Hamster helps whales",
+        "toggle": {
+          "enableAt": "2024-08-10T11:00:00.000Z"
+        },
+        "price": 31000,
+        "profitPerHour": 2000,
+        "condition": null,
+        "section": "Specials"
+      },
+      {
+        "id": "hamster_with_friends",
+        "name": "Hamster with friends",
+        "toggle": {
+          "enableAt": "2024-08-11T11:00:00.000Z"
+        },
+        "price": 5000,
+        "profitPerHour": 300,
+        "condition": null,
+        "section": "Specials"
+      }
+    ],
+    "levelUp": {
+      "maxTaps": 500,
+      "earnPerTap": 1
+    },
+    "referral": {
+      "base": {
+        "welcome": 5000,
+        "levelUp": {
+          "1": 0,
+          "2": 20000,
+          "3": 30000,
+          "4": 40000,
+          "5": 60000,
+          "6": 100000,
+          "7": 250000,
+          "8": 500000,
+          "9": 1000000,
+          "10": 3000000,
+          "11": 6000000
+        }
+      },
+      "premium": {
+        "welcome": 25000,
+        "levelUp": {
+          "1": 0,
+          "2": 25000,
+          "3": 50000,
+          "4": 75000,
+          "5": 100000,
+          "6": 150000,
+          "7": 500000,
+          "8": 1000000,
+          "9": 2000000,
+          "10": 6000000,
+          "11": 12000000
+        }
+      }
+    },
+    "exchanges": [
+      {
+        "id": "binance",
+        "name": "Binance",
+        "players": 150000,
+        "bonus": 100
+      },
+      {
+        "id": "okx",
+        "name": "OKX",
+        "players": 130000,
+        "bonus": 100
+      },
+      {
+        "id": "crypto_com",
+        "name": "Crypto.com",
+        "players": 140000,
+        "bonus": 100
+      },
+      {
+        "id": "bybit",
+        "name": "Bybit",
+        "players": 140000,
+        "bonus": 100
+      },
+      {
+        "id": "bingx",
+        "name": "BingX",
+        "players": 130000,
+        "bonus": 100
+      },
+      {
+        "id": "htx",
+        "name": "HTX",
+        "players": 130000,
+        "bonus": 100
+      },
+      {
+        "id": "kucoin",
+        "name": "Kucoin",
+        "players": 130000,
+        "bonus": 100
+      },
+      {
+        "id": "gate_io",
+        "name": "Gate.io",
+        "players": 130000,
+        "bonus": 100
+      },
+      {
+        "id": "mexc",
+        "name": "MEXC",
+        "players": 130000,
+        "bonus": 100
+      },
+      {
+        "id": "bitget",
+        "name": "Bitget",
+        "players": 130000,
+        "bonus": 100
+      },
+      {
+        "id": "hamster",
+        "name": "Hamster",
+        "players": 130000,
+        "bonus": 100
+      }
+    ],
+    "airdrops": [],
+    "depositsUpdateCooldownSeconds": 60,
+    "skins": [
+      {
+        "id": "skin0",
+        "name": "Default",
+        "price": 0,
+        "pictureLink": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/skins/skin0.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/skins/skin0.webp"
+        },
+        "condition": {
+          "_type": "UserLevel",
+          "level": 0
+        }
+      },
+      {
+        "id": "skin1",
+        "name": "Marta",
+        "price": 2500000,
+        "pictureLink": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/skins/skin1.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/skins/skin1.webp"
+        },
+        "condition": {
+          "_type": "UserLevel",
+          "level": 7
+        }
+      },
+      {
+        "id": "skin2",
+        "name": "Homie",
+        "price": 2500000,
+        "pictureLink": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/skins/skin2.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/skins/skin2.webp"
+        },
+        "condition": {
+          "_type": "UserLevel",
+          "level": 7
+        }
+      },
+      {
+        "id": "skin3",
+        "name": "Fighty",
+        "price": 2500000,
+        "pictureLink": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/skins/skin3.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/skins/skin3.webp"
+        },
+        "condition": {
+          "_type": "UserLevel",
+          "level": 7
+        }
+      },
+      {
+        "id": "skin4",
+        "name": "Rockstar",
+        "price": 2500000,
+        "pictureLink": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/skins/skin4.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/skins/skin4.webp"
+        },
+        "condition": {
+          "_type": "UserLevel",
+          "level": 7
+        }
+      },
+      {
+        "id": "skin5",
+        "name": "Fanky",
+        "price": 10000000,
+        "pictureLink": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/skins/skin5.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/skins/skin5.webp"
+        },
+        "condition": {
+          "_type": "UserLevel",
+          "level": 8
+        }
+      },
+      {
+        "id": "skin6",
+        "name": "Punky",
+        "price": 10000000,
+        "pictureLink": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/skins/skin6.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/skins/skin6.webp"
+        },
+        "condition": {
+          "_type": "UserLevel",
+          "level": 8
+        }
+      },
+      {
+        "id": "skin7",
+        "name": "Groovy",
+        "price": 10000000,
+        "pictureLink": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/skins/skin7.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/skins/skin7.webp"
+        },
+        "condition": {
+          "_type": "UserLevel",
+          "level": 8
+        }
+      },
+      {
+        "id": "skin8",
+        "name": "Funny",
+        "price": 10000000,
+        "pictureLink": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/skins/skin8.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/skins/skin8.webp"
+        },
+        "condition": {
+          "_type": "UserLevel",
+          "level": 8
+        }
+      },
+      {
+        "id": "skin9",
+        "name": "Hamstervestor",
+        "price": 50000000,
+        "pictureLink": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/skins/skin9.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/skins/skin9.webp"
+        },
+        "condition": {
+          "_type": "UserLevel",
+          "level": 9
+        }
+      },
+      {
+        "id": "skin10",
+        "name": "Busy",
+        "price": 50000000,
+        "pictureLink": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/skins/skin10.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/skins/skin10.webp"
+        },
+        "condition": {
+          "_type": "UserLevel",
+          "level": 9
+        }
+      },
+      {
+        "id": "skin11",
+        "name": "Smarty",
+        "price": 100000000,
+        "pictureLink": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/skins/skin11.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/skins/skin11.webp"
+        },
+        "condition": {
+          "_type": "UserLevel",
+          "level": 9
+        }
+      },
+      {
+        "id": "skin12",
+        "name": "Spacy",
+        "price": 50000000,
+        "pictureLink": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/skins/skin12.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/skins/skin12.webp"
+        },
+        "condition": {
+          "_type": "UserLevel",
+          "level": 9
+        }
+      },
+      {
+        "id": "skin13",
+        "name": "Bravy",
+        "price": 50000000,
+        "pictureLink": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/skins/skin13.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/skins/skin13.webp"
+        },
+        "condition": {
+          "_type": "UserLevel",
+          "level": 9
+        }
+      },
+      {
+        "id": "skin14",
+        "name": "Genius",
+        "price": 200000000,
+        "pictureLink": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/skins/skin14.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/skins/skin14.webp"
+        },
+        "condition": {
+          "_type": "UserLevel",
+          "level": 10
+        }
+      },
+      {
+        "id": "skin15",
+        "name": "Wisy",
+        "price": 500000000,
+        "pictureLink": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/skins/skin15.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/skins/skin15.webp"
+        },
+        "condition": {
+          "_type": "UserLevel",
+          "level": 10
+        }
+      },
+      {
+        "id": "skin16",
+        "name": "Gravity",
+        "price": 200000000,
+        "pictureLink": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/skins/skin16.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/skins/skin16.webp"
+        },
+        "condition": {
+          "_type": "UserLevel",
+          "level": 10
+        }
+      },
+      {
+        "id": "skin17",
+        "name": "Appolo",
+        "price": 200000000,
+        "pictureLink": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/skins/skin17.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/skins/skin17.webp"
+        },
+        "condition": {
+          "_type": "UserLevel",
+          "level": 10
+        }
+      },
+      {
+        "id": "skin28",
+        "name": "Gunslinger",
+        "price": 1000000,
+        "pictureLink": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/skins/skin28.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/skins/skin28.webp"
+        },
+        "condition": {
+          "_type": "UserLevel",
+          "level": 1
+        },
+        "releaseAt": "2024-08-01T11:45:00.000Z",
+        "expiresAt": "2024-08-18T23:59:00.000Z",
+        "featuredUntil": "2024-08-18T11:00:00.000Z"
+      },
+      {
+        "id": "skin18",
+        "name": "Bron",
+        "price": 1000000,
+        "pictureLink": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/skins/skin18.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/skins/skin18.webp"
+        },
+        "condition": {
+          "_type": "UserLevel",
+          "level": 1
+        },
+        "releaseAt": "2024-08-01T11:45:00.000Z",
+        "expiresAt": "2024-08-18T23:59:00.000Z",
+        "featuredUntil": "2024-08-18T11:00:00.000Z"
+      },
+      {
+        "id": "skin19",
+        "name": "Rafa",
+        "price": 1000000,
+        "pictureLink": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/skins/skin19.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/skins/skin19.webp"
+        },
+        "condition": {
+          "_type": "UserLevel",
+          "level": 1
+        },
+        "releaseAt": "2024-08-01T11:45:00.000Z",
+        "expiresAt": "2024-08-18T23:59:00.000Z",
+        "featuredUntil": "2024-08-18T11:00:00.000Z"
+      },
+      {
+        "id": "skin20",
+        "name": "Tobi",
+        "price": 1000000,
+        "pictureLink": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/skins/skin20.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/skins/skin20.webp"
+        },
+        "condition": {
+          "_type": "UserLevel",
+          "level": 1
+        },
+        "releaseAt": "2024-08-01T11:45:00.000Z",
+        "expiresAt": "2024-08-18T23:59:00.000Z",
+        "featuredUntil": "2024-08-18T11:00:00.000Z"
+      },
+      {
+        "id": "skin21",
+        "name": "Bakhodir",
+        "price": 1000000,
+        "pictureLink": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/skins/skin21.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/skins/skin21.webp"
+        },
+        "condition": {
+          "_type": "UserLevel",
+          "level": 1
+        },
+        "releaseAt": "2024-08-01T11:45:00.000Z",
+        "expiresAt": "2024-08-18T23:59:00.000Z",
+        "featuredUntil": "2024-08-18T11:00:00.000Z"
+      },
+      {
+        "id": "skin22",
+        "name": "Archy",
+        "price": 1000000,
+        "pictureLink": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/skins/skin22.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/skins/skin22.webp"
+        },
+        "condition": {
+          "_type": "UserLevel",
+          "level": 1
+        },
+        "releaseAt": "2024-08-01T11:45:00.000Z",
+        "expiresAt": "2024-08-18T23:59:00.000Z",
+        "featuredUntil": "2024-08-18T11:00:00.000Z"
+      },
+      {
+        "id": "skin23",
+        "name": "Swimmy",
+        "price": 1000000,
+        "pictureLink": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/skins/skin23.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/skins/skin23.webp"
+        },
+        "condition": {
+          "_type": "UserLevel",
+          "level": 1
+        },
+        "releaseAt": "2024-08-01T11:45:00.000Z",
+        "expiresAt": "2024-08-18T23:59:00.000Z",
+        "featuredUntil": "2024-08-18T11:00:00.000Z"
+      },
+      {
+        "id": "skin24",
+        "name": "Footy",
+        "price": 1000000,
+        "pictureLink": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/skins/skin24.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/skins/skin24.webp"
+        },
+        "condition": {
+          "_type": "UserLevel",
+          "level": 1
+        },
+        "releaseAt": "2024-08-01T11:45:00.000Z",
+        "expiresAt": "2024-08-18T23:59:00.000Z",
+        "featuredUntil": "2024-08-18T11:00:00.000Z"
+      },
+      {
+        "id": "skin25",
+        "name": "Flexy",
+        "price": 1000000,
+        "pictureLink": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/skins/skin25.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/skins/skin25.webp"
+        },
+        "condition": {
+          "_type": "UserLevel",
+          "level": 1
+        },
+        "releaseAt": "2024-08-01T11:45:00.000Z",
+        "expiresAt": "2024-08-18T23:59:00.000Z",
+        "featuredUntil": "2024-08-18T11:00:00.000Z"
+      },
+      {
+        "id": "skin26",
+        "name": "Volley",
+        "price": 1000000,
+        "pictureLink": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/skins/skin26.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/skins/skin26.webp"
+        },
+        "condition": {
+          "_type": "UserLevel",
+          "level": 1
+        },
+        "releaseAt": "2024-08-01T11:45:00.000Z",
+        "expiresAt": "2024-08-18T23:59:00.000Z",
+        "featuredUntil": "2024-08-18T11:00:00.000Z"
+      },
+      {
+        "id": "skin27",
+        "name": "Boxy",
+        "price": 1000000,
+        "pictureLink": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/skins/skin27.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/skins/skin27.webp"
+        },
+        "condition": {
+          "_type": "UserLevel",
+          "level": 1
+        },
+        "releaseAt": "2024-08-01T11:45:00.000Z",
+        "expiresAt": "2024-08-18T23:59:00.000Z",
+        "featuredUntil": "2024-08-18T11:00:00.000Z"
+      }
+    ],
+    "achievements": [
+      {
+        "achievementTypeId": "UpgradeCard",
+        "condition": {
+          "target": {
+            "count": 10
+          }
+        },
+        "id": "upgrade_card_1",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_1.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_1.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "10 cards",
+          "de": "10 Karten",
+          "es": "10 cartas",
+          "fr": "10 cartes",
+          "hi": "10 कार्ड",
+          "id": "10 kartu",
+          "pt": "10 cartas",
+          "ru": "10 карт",
+          "th": "ไพ่ 10 ใบ",
+          "tl": "10 baraha",
+          "tr": "10 kart",
+          "uz": "10 ta karta",
+          "vi": "10 thẻ"
+        }
+      },
+      {
+        "achievementTypeId": "UpgradeCard",
+        "condition": {
+          "target": {
+            "count": 25
+          }
+        },
+        "id": "upgrade_card_2",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_2.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_2.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "25 cards",
+          "de": "25 Karten",
+          "es": "25 cartas",
+          "fr": "25 cartes",
+          "hi": "25 कार्ड",
+          "id": "25 kartu",
+          "pt": "25 cartas",
+          "ru": "25 карт",
+          "th": "ไพ่ 25 ใบ",
+          "tl": "25 baraha",
+          "tr": "25 kart",
+          "uz": "25 ta karta",
+          "vi": "25 thẻ"
+        }
+      },
+      {
+        "achievementTypeId": "UpgradeCard",
+        "condition": {
+          "target": {
+            "count": 50
+          }
+        },
+        "id": "upgrade_card_3",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_3.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_3.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "50 cards",
+          "de": "50 Karten",
+          "es": "50 cartas",
+          "fr": "50 cartes",
+          "hi": "50 कार्ड",
+          "id": "50 kartu",
+          "pt": "50 cartas",
+          "ru": "50 карт",
+          "th": "ไพ่ 50 ใบ",
+          "tl": "50 baraha",
+          "tr": "50 kart",
+          "uz": "50 ta karta",
+          "vi": "50 thẻ"
+        }
+      },
+      {
+        "achievementTypeId": "UpgradeCard",
+        "condition": {
+          "target": {
+            "count": 200
+          }
+        },
+        "id": "upgrade_card_4",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_4.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_4.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "200 cards",
+          "de": "200 Karten",
+          "es": "200 cartas",
+          "fr": "200 cartes",
+          "hi": "200 कार्ड",
+          "id": "200 kartu",
+          "pt": "200 cartas",
+          "ru": "200 карт",
+          "th": "ไพ่ 200 ใบ",
+          "tl": "200 baraha",
+          "tr": "200 kart",
+          "uz": "200 ta karta",
+          "vi": "200 thẻ"
+        }
+      },
+      {
+        "achievementTypeId": "UpgradeCard",
+        "condition": {
+          "target": {
+            "count": 500
+          }
+        },
+        "id": "upgrade_card_5",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_5.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_5.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "500 cards",
+          "de": "500 Karten",
+          "es": "500 cartas",
+          "fr": "500 cartes",
+          "hi": "500 कार्ड",
+          "id": "500 kartu",
+          "pt": "500 cartas",
+          "ru": "500 карт",
+          "th": "ไพ่ 500 ใบ",
+          "tl": "500 baraha",
+          "tr": "500 kart",
+          "uz": "500 ta karta",
+          "vi": "500 thẻ"
+        }
+      },
+      {
+        "achievementTypeId": "UpgradeCardToLevel15",
+        "condition": {
+          "target": {
+            "count": 1
+          }
+        },
+        "id": "upgrade_card_to_level_15_1",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_to_level_15_1.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_to_level_15_1.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "1 card",
+          "de": "1 Karte",
+          "es": "1 carta",
+          "fr": "1 carte",
+          "hi": "1 कार्ड",
+          "id": "1 kartu",
+          "pt": "1 carta",
+          "ru": "1 карта",
+          "th": "ไพ่ 1 ใบ",
+          "tl": "1 baraha",
+          "tr": "1 kart",
+          "uz": "1 ta karta",
+          "vi": "1 thẻ"
+        }
+      },
+      {
+        "achievementTypeId": "UpgradeCardToLevel15",
+        "condition": {
+          "target": {
+            "count": 5
+          }
+        },
+        "id": "upgrade_card_to_level_15_2",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_to_level_15_2.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_to_level_15_2.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "5 cards",
+          "de": "5 Karten",
+          "es": "5 cartas",
+          "fr": "5 cartes",
+          "hi": "5 कार्ड",
+          "id": "5 kartu",
+          "pt": "5 cartas",
+          "ru": "5 карт",
+          "th": "ไพ่ 5 ใบ",
+          "tl": "5 baraha",
+          "tr": "5 kart",
+          "uz": "5 ta karta",
+          "vi": "5 thẻ"
+        }
+      },
+      {
+        "achievementTypeId": "UpgradeCardToLevel15",
+        "condition": {
+          "target": {
+            "count": 10
+          }
+        },
+        "id": "upgrade_card_to_level_15_3",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_to_level_15_3.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_to_level_15_3.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "10 cards",
+          "de": "10 Karten",
+          "es": "10 cartas",
+          "fr": "10 cartes",
+          "hi": "10 कार्ड",
+          "id": "10 kartu",
+          "pt": "10 cartas",
+          "ru": "10 карт",
+          "th": "ไพ่ 10 ใบ",
+          "tl": "10 baraha",
+          "tr": "10 kart",
+          "uz": "10 ta karta",
+          "vi": "10 thẻ"
+        }
+      },
+      {
+        "achievementTypeId": "UpgradeCardToLevel15",
+        "condition": {
+          "target": {
+            "count": 25
+          }
+        },
+        "id": "upgrade_card_to_level_15_4",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_to_level_15_4.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_to_level_15_4.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "25 cards",
+          "de": "25 Karten",
+          "es": "25 cartas",
+          "fr": "25 cartes",
+          "hi": "25 कार्ड",
+          "id": "25 kartu",
+          "pt": "25 cartas",
+          "ru": "25 карт",
+          "th": "ไพ่ 25 ใบ",
+          "tl": "25 baraha",
+          "tr": "25 kart",
+          "uz": "25 ta karta",
+          "vi": "25 thẻ"
+        }
+      },
+      {
+        "achievementTypeId": "UpgradeCardToLevel15",
+        "condition": {
+          "target": {
+            "count": 50
+          }
+        },
+        "id": "upgrade_card_to_level_15_5",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_to_level_15_5.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_to_level_15_5.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "50 cards",
+          "de": "50 Karten",
+          "es": "50 cartas",
+          "fr": "50 cartes",
+          "hi": "50 कार्ड",
+          "id": "50 kartu",
+          "pt": "50 cartas",
+          "ru": "50 карт",
+          "th": "ไพ่ 50 ใบ",
+          "tl": "50 baraha",
+          "tr": "50 kart",
+          "uz": "50 ta karta",
+          "vi": "50 thẻ"
+        }
+      },
+      {
+        "achievementTypeId": "UpgradeCardToLevel25",
+        "condition": {
+          "target": {
+            "count": 1
+          }
+        },
+        "id": "upgrade_card_to_level_25_1",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_to_level_25_1.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_to_level_25_1.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "1 card",
+          "de": "1 Karte",
+          "es": "1 carta",
+          "fr": "1 carte",
+          "hi": "1 कार्ड",
+          "id": "1 kartu",
+          "pt": "1 carta",
+          "ru": "1 карта",
+          "th": "ไพ่ 1 ใบ",
+          "tl": "1 baraha",
+          "tr": "1 kart",
+          "uz": "1 ta karta",
+          "vi": "1 thẻ"
+        }
+      },
+      {
+        "achievementTypeId": "UpgradeCardToLevel25",
+        "condition": {
+          "target": {
+            "count": 5
+          }
+        },
+        "id": "upgrade_card_to_level_25_2",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_to_level_25_2.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_to_level_25_2.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "5 cards",
+          "de": "5 Karten",
+          "es": "5 cartas",
+          "fr": "5 cartes",
+          "hi": "5 कार्ड",
+          "id": "5 kartu",
+          "pt": "5 cartas",
+          "ru": "5 карт",
+          "th": "ไพ่ 5 ใบ",
+          "tl": "5 baraha",
+          "tr": "5 kart",
+          "uz": "5 ta karta",
+          "vi": "5 thẻ"
+        }
+      },
+      {
+        "achievementTypeId": "UpgradeCardToLevel25",
+        "condition": {
+          "target": {
+            "count": 10
+          }
+        },
+        "id": "upgrade_card_to_level_25_3",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_to_level_25_3.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_to_level_25_3.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "10 cards",
+          "de": "10 Karten",
+          "es": "10 cartas",
+          "fr": "10 cartes",
+          "hi": "10 कार्ड",
+          "id": "10 kartu",
+          "pt": "10 cartas",
+          "ru": "10 карт",
+          "th": "ไพ่ 10 ใบ",
+          "tl": "10 baraha",
+          "tr": "10 kart",
+          "uz": "10 ta karta",
+          "vi": "10 thẻ"
+        }
+      },
+      {
+        "achievementTypeId": "UpgradeCardToLevel25",
+        "condition": {
+          "target": {
+            "count": 25
+          }
+        },
+        "id": "upgrade_card_to_level_25_4",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_to_level_25_4.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_to_level_25_4.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "25 cards",
+          "de": "25 Karten",
+          "es": "25 cartas",
+          "fr": "25 cartes",
+          "hi": "25 कार्ड",
+          "id": "25 kartu",
+          "pt": "25 cartas",
+          "ru": "25 карт",
+          "th": "ไพ่ 25 ใบ",
+          "tl": "25 baraha",
+          "tr": "25 kart",
+          "uz": "25 ta karta",
+          "vi": "25 thẻ"
+        }
+      },
+      {
+        "achievementTypeId": "UpgradeCardToLevel25",
+        "condition": {
+          "target": {
+            "count": 50
+          }
+        },
+        "id": "upgrade_card_to_level_25_5",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_to_level_25_5.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/upgrade_card_to_level_25_5.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "50 cards",
+          "de": "50 Karten",
+          "es": "50 cartas",
+          "fr": "50 cartes",
+          "hi": "50 कार्ड",
+          "id": "50 kartu",
+          "pt": "50 cartas",
+          "ru": "50 карт",
+          "th": "ไพ่ 50 ใบ",
+          "tl": "50 baraha",
+          "tr": "50 kart",
+          "uz": "50 ta karta",
+          "vi": "50 thẻ"
+        }
+      },
+      {
+        "achievementTypeId": "CollectCoin",
+        "condition": {
+          "target": {
+            "count": 1000000
+          }
+        },
+        "id": "collect_coin_1",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/collect_coin_1.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/collect_coin_1.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "1M coins",
+          "de": "1M Münzen",
+          "es": "1M monedas",
+          "fr": "1M pièces",
+          "hi": "1M सिक्के",
+          "id": "1M koin",
+          "pt": "1M moedas",
+          "ru": "1M монет",
+          "th": "1M เหรียญ",
+          "tl": "1M barya",
+          "tr": "1M madeni para",
+          "uz": "1M tanga",
+          "vi": "1M xu"
+        }
+      },
+      {
+        "achievementTypeId": "CollectCoin",
+        "condition": {
+          "target": {
+            "count": 10000000
+          }
+        },
+        "id": "collect_coin_2",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/collect_coin_2.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/collect_coin_2.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "10M coins",
+          "de": "10M Münzen",
+          "es": "10M monedas",
+          "fr": "10M pièces",
+          "hi": "10M सिक्के",
+          "id": "10M koin",
+          "pt": "10M moedas",
+          "ru": "10M монет",
+          "th": "10M เหรียญ",
+          "tl": "10M barya",
+          "tr": "10M madeni para",
+          "uz": "10M tanga",
+          "vi": "10M xu"
+        }
+      },
+      {
+        "achievementTypeId": "CollectCoin",
+        "condition": {
+          "target": {
+            "count": 200000000
+          }
+        },
+        "id": "collect_coin_3",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/collect_coin_3.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/collect_coin_3.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "200M coins",
+          "de": "200M Münzen",
+          "es": "200M monedas",
+          "fr": "200M pièces",
+          "hi": "200M सिक्के",
+          "id": "200M koin",
+          "pt": "200M moedas",
+          "ru": "200M монет",
+          "th": "200M เหรียญ",
+          "tl": "200M barya",
+          "tr": "200M madeni para",
+          "uz": "200M tanga",
+          "vi": "200M xu"
+        }
+      },
+      {
+        "achievementTypeId": "CollectCoin",
+        "condition": {
+          "target": {
+            "count": 1500000000
+          }
+        },
+        "id": "collect_coin_4",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/collect_coin_4.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/collect_coin_4.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "1,5B coins",
+          "de": "1,5B Münzen",
+          "es": "1,5B monedas",
+          "fr": "1,5B pièces",
+          "hi": "1,5B सिक्के",
+          "id": "1,5B koin",
+          "pt": "1,5B moedas",
+          "ru": "1,5B монет",
+          "th": "1,5B เหรียญ",
+          "tl": "1,5B barya",
+          "tr": "1,5B madeni para",
+          "uz": "1,5B tanga",
+          "vi": "1,5B xu"
+        }
+      },
+      {
+        "achievementTypeId": "CollectCoin",
+        "condition": {
+          "target": {
+            "count": 15000000000
+          }
+        },
+        "id": "collect_coin_5",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/collect_coin_5.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/collect_coin_5.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "15B coins",
+          "de": "15B Münzen",
+          "es": "15B monedas",
+          "fr": "15B pièces",
+          "hi": "15B सिक्के",
+          "id": "15B koin",
+          "pt": "15B moedas",
+          "ru": "15B монет",
+          "th": "15B เหรียญ",
+          "tl": "15B barya",
+          "tr": "15B madeni para",
+          "uz": "15B tanga",
+          "vi": "15B xu"
+        }
+      },
+      {
+        "achievementTypeId": "InviteFriend",
+        "condition": {
+          "target": {
+            "count": 1
+          }
+        },
+        "id": "invite_friend_1",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/invite_friend_1.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/invite_friend_1.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "1 friend",
+          "de": "1 Freund",
+          "es": "1 amigo",
+          "fr": "1 ami",
+          "hi": "1 दोस्त",
+          "id": "1 teman",
+          "pt": "1 amigo",
+          "ru": "1 друг",
+          "th": "1 เพื่อน",
+          "tl": "1 kaibigan",
+          "tr": "1 arkadaş",
+          "uz": "1 do‘st",
+          "vi": "1 người bạn"
+        }
+      },
+      {
+        "achievementTypeId": "InviteFriend",
+        "condition": {
+          "target": {
+            "count": 10
+          }
+        },
+        "id": "invite_friend_2",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/invite_friend_2.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/invite_friend_2.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "10 friends",
+          "de": "10 Freunde",
+          "es": "10 amigos",
+          "fr": "10 amis",
+          "hi": "10 दोस्त",
+          "id": "10 teman",
+          "pt": "10 amigos",
+          "ru": "10 друзей",
+          "th": "10 เพื่อน",
+          "tl": "10 kaibigan",
+          "tr": "10 arkadaş",
+          "uz": "10 do‘st",
+          "vi": "10 người bạn"
+        }
+      },
+      {
+        "achievementTypeId": "InviteFriend",
+        "condition": {
+          "target": {
+            "count": 25
+          }
+        },
+        "id": "invite_friend_3",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/invite_friend_3.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/invite_friend_3.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "25 friends",
+          "de": "25 Freunde",
+          "es": "25 amigos",
+          "fr": "25 amis",
+          "hi": "25 दोस्त",
+          "id": "25 teman",
+          "pt": "25 amigos",
+          "ru": "25 друзей",
+          "th": "25 เพื่อน",
+          "tl": "25 kaibigan",
+          "tr": "25 arkadaş",
+          "uz": "25 do‘st",
+          "vi": "25 người bạn"
+        }
+      },
+      {
+        "achievementTypeId": "InviteFriend",
+        "condition": {
+          "target": {
+            "count": 50
+          }
+        },
+        "id": "invite_friend_4",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/invite_friend_4.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/invite_friend_4.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "50 friends",
+          "de": "50 Freunde",
+          "es": "50 amigos",
+          "fr": "50 amis",
+          "hi": "50 दोस्त",
+          "id": "50 teman",
+          "pt": "50 amigos",
+          "ru": "50 друзей",
+          "th": "50 เพื่อน",
+          "tl": "50 kaibigan",
+          "tr": "50 arkadaş",
+          "uz": "50 do‘st",
+          "vi": "50 người bạn"
+        }
+      },
+      {
+        "achievementTypeId": "InviteFriend",
+        "condition": {
+          "target": {
+            "count": 100
+          }
+        },
+        "id": "invite_friend_5",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/invite_friend_5.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/invite_friend_5.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "100 friends",
+          "de": "100 Freunde",
+          "es": "100 amigos",
+          "fr": "100 amis",
+          "hi": "100 दोस्त",
+          "id": "100 teman",
+          "pt": "100 amigos",
+          "ru": "100 друзей",
+          "th": "100 เพื่อน",
+          "tl": "100 kaibigan",
+          "tr": "100 arkadaş",
+          "uz": "100 do‘st",
+          "vi": "100 người bạn"
+        }
+      },
+      {
+        "achievementTypeId": "UnlockSkin",
+        "condition": {
+          "target": {
+            "count": 1
+          }
+        },
+        "id": "unlock_skin_1",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/unlock_skin_1.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/unlock_skin_1.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "1 skin",
+          "de": "1 Haut",
+          "es": "1 piel",
+          "fr": "1 peau",
+          "hi": "1 त्वचा",
+          "id": "1 kulit",
+          "pt": "1 pele",
+          "ru": "1 скин",
+          "th": "1 สกิน",
+          "tl": "1 balat",
+          "tr": "1 cilt",
+          "uz": "1 teri",
+          "vi": "1 da"
+        }
+      },
+      {
+        "achievementTypeId": "UnlockSkin",
+        "condition": {
+          "target": {
+            "count": 5
+          }
+        },
+        "id": "unlock_skin_2",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/unlock_skin_2.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/unlock_skin_2.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "5 skins",
+          "de": "5 Häute",
+          "es": "5 pieles",
+          "fr": "5 peaux",
+          "hi": "5 त्वचा",
+          "id": "5 kulit",
+          "pt": "5 peles",
+          "ru": "5 скинов",
+          "th": "5 สกิน",
+          "tl": "5 balat",
+          "tr": "5 cilt",
+          "uz": "5 teri",
+          "vi": "5 da"
+        }
+      },
+      {
+        "achievementTypeId": "UnlockSkin",
+        "condition": {
+          "target": {
+            "count": 10
+          }
+        },
+        "id": "unlock_skin_3",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/unlock_skin_3.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/unlock_skin_3.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "10 skins",
+          "de": "10 Häute",
+          "es": "10 pieles",
+          "fr": "10 peaux",
+          "hi": "10 त्वचा",
+          "id": "10 kulit",
+          "pt": "10 peles",
+          "ru": "10 скинов",
+          "th": "10 สกิน",
+          "tl": "10 balat",
+          "tr": "10 cilt",
+          "uz": "10 teri",
+          "vi": "10 da"
+        }
+      },
+      {
+        "achievementTypeId": "UnlockSkin",
+        "condition": {
+          "target": {
+            "count": 25
+          }
+        },
+        "id": "unlock_skin_4",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/unlock_skin_4.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/unlock_skin_4.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "25 skins",
+          "de": "25 Häute",
+          "es": "25 pieles",
+          "fr": "25 peaux",
+          "hi": "25 त्वचा",
+          "id": "25 kulit",
+          "pt": "25 peles",
+          "ru": "25 скинов",
+          "th": "25 สกิน",
+          "tl": "25 balat",
+          "tr": "25 cilt",
+          "uz": "25 teri",
+          "vi": "25 da"
+        }
+      },
+      {
+        "achievementTypeId": "UnlockSkin",
+        "condition": {
+          "target": {
+            "count": 50
+          }
+        },
+        "id": "unlock_skin_5",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/unlock_skin_5.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/unlock_skin_5.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "50 skins",
+          "de": "50 Häute",
+          "es": "50 pieles",
+          "fr": "50 peaux",
+          "hi": "50 त्वचा",
+          "id": "50 kulit",
+          "pt": "50 peles",
+          "ru": "50 скинов",
+          "th": "50 สกิน",
+          "tl": "50 balat",
+          "tr": "50 cilt",
+          "uz": "50 teri",
+          "vi": "50 da"
+        }
+      },
+      {
+        "achievementTypeId": "ProfitPerHour",
+        "condition": {
+          "target": {
+            "count": 100000
+          }
+        },
+        "id": "profit_per_hour_1",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/profit_per_hour_1.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/profit_per_hour_1.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "100K coins",
+          "de": "100K Münzen",
+          "es": "100K monedas",
+          "fr": "100K pièces",
+          "hi": "100K सिक्के",
+          "id": "100K koin",
+          "pt": "100K moedas",
+          "ru": "100K монет",
+          "th": "100K เหรียญ",
+          "tl": "100K barya",
+          "tr": "100K madeni para",
+          "uz": "100K tanga",
+          "vi": "100K xu"
+        }
+      },
+      {
+        "achievementTypeId": "ProfitPerHour",
+        "condition": {
+          "target": {
+            "count": 500000
+          }
+        },
+        "id": "profit_per_hour_2",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/profit_per_hour_2.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/profit_per_hour_2.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "500K coins",
+          "de": "500K Münzen",
+          "es": "500K monedas",
+          "fr": "500K pièces",
+          "hi": "500K सिक्के",
+          "id": "500K koin",
+          "pt": "500K moedas",
+          "ru": "500K монет",
+          "th": "500K เหรียญ",
+          "tl": "500K barya",
+          "tr": "500K madeni para",
+          "uz": "500K tanga",
+          "vi": "500K xu"
+        }
+      },
+      {
+        "achievementTypeId": "ProfitPerHour",
+        "condition": {
+          "target": {
+            "count": 1000000
+          }
+        },
+        "id": "profit_per_hour_3",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/profit_per_hour_3.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/profit_per_hour_3.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "1M coins",
+          "de": "1M Münzen",
+          "es": "1M monedas",
+          "fr": "1M pièces",
+          "hi": "1M सिक्के",
+          "id": "1M koin",
+          "pt": "1M moedas",
+          "ru": "1M монет",
+          "th": "1M เหรียญ",
+          "tl": "1M barya",
+          "tr": "1M madeni para",
+          "uz": "1M tanga",
+          "vi": "1M xu"
+        }
+      },
+      {
+        "achievementTypeId": "ProfitPerHour",
+        "condition": {
+          "target": {
+            "count": 2000000
+          }
+        },
+        "id": "profit_per_hour_4",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/profit_per_hour_4.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/profit_per_hour_4.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "2M coins",
+          "de": "2M Münzen",
+          "es": "2M monedas",
+          "fr": "2M pièces",
+          "hi": "2M सिक्के",
+          "id": "2M koin",
+          "pt": "2M moedas",
+          "ru": "2M монет",
+          "th": "2M เหรียญ",
+          "tl": "2M barya",
+          "tr": "2M madeni para",
+          "uz": "2M tanga",
+          "vi": "2M xu"
+        }
+      },
+      {
+        "achievementTypeId": "ProfitPerHour",
+        "condition": {
+          "target": {
+            "count": 3000000
+          }
+        },
+        "id": "profit_per_hour_5",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/profit_per_hour_5.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/profit_per_hour_5.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "3M coins",
+          "de": "3M Münzen",
+          "es": "3M monedas",
+          "fr": "3M pièces",
+          "hi": "3M सिक्के",
+          "id": "3M koin",
+          "pt": "3M moedas",
+          "ru": "3M монет",
+          "th": "3M เหรียญ",
+          "tl": "3M barya",
+          "tr": "3M madeni para",
+          "uz": "3M tanga",
+          "vi": "3M xu"
+        }
+      },
+      {
+        "achievementTypeId": "TelegramSubscribeChannel",
+        "condition": {
+          "target": {
+            "taskId": "subscribe_telegram_channel",
+            "daysAgo": 10
+          }
+        },
+        "id": "telegram_subscribe_channel_1",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/telegram_subscribe_channel_1.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/telegram_subscribe_channel_1.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "10 days",
+          "de": "10 Tage",
+          "es": "10 días",
+          "fr": "10 jours",
+          "hi": "10 दिन",
+          "id": "10 hari",
+          "pt": "10 dias",
+          "ru": "10 дней",
+          "th": "10 วัน",
+          "tl": "10 araw",
+          "tr": "10 gün",
+          "uz": "10 kun",
+          "vi": "10 ngày"
+        }
+      },
+      {
+        "achievementTypeId": "TelegramSubscribeChannel",
+        "condition": {
+          "target": {
+            "taskId": "subscribe_telegram_channel",
+            "daysAgo": 30
+          }
+        },
+        "id": "telegram_subscribe_channel_2",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/telegram_subscribe_channel_2.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/telegram_subscribe_channel_2.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "30 days",
+          "de": "30 Tage",
+          "es": "30 días",
+          "fr": "30 jours",
+          "hi": "30 दिन",
+          "id": "30 hari",
+          "pt": "30 dias",
+          "ru": "30 дней",
+          "th": "30 วัน",
+          "tl": "30 araw",
+          "tr": "30 gün",
+          "uz": "30 kun",
+          "vi": "30 ngày"
+        }
+      },
+      {
+        "achievementTypeId": "TelegramSubscribeChannel",
+        "condition": {
+          "target": {
+            "taskId": "subscribe_telegram_channel",
+            "daysAgo": 60
+          }
+        },
+        "id": "telegram_subscribe_channel_3",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/telegram_subscribe_channel_3.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/telegram_subscribe_channel_3.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "60 days",
+          "de": "60 Tage",
+          "es": "60 días",
+          "fr": "60 jours",
+          "hi": "60 दिन",
+          "id": "60 hari",
+          "pt": "60 dias",
+          "ru": "60 дней",
+          "th": "60 วัน",
+          "tl": "60 araw",
+          "tr": "60 gün",
+          "uz": "60 kun",
+          "vi": "60 ngày"
+        }
+      },
+      {
+        "achievementTypeId": "TelegramSubscribeChannel",
+        "condition": {
+          "target": {
+            "taskId": "subscribe_telegram_channel",
+            "daysAgo": 100
+          }
+        },
+        "id": "telegram_subscribe_channel_4",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/telegram_subscribe_channel_4.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/telegram_subscribe_channel_4.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "100 days",
+          "de": "100 Tage",
+          "es": "100 días",
+          "fr": "100 jours",
+          "hi": "100 दिन",
+          "id": "100 hari",
+          "pt": "100 dias",
+          "ru": "100 дней",
+          "th": "100 วัน",
+          "tl": "100 araw",
+          "tr": "100 gün",
+          "uz": "100 kun",
+          "vi": "100 ngày"
+        }
+      },
+      {
+        "achievementTypeId": "TelegramSubscribeChannel",
+        "condition": {
+          "target": {
+            "taskId": "subscribe_telegram_channel",
+            "daysAgo": 200
+          }
+        },
+        "id": "telegram_subscribe_channel_5",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/telegram_subscribe_channel_5.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/telegram_subscribe_channel_5.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "200 days",
+          "de": "200 Tage",
+          "es": "200 días",
+          "fr": "200 jours",
+          "hi": "200 दिन",
+          "id": "200 hari",
+          "pt": "200 dias",
+          "ru": "200 дней",
+          "th": "200 วัน",
+          "tl": "200 araw",
+          "tr": "200 gün",
+          "uz": "200 kun",
+          "vi": "200 ngày"
+        }
+      },
+      {
+        "achievementTypeId": "YoutubeWatchVideo",
+        "condition": {
+          "target": {
+            "count": 5
+          }
+        },
+        "id": "youtube_watch_video_1",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/youtube_watch_video_1.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/youtube_watch_video_1.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "5 videos",
+          "de": "5 Videos",
+          "es": "5 videos",
+          "fr": "5 vidéos",
+          "hi": "5 वीडियो",
+          "id": "5 video",
+          "pt": "5 vídeos",
+          "ru": "5 видео",
+          "th": "5 วิดีโอ",
+          "tl": "5 video",
+          "tr": "5 video",
+          "uz": "5 video",
+          "vi": "5 video"
+        }
+      },
+      {
+        "achievementTypeId": "YoutubeWatchVideo",
+        "condition": {
+          "target": {
+            "count": 10
+          }
+        },
+        "id": "youtube_watch_video_2",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/youtube_watch_video_2.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/youtube_watch_video_2.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "10 videos",
+          "de": "10 Videos",
+          "es": "10 videos",
+          "fr": "10 vidéos",
+          "hi": "10 वीडियो",
+          "id": "10 video",
+          "pt": "10 vídeos",
+          "ru": "10 видео",
+          "th": "10 วิดีโอ",
+          "tl": "10 video",
+          "tr": "10 video",
+          "uz": "10 video",
+          "vi": "10 video"
+        }
+      },
+      {
+        "achievementTypeId": "YoutubeWatchVideo",
+        "condition": {
+          "target": {
+            "count": 25
+          }
+        },
+        "id": "youtube_watch_video_3",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/youtube_watch_video_3.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/youtube_watch_video_3.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "25 videos",
+          "de": "25 Videos",
+          "es": "25 videos",
+          "fr": "25 vidéos",
+          "hi": "25 वीडियो",
+          "id": "25 video",
+          "pt": "25 vídeos",
+          "ru": "25 видео",
+          "th": "25 วิดีโอ",
+          "tl": "25 video",
+          "tr": "25 video",
+          "uz": "25 video",
+          "vi": "25 video"
+        }
+      },
+      {
+        "achievementTypeId": "YoutubeWatchVideo",
+        "condition": {
+          "target": {
+            "count": 50
+          }
+        },
+        "id": "youtube_watch_video_4",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/youtube_watch_video_4.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/youtube_watch_video_4.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "50 videos",
+          "de": "50 Videos",
+          "es": "50 videos",
+          "fr": "50 vidéos",
+          "hi": "50 वीडियो",
+          "id": "50 video",
+          "pt": "50 vídeos",
+          "ru": "50 видео",
+          "th": "50 วิดีโอ",
+          "tl": "50 video",
+          "tr": "50 video",
+          "uz": "50 video",
+          "vi": "50 video"
+        }
+      },
+      {
+        "achievementTypeId": "YoutubeWatchVideo",
+        "condition": {
+          "target": {
+            "count": 100
+          }
+        },
+        "id": "youtube_watch_video_5",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/youtube_watch_video_5.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/youtube_watch_video_5.webp"
+        },
+        "releaseAt": "2024-07-25T18:53:00.000Z",
+        "name": {
+          "en": "100 videos",
+          "de": "100 Videos",
+          "es": "100 videos",
+          "fr": "100 vidéos",
+          "hi": "100 वीडियो",
+          "id": "100 video",
+          "pt": "100 vídeos",
+          "ru": "100 видео",
+          "th": "100 วิดีโอ",
+          "tl": "100 video",
+          "tr": "100 video",
+          "uz": "100 video",
+          "vi": "100 video"
+        }
+      }
+    ],
+    "achievementTypes": [
+      {
+        "id": "UpgradeCard",
+        "name": {
+          "en": "Upgrade cards",
+          "de": "Karten aufwerten",
+          "es": "Tarjetas de actualización",
+          "fr": "Mettre à niveau les cartes",
+          "hi": "कार्ड्स को अपग्रेड करें",
+          "id": "Tingkatkan kartu",
+          "pt": "Cartões de atualização",
+          "ru": "Улучшить карты",
+          "th": "อัปเกรดการ์ด",
+          "tl": "I-upgrade ang mga card",
+          "tr": "Kartları yükseltin",
+          "uz": "Kartalari yangilash",
+          "vi": "Thẻ nâng cấp"
+        }
+      },
+      {
+        "id": "UpgradeCardToLevel15",
+        "name": {
+          "en": "Upgrade cards to&nbsp;level 15",
+          "de": "Karten auf Stufe 15&nbsp;aufwerten",
+          "es": "Actualiza tarjetas al&nbsp;nivel 15",
+          "fr": "Mettre &agrave;&nbsp;niveau les cartes au&nbsp;niveau 15",
+          "hi": "कार्ड्स को लेवल 15 तक अपग्रेड करें",
+          "id": "Tingkatkan kartu ke&nbsp;level 15",
+          "pt": "Atualize as&nbsp;cartas para o&nbsp;n&iacute;vel 15",
+          "ru": "Улучшить карты до&nbsp;уровня 15",
+          "th": "อัปเกรดการ์ดถึงระดับ 15",
+          "tl": "I-upgrade ang mga card sa&nbsp;antas 15",
+          "tr": "Kartları 15&nbsp;seviyeye y&uuml;kseltin",
+          "uz": "Kartalarni 15-darajaga yangilash",
+          "vi": "N&acirc;ng cấp thẻ l&ecirc;n cấp 15"
+        }
+      },
+      {
+        "id": "UpgradeCardToLevel25",
+        "name": {
+          "en": "Upgrade cards to&nbsp;level 25",
+          "de": "Karten auf Stufe 25&nbsp;aufwerten",
+          "es": "Actualiza tarjetas al&nbsp;nivel 25",
+          "fr": "Mettre &agrave;&nbsp;niveau les cartes au&nbsp;niveau 25",
+          "hi": "कार्ड्स को लेवल 25 तक अपग्रेड करें",
+          "id": "Tingkatkan kartu ke&nbsp;level 25",
+          "pt": "Atualize as&nbsp;cartas para o&nbsp;n&iacute;vel 25",
+          "ru": "Улучшить карты до&nbsp;уровня 25",
+          "th": "อัปเกรดการ์ดถึงระดับ 25",
+          "tl": "I-upgrade ang mga card sa&nbsp;antas 25",
+          "tr": "Kartları 25&nbsp;seviyeye y&uuml;kseltin",
+          "uz": "Kartalarni 25-darajaga yangilash",
+          "vi": "N&acirc;ng cấp thẻ l&ecirc;n cấp 25"
+        }
+      },
+      {
+        "id": "CollectCoin",
+        "name": {
+          "en": "Collect coins",
+          "de": "Münzen sammeln",
+          "es": "Recoge monedas",
+          "fr": "Collecter des pièces",
+          "hi": "सिक्के इकट्ठा करें",
+          "id": "Kumpulkan koin",
+          "pt": "Coletar moedas",
+          "ru": "Собирать монеты",
+          "th": "เก็บเหรียญ",
+          "tl": "Mangolekta ng mga barya",
+          "tr": "Coinleri birleştirin ",
+          "uz": "Tangalarni yig'ish",
+          "vi": "Sưu tầm tiền xu"
+        }
+      },
+      {
+        "id": "InviteFriend",
+        "name": {
+          "en": "Invite friends",
+          "de": "Freunde einladen",
+          "es": "Invita a amigos",
+          "fr": "Inviter des amis",
+          "hi": "दोस्तों को आमंत्रित करें",
+          "id": "Mengundang teman-teman",
+          "pt": "Convide amigos",
+          "ru": "Пригласить друзей",
+          "th": "เชิญเพื่อน",
+          "tl": "Mag-imbita ng mga kaibigan",
+          "tr": "Arkadaşlarınızı davet edin",
+          "uz": "Do'stlarni taklif qiling",
+          "vi": "Mời bạn bè"
+        }
+      },
+      {
+        "id": "UnlockSkin",
+        "name": {
+          "en": "Unlock skins",
+          "de": "Skins freischalten",
+          "es": "Desbloquea skins",
+          "fr": "Débloquer des skins",
+          "hi": "स्किन्स अनलॉक करें",
+          "id": "Buka kunci skin",
+          "pt": "Desbloquear skins",
+          "ru": "Разблокировать скины",
+          "th": "ปลดล็อกสกิน",
+          "tl": "I-unlock ang mga skin",
+          "tr": "Skinlerin kilidini aç",
+          "uz": "Terlilarni ochish",
+          "vi": "Mở khóa giao diện"
+        }
+      },
+      {
+        "id": "ProfitPerHour",
+        "name": {
+          "en": "Profit per hour",
+          "de": "Gewinn pro Stunde",
+          "es": "Ganancia por hora",
+          "fr": "Profit par heure",
+          "hi": "प्रति घंटे लाभ",
+          "id": "Untung per jam",
+          "pt": "Lucro por hora",
+          "ru": "Прибыль в&nbsp;час",
+          "th": "กำไรต่อชั่วโมง",
+          "tl": "Kita bawat oras",
+          "tr": "Saat başına k&acirc;r",
+          "uz": "Bir soatlik daromad",
+          "vi": "Lợi nhuận mỗi giờ"
+        }
+      },
+      {
+        "id": "YoutubeWatchVideo",
+        "name": {
+          "en": "Watch Hamster Youtube videos",
+          "de": "Hamster Youtube-Videos ansehen",
+          "es": "Ver v&iacute;deos de&nbsp;Hamster Youtube",
+          "fr": "Regarder des vid&eacute;os de&nbsp;Hamster sur YouTube",
+          "hi": "हम्सटर यूट्यूब वीडियो देखें",
+          "id": "Tonton video Youtube Hamster",
+          "pt": "Assistir v&iacute;deos do&nbsp;Hamster no&nbsp;Youtube",
+          "ru": "Смотреть видео Hamster на&nbsp;Youtube",
+          "th": "ดูวิดีโอ Hamster บน Youtube",
+          "tl": "Manood ng&nbsp;mga video ng&nbsp;Hamster sa&nbsp;Youtube",
+          "tr": "Hamster Youtube videolarını izleyin",
+          "uz": "Hamster Youtube videolarini tomosha qiling",
+          "vi": "Xem video Youtube của Hamster"
+        }
+      },
+      {
+        "id": "TelegramSubscribeChannel",
+        "name": {
+          "en": "Subscribed to&nbsp;Hamster TG",
+          "de": "Abonniert Hamster TG",
+          "es": "Estar suscrito a&nbsp;Hamster TG",
+          "fr": "Abonn&eacute; &agrave;&nbsp;Hamster sur Telegram",
+          "hi": "हम्सटर टीजी को सब्सक्राइब किया",
+          "id": "Berlangganan Hamster TG",
+          "pt": "Inscrito no&nbsp;Hamster TG",
+          "ru": "Подписан на&nbsp;Hamster TG",
+          "th": "สมัครสมาชิก Hamster TG",
+          "tl": "Nakasubscribe sa&nbsp;Hamster TG",
+          "tr": "Hamster TG&rsquo;ye abone olun",
+          "uz": "Hamster TG-ga obuna bo&rsquo;lgan",
+          "vi": "Đ&atilde;&nbsp;đăng k&yacute;&nbsp;Hamster&nbsp;TG"
+        }
+      }
+    ],
+    "achievementRareTypes": [
+      {
+        "id": "Bronze",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/Bronze.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/Bronze.webp"
+        },
+        "lowerBoundPercent": 20,
+        "upperBoundPercent": 50
+      },
+      {
+        "id": "Silver",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/Silver.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/Silver.webp"
+        },
+        "lowerBoundPercent": 10,
+        "upperBoundPercent": 20
+      },
+      {
+        "id": "Gold",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/Gold.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/Gold.webp"
+        },
+        "lowerBoundPercent": 5,
+        "upperBoundPercent": 10
+      },
+      {
+        "id": "Platinum",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/Platinum.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/Platinum.webp"
+        },
+        "lowerBoundPercent": 1,
+        "upperBoundPercent": 5
+      },
+      {
+        "id": "Diamond",
+        "image": {
+          "defaultUrl": "https://cdn.hamsterkombat.io/achievements/Diamond.png",
+          "compressedUrl": "https://cdn.hamsterkombat.io/achievements/Diamond.webp"
+        },
+        "lowerBoundPercent": 0,
+        "upperBoundPercent": 1
+      }
+    ]
+  }
+}

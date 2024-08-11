@@ -44,8 +44,8 @@ public class Upgrade {
     @Column(name = "profit_per_hour_delta")
     Integer profitPerHourDelta;
 
-    @Column(name = "price_to_upgrade")
-    Integer priceToUpdate;
+    @Column(name = "price")
+    Integer price;
 
     @ManyToOne
     @JoinColumn(name = "condition_id")

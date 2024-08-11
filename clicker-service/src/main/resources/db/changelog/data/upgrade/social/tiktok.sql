@@ -1,4 +1,4 @@
-INSERT INTO upgrade (name, section, level, profit_per_hour, profit_per_hour_delta, price_to_upgrade, condition_id, max_level)
+INSERT INTO upgrade (name, section, level, profit_per_hour, profit_per_hour_delta, price, condition_id, max_level)
 VALUES ('TikTok', 'Social', 0, 0, 80, 13440, NULL, FALSE),
        ('TikTok', 'Social', 1, 80, 240, 40320, NULL, FALSE),
        ('TikTok', 'Social', 2, 320, 400, 67200, NULL, FALSE),

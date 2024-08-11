@@ -85,7 +85,7 @@ public class UpgradeGenerator {
     }
 
     public static String getSQL(List<Upgrade> upgrades) {
-        StringBuilder s = new StringBuilder("INSERT INTO upgrade (name, section, level, profit_per_hour, profit_per_hour_delta, price_to_upgrade, condition_id, max_level)\nVALUES ");
+        StringBuilder s = new StringBuilder("INSERT INTO upgrade (name, section, level, profit_per_hour, profit_per_hour_delta, price, condition_id, max_level)\nVALUES ");
         for (Upgrade upgrade : upgrades) {
             if (upgrade.level == 10) {
                 s.append(upgrade).append(";");

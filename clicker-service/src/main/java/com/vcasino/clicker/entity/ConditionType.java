@@ -10,4 +10,12 @@ public enum ConditionType {
 
     private final String type;
 
+    public static ConditionType fromString(String type) {
+        for (ConditionType conditionType : ConditionType.values()) {
+            if (conditionType.getType().equals(type)) {
+                return conditionType;
+            }
+        }
+        throw new IllegalArgumentException("Unknown type: " + type);
+    }
 }
