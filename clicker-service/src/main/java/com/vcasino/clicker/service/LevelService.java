@@ -1,7 +1,9 @@
 package com.vcasino.clicker.service;
 
+import com.vcasino.clicker.dto.LevelDto;
 import com.vcasino.clicker.entity.Level;
 import com.vcasino.clicker.exception.AppException;
+import com.vcasino.clicker.mapper.LevelMapper;
 import com.vcasino.clicker.repository.LevelRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
@@ -19,8 +21,10 @@ import java.util.List;
 public class LevelService {
 
     private List<Level> levels;
+    private List<LevelDto> levelDtos;
 
     private final LevelRepository levelRepository;
+    private final LevelMapper levelMapper;
 
     public Level getLevelAccordingNetWorth(Long netWorth) {
         for (int i = levels.size() - 1; i >= 0; i--) {
@@ -37,11 +41,16 @@ public class LevelService {
         return getLevelAccordingNetWorth(netWorth.longValue());
     }
 
+    public List<LevelDto> getLevels() {
+        return levelDtos;
+    }
+
     @PostConstruct
     private void cacheLevels() {
         levels = levelRepository.findAll();
         levels.sort(Comparator.comparingLong(Level::getNetWorth));
-        log.info("Cached {} levels", levels.size());
+        levelDtos = levelMapper.toDtos(levels);
+        log.info("Cached {} levels, {} levelDtos", levels.size(), levelDtos.size());
     }
 
 }
