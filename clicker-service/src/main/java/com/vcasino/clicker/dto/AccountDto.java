@@ -24,5 +24,6 @@ public class AccountDto {
     Integer earnPerTap;
     Integer tapsRecoverPerSec;
     Integer passiveEarnPerHour;
+    Double passiveEarnPerSec;
     List<UpgradeDto> upgrades;
 }

@@ -25,6 +25,10 @@ public class ClickerService {
             return handleSuspiciousBehaviour(new SuspiciousTapAction(account, tap, "Available taps is more than max taps"));
         }
 
+        if (tap.getTimestamp() > TimeUtil.getCurrentUnixTime()) {
+            return handleSuspiciousBehaviour(new SuspiciousTapAction(account, tap, "Does the user live in the future???"));
+        }
+
         long lastSync = TimeUtil.toUnixTime(account.getLastSyncDate());
 
         if (lastSync >= tap.getTimestamp()) {

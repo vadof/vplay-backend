@@ -47,6 +47,11 @@ public abstract class AccountMapper implements EntityMapper<Account, AccountDto>
         }
     }
 
+    @AfterMapping
+    protected void calculatePassiveEarnPerSec(@MappingTarget AccountDto dto) {
+        dto.setPassiveEarnPerSec(dto.getPassiveEarnPerHour() / 3600d);
+    }
+
     private boolean isAvailableByUpgrade(ConditionDto condition, Map<String, Integer> currentUpgradeLevels) {
         return currentUpgradeLevels.get(condition.getUpgradeName()) >= condition.getLevel();
     }

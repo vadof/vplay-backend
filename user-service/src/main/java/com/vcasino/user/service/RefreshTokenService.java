@@ -27,7 +27,7 @@ public class RefreshTokenService {
 
     public RefreshToken findByToken(String token) {
         return refreshTokenRepository.findByToken(token)
-                .orElseThrow(() -> new AppException("Refresh token not found", HttpStatus.UNAUTHORIZED));
+                .orElseThrow(() -> new AppException("Refresh token not found", HttpStatus.FORBIDDEN));
     }
 
     public RefreshToken createRefreshToken(Long userId) {
@@ -53,7 +53,7 @@ public class RefreshTokenService {
     public RefreshToken verifyExpiration(RefreshToken token) {
         if (token.getExpiryDate().compareTo(Instant.now()) < 0) {
             refreshTokenRepository.delete(token);
-            throw new AppException("Refresh token was expired. Please make a new login request", HttpStatus.UNAUTHORIZED);
+            throw new AppException("Refresh token was expired. Please make a new login request", HttpStatus.FORBIDDEN);
         }
 
         return token;

@@ -4,6 +4,7 @@ import com.vcasino.clicker.dto.AccountDto;
 import com.vcasino.clicker.entity.Account;
 import com.vcasino.clicker.utils.TimeUtil;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class AccountMocks {
@@ -12,10 +13,10 @@ public class AccountMocks {
                 .id(1L)
                 .userId(userId)
                 .level(0)
-                .balanceCoins(0L)
-                .netWorth(0L)
+                .balanceCoins(new BigDecimal(0))
+                .netWorth(new BigDecimal(0))
                 .upgrades(new ArrayList<>())
-                .earnPassivePerHour(0)
+                .passiveEarnPerHour(0)
                 .availableTaps(100)
                 .maxTaps(100)
                 .earnPerTap(1)
@@ -29,10 +30,10 @@ public class AccountMocks {
     public static AccountDto getAccountDtoMock() {
         return AccountDto.builder()
                 .level(0)
-                .balanceCoins(0L)
-                .netWorth(0L)
+                .balanceCoins(new BigDecimal(0))
+                .netWorth(new BigDecimal(0))
                 .upgrades(new ArrayList<>())
-                .earnPassivePerHour(0)
+                .passiveEarnPerHour(0)
                 .availableTaps(100)
                 .maxTaps(100)
                 .earnPerTap(1)

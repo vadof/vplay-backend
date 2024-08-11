@@ -1,8 +1,6 @@
 package com.vcasino.clicker.service;
 
-import com.google.gson.internal.LinkedTreeMap;
 import com.vcasino.clicker.dto.AccountDto;
-import com.vcasino.clicker.dto.UpgradeDto;
 import com.vcasino.clicker.entity.Account;
 import com.vcasino.clicker.entity.Upgrade;
 import com.vcasino.clicker.mapper.AccountMapper;
@@ -92,7 +90,7 @@ public class AccountServiceTest {
         assertEquals(mockedUpgrade.getName() ,response.getUpgrades().get(0).getName());
         assertEquals(mockedUpgrade.getLevel() ,response.getUpgrades().get(0).getLevel());
         assertTrue(response.getUpgrades().get(0).getAvailable());
-        assertEquals(mockedAccount.getEarnPassivePerHour(), response.getEarnPassivePerHour());
+        assertEquals(mockedAccount.getPassiveEarnPerHour(), response.getPassiveEarnPerHour());
         assertEquals(mockedAccount.getAvailableTaps(), response.getAvailableTaps());
         assertEquals(mockedAccount.getMaxTaps(), response.getMaxTaps());
         assertEquals(mockedAccount.getEarnPerTap(), response.getEarnPerTap());
