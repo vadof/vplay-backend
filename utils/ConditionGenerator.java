@@ -6,8 +6,8 @@ import java.io.IOException;
 
 public class ConditionGenerator {
     public static void main(String[] args) {
-        generateCondition("ByUpgrade", "Facebook", 1, 10, "condition/facebook.sql");
-        generateCondition("ByUpgrade", "Instagram", 1, 10, "condition/instagram.sql");
+        generateCondition("BY_UPGRADE", "Facebook", 1, 10, "condition/facebook.sql");
+        generateCondition("BY_UPGRADE", "Instagram", 1, 10, "condition/instagram.sql");
         generateCondition("ByUpgrade", "Reddit", 1, 10, "condition/reddit.sql");
         generateCondition("ByUpgrade", "Snapchat", 1, 10, "condition/snapchat.sql");
         generateCondition("ByUpgrade", "Telegram", 1, 10, "condition/telegram.sql");

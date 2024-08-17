@@ -93,10 +93,7 @@ public class AccountService {
             throw new IllegalArgumentException("Amount cannot be negative");
         }
 
-        account.setBalanceCoins(account.getBalanceCoins().add(new BigDecimal(amount)));
-        account.setNetWorth(account.getNetWorth().add(new BigDecimal(amount)));
-        Level level = levelService.getLevelAccordingNetWorth(account.getNetWorth().longValue());
-        account.setLevel(level.getValue());
+        updateAccountBalance(account, new BigDecimal(amount));
     }
 
     public AccountDto getAccount(Long userId) {
@@ -120,6 +117,8 @@ public class AccountService {
     private void updateAccountBalance(Account account, BigDecimal earned) {
         account.setBalanceCoins(account.getBalanceCoins().add(earned));
         account.setNetWorth(account.getNetWorth().add(earned));
+        Level level = levelService.getLevelAccordingNetWorth(account.getNetWorth().longValue());
+        account.setLevel(level.getValue());
     }
 
     private void updateAccountTaps(Account account, Long differenceInSecond) {

@@ -1,5 +1,5 @@
 INSERT INTO condition (type, upgrade_name, level)
-VALUES ('ByUpgrade', 'Meta', 1),
+VALUES ('BY_UPGRADE', 'Meta', 1),
        ('ByUpgrade', 'Meta', 2),
        ('ByUpgrade', 'Meta', 3),
        ('ByUpgrade', 'Meta', 4),

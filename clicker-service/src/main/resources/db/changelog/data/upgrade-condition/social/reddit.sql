@@ -1,6 +1,6 @@
 UPDATE upgrade u
 SET condition_id = (SELECT c.id FROM condition c WHERE c.upgrade_name = 'X' AND c.level = 2)
-WHERE u.name = 'Reddit' AND u.level = 1;
+WHERE u.name = 'Reddit' AND u.level = 0;
 
 UPDATE upgrade u
 SET condition_id = (SELECT c.id FROM condition c WHERE c.upgrade_name = 'X' AND c.level = 3)

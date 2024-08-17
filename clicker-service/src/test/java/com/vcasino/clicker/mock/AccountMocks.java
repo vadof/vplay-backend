@@ -32,7 +32,7 @@ public class AccountMocks {
                 .level(0)
                 .balanceCoins(new BigDecimal(0))
                 .netWorth(new BigDecimal(0))
-                .upgrades(new ArrayList<>())
+                .sectionUpgrades(new ArrayList<>())
                 .passiveEarnPerHour(0)
                 .availableTaps(100)
                 .maxTaps(100)

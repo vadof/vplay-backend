@@ -22,11 +22,13 @@ public class ClickerService {
         log.info("Account#{} tapped {} times", account.getId(), tap.getAmount());
 
         if (tap.getAvailableTaps() > account.getMaxTaps()) {
-            return handleSuspiciousBehaviour(new SuspiciousTapAction(account, tap, "Available taps is more than max taps"));
+            String message = "Available taps is more than max taps";
+            return handleSuspiciousBehaviour(new SuspiciousTapAction(account, tap, message));
         }
 
         if (tap.getTimestamp() > TimeUtil.getCurrentUnixTime()) {
-            return handleSuspiciousBehaviour(new SuspiciousTapAction(account, tap, "Does the user live in the future???"));
+            String message = "Does the user live in the future???";
+            return handleSuspiciousBehaviour(new SuspiciousTapAction(account, tap, message));
         }
 
         long lastSync = TimeUtil.toUnixTime(account.getLastSyncDate());

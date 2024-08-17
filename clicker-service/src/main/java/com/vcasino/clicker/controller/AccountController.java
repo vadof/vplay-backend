@@ -39,6 +39,7 @@ public class AccountController extends GenericController {
         this.levelService = levelService;
     }
 
+    // TODO make only for admin
     @Operation(summary = "Create account")
     @ApiResponse(responseCode = "200", description = "Account created",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AccountDto.class)))

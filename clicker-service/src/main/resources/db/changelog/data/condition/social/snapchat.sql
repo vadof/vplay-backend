@@ -1,8 +1,8 @@
 INSERT INTO condition (type, upgrade_name, level)
-VALUES ('ByUpgrade', 'Snapchat', 1),
-       ('ByUpgrade', 'Snapchat', 2),
-       ('ByUpgrade', 'Snapchat', 3),
-       ('ByUpgrade', 'Snapchat', 4),
+VALUES ('BY_UPGRADE', 'Snapchat', 1),
+       ('BY_UPGRADE', 'Snapchat', 2),
+       ('BY_UPGRADE', 'Snapchat', 3),
+       ('BY_UPGRADE', 'Snapchat', 4),
        ('ByUpgrade', 'Snapchat', 5),
        ('ByUpgrade', 'Snapchat', 6),
        ('ByUpgrade', 'Snapchat', 7),
