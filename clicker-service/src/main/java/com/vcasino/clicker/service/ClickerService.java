@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -47,8 +49,11 @@ public class ClickerService {
             return handleSuspiciousBehaviour(new SuspiciousTapAction(account, tap, message));
         }
 
+        BigDecimal passiveEarn = accountService.calculatePassiveEarn(account.getPassiveEarnPerHour(), diff);
+        BigDecimal toAdd = passiveEarn.add(new BigDecimal(tap.getAmount() * account.getEarnPerTap()));
+        accountService.addCoins(account, toAdd);
+
         account.setAvailableTaps(tap.getAvailableTaps());
-        accountService.addCoins(account, (long) tap.getAmount() * account.getEarnPerTap());
         account.setLastSyncDate(TimeUtil.toTimestamp(tap.getTimestamp()));
 
         account = accountService.save(account);
@@ -67,7 +72,7 @@ public class ClickerService {
         }
 
         account.setSuspiciousActionsNumber(suspiciousActionsNumber);
-        account = accountService.save(account);
+        accountService.updateAccount(account);
 
         return accountService.toDto(account);
     }

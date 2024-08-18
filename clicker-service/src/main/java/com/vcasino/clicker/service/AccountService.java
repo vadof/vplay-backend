@@ -96,6 +96,15 @@ public class AccountService {
         updateAccountBalance(account, new BigDecimal(amount));
     }
 
+    public void addCoins(Account account, BigDecimal amount) {
+        log.info("Add {} coins to Account#{}", amount, account.getId());
+        if (amount.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Amount cannot be negative");
+        }
+
+        updateAccountBalance(account, amount);
+    }
+
     public AccountDto getAccount(Long userId) {
         Account account = getByUserId(userId);
         updateAccount(account);
