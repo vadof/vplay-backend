@@ -16,8 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,17 +35,6 @@ public class AccountController extends GenericController {
         super(request);
         this.accountService = accountService;
         this.levelService = levelService;
-    }
-
-    // TODO make only for admin
-    @Operation(summary = "Create account")
-    @ApiResponse(responseCode = "200", description = "Account created",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AccountDto.class)))
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccountDto> createAccount(@RequestBody Long userId) {
-        log.info("REST request to create Account for User#{}", userId);
-        AccountDto account = accountService.createAccount(userId);
-        return ResponseEntity.ok().body(account);
     }
 
     @Operation(summary = "Get account")
