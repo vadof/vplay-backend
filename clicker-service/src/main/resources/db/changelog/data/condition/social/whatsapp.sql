@@ -6,6 +6,6 @@ VALUES ('BY_UPGRADE', 'WhatsApp', 1),
        ('BY_UPGRADE', 'WhatsApp', 5),
        ('BY_UPGRADE', 'WhatsApp', 6),
        ('BY_UPGRADE', 'WhatsApp', 7),
-       ('ByUpgrade', 'WhatsApp', 8),
-       ('ByUpgrade', 'WhatsApp', 9),
-       ('ByUpgrade', 'WhatsApp', 10);
+       ('BY_UPGRADE', 'WhatsApp', 8),
+       ('BY_UPGRADE', 'WhatsApp', 9),
+       ('BY_UPGRADE', 'WhatsApp', 10);

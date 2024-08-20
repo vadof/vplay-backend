@@ -6,6 +6,6 @@ VALUES ('BY_UPGRADE', 'TikTok', 1),
        ('BY_UPGRADE', 'TikTok', 5),
        ('BY_UPGRADE', 'TikTok', 6),
        ('BY_UPGRADE', 'TikTok', 7),
-       ('ByUpgrade', 'TikTok', 8),
-       ('ByUpgrade', 'TikTok', 9),
-       ('ByUpgrade', 'TikTok', 10);
+       ('BY_UPGRADE', 'TikTok', 8),
+       ('BY_UPGRADE', 'TikTok', 9),
+       ('BY_UPGRADE', 'TikTok', 10);

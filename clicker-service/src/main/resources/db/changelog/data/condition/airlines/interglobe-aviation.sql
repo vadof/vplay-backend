@@ -1,11 +1,11 @@
 INSERT INTO condition (type, upgrade_name, level)
-VALUES ('ByUpgrade', 'InterGlobe Aviation', 1),
-       ('ByUpgrade', 'InterGlobe Aviation', 2),
-       ('ByUpgrade', 'InterGlobe Aviation', 3),
-       ('ByUpgrade', 'InterGlobe Aviation', 4),
-       ('ByUpgrade', 'InterGlobe Aviation', 5),
-       ('ByUpgrade', 'InterGlobe Aviation', 6),
-       ('ByUpgrade', 'InterGlobe Aviation', 7),
-       ('ByUpgrade', 'InterGlobe Aviation', 8),
-       ('ByUpgrade', 'InterGlobe Aviation', 9),
-       ('ByUpgrade', 'InterGlobe Aviation', 10);
+VALUES ('BY_UPGRADE', 'InterGlobe Aviation', 1),
+       ('BY_UPGRADE', 'InterGlobe Aviation', 2),
+       ('BY_UPGRADE', 'InterGlobe Aviation', 3),
+       ('BY_UPGRADE', 'InterGlobe Aviation', 4),
+       ('BY_UPGRADE', 'InterGlobe Aviation', 5),
+       ('BY_UPGRADE', 'InterGlobe Aviation', 6),
+       ('BY_UPGRADE', 'InterGlobe Aviation', 7),
+       ('BY_UPGRADE', 'InterGlobe Aviation', 8),
+       ('BY_UPGRADE', 'InterGlobe Aviation', 9),
+       ('BY_UPGRADE', 'InterGlobe Aviation', 10);

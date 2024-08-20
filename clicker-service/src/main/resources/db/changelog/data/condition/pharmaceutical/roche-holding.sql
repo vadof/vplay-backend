@@ -1,11 +1,11 @@
 INSERT INTO condition (type, upgrade_name, level)
-VALUES ('ByUpgrade', 'Roche Holding', 1),
-       ('ByUpgrade', 'Roche Holding', 2),
-       ('ByUpgrade', 'Roche Holding', 3),
-       ('ByUpgrade', 'Roche Holding', 4),
-       ('ByUpgrade', 'Roche Holding', 5),
-       ('ByUpgrade', 'Roche Holding', 6),
-       ('ByUpgrade', 'Roche Holding', 7),
-       ('ByUpgrade', 'Roche Holding', 8),
-       ('ByUpgrade', 'Roche Holding', 9),
-       ('ByUpgrade', 'Roche Holding', 10);
+VALUES ('BY_UPGRADE', 'Roche Holding', 1),
+       ('BY_UPGRADE', 'Roche Holding', 2),
+       ('BY_UPGRADE', 'Roche Holding', 3),
+       ('BY_UPGRADE', 'Roche Holding', 4),
+       ('BY_UPGRADE', 'Roche Holding', 5),
+       ('BY_UPGRADE', 'Roche Holding', 6),
+       ('BY_UPGRADE', 'Roche Holding', 7),
+       ('BY_UPGRADE', 'Roche Holding', 8),
+       ('BY_UPGRADE', 'Roche Holding', 9),
+       ('BY_UPGRADE', 'Roche Holding', 10);

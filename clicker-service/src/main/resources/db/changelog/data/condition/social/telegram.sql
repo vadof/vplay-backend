@@ -7,5 +7,5 @@ VALUES ('BY_UPGRADE', 'Telegram', 1),
        ('BY_UPGRADE', 'Telegram', 6),
        ('BY_UPGRADE', 'Telegram', 7),
        ('BY_UPGRADE', 'Telegram', 8),
-       ('ByUpgrade', 'Telegram', 9),
-       ('ByUpgrade', 'Telegram', 10);
+       ('BY_UPGRADE', 'Telegram', 9),
+       ('BY_UPGRADE', 'Telegram', 10);

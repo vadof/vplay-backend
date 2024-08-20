@@ -7,5 +7,5 @@ VALUES ('BY_UPGRADE', 'NVIDIA', 1),
        ('BY_UPGRADE', 'NVIDIA', 6),
        ('BY_UPGRADE', 'NVIDIA', 7),
        ('BY_UPGRADE', 'NVIDIA', 8),
-       ('ByUpgrade', 'NVIDIA', 9),
-       ('ByUpgrade', 'NVIDIA', 10);
+       ('BY_UPGRADE', 'NVIDIA', 9),
+       ('BY_UPGRADE', 'NVIDIA', 10);

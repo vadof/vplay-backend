@@ -7,5 +7,5 @@ VALUES ('BY_UPGRADE', 'Facebook', 1),
        ('BY_UPGRADE', 'Facebook', 6),
        ('BY_UPGRADE', 'Facebook', 7),
        ('BY_UPGRADE', 'Facebook', 8),
-       ('ByUpgrade', 'Facebook', 9),
-       ('ByUpgrade', 'Facebook', 10);
+       ('BY_UPGRADE', 'Facebook', 9),
+       ('BY_UPGRADE', 'Facebook', 10);

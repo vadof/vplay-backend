@@ -5,7 +5,7 @@ VALUES ('BY_UPGRADE', 'Ryanair', 1),
        ('BY_UPGRADE', 'Ryanair', 4),
        ('BY_UPGRADE', 'Ryanair', 5),
        ('BY_UPGRADE', 'Ryanair', 6),
-       ('ByUpgrade', 'Ryanair', 7),
-       ('ByUpgrade', 'Ryanair', 8),
-       ('ByUpgrade', 'Ryanair', 9),
-       ('ByUpgrade', 'Ryanair', 10);
+       ('BY_UPGRADE', 'Ryanair', 7),
+       ('BY_UPGRADE', 'Ryanair', 8),
+       ('BY_UPGRADE', 'Ryanair', 9),
+       ('BY_UPGRADE', 'Ryanair', 10);
