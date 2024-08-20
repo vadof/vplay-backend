@@ -2,13 +2,17 @@ package com.vcasino.clicker.service;
 
 import com.vcasino.clicker.dto.SectionUpgradesDto;
 import com.vcasino.clicker.dto.UpgradeDto;
+import com.vcasino.clicker.entity.Account;
 import com.vcasino.clicker.entity.Upgrade;
+import com.vcasino.clicker.entity.id.key.UpgradeKey;
+import com.vcasino.clicker.exception.AppException;
 import com.vcasino.clicker.mapper.UpgradeMapper;
 import com.vcasino.clicker.repository.UpgradeRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -37,6 +41,23 @@ public class UpgradeService {
                 .sum();
     }
 
+    public Upgrade findUpgradeInAccount(Account account, String upgradeName, Integer upgradeLevel) {
+        return account.getUpgrades().stream()
+                .filter(u ->
+                        u.getName().equals(upgradeName) &&
+                                u.getLevel().equals(upgradeLevel))
+                .findFirst()
+                .orElseThrow(() -> {
+                    log.warn("Upgrade not found {} lvl {}", upgradeName, upgradeLevel);
+                    return new AppException("Upgrade not found", HttpStatus.NOT_FOUND);
+                });
+    }
+
+    public Upgrade findUpgrade(String name, Integer level) {
+        return upgradeRepository.findById(new UpgradeKey(name, level)).orElseThrow(
+                () -> new AppException(String.format("Upgrade %s with level %s not found", name, level), HttpStatus.NOT_FOUND));
+    }
+
     @PostConstruct
     private void cacheUpgrades() {
         initialUpgrades = upgradeRepository.findAllByLevel(0);
@@ -62,5 +83,4 @@ public class UpgradeService {
             );
         }
     }
-
 }

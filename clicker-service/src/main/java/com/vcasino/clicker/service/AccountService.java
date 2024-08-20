@@ -2,7 +2,9 @@ package com.vcasino.clicker.service;
 
 import com.vcasino.clicker.config.constants.AccountConstants;
 import com.vcasino.clicker.dto.AccountDto;
+import com.vcasino.clicker.dto.UpgradeUpdateRequest;
 import com.vcasino.clicker.entity.Account;
+import com.vcasino.clicker.entity.Condition;
 import com.vcasino.clicker.entity.Level;
 import com.vcasino.clicker.entity.Upgrade;
 import com.vcasino.clicker.exception.AppException;
@@ -34,7 +36,7 @@ public class AccountService {
         Account account = buildAccount(userId);
         account = save(account);
         log.info("Account#{} saved to database", account.getId());
-        return accountMapper.toDto(account);
+        return toDto(account);
     }
 
     private Account buildAccount(Long userId) {
@@ -70,6 +72,46 @@ public class AccountService {
                 () -> new AppException("Account with userId#" + userId + " not found", HttpStatus.NOT_FOUND));
         handleFrozenAccount(account);
         return account;
+    }
+
+    public AccountDto updateUpgrade(UpgradeUpdateRequest request, Long userId) {
+        Account account = getByUserId(userId);
+        updateAccount(account, false);
+
+        Upgrade upgrade = upgradeService.findUpgradeInAccount(account, request.getUpgradeName(), request.getUpgradeLevel());
+
+        if (upgrade.getMaxLevel()) {
+            throw new AppException("The maximum level has already been reached", HttpStatus.BAD_REQUEST);
+        }
+        validateMoney(account, upgrade);
+        validateCondition(account, upgrade.getCondition());
+
+        Upgrade updatedUpgrade = upgradeService.findUpgrade(upgrade.getName(), upgrade.getLevel() + 1);
+        account.getUpgrades().remove(upgrade);
+        account.getUpgrades().add(updatedUpgrade);
+        account.setBalanceCoins(account.getBalanceCoins().subtract(new BigDecimal(upgrade.getPrice())));
+        account.setPassiveEarnPerHour(upgradeService.calculatePassiveEarnPerHour(account.getUpgrades()));
+
+        return toDto(save(account));
+    }
+
+    private void validateMoney(Account account, Upgrade upgrade) {
+        boolean enoughMoney = new BigDecimal(upgrade.getPrice()).compareTo(account.getBalanceCoins()) < 1;
+        if (!enoughMoney) {
+            log.warn("User cannot buy upgrade - not enough money. Balance: {}, Price: {}",
+                    account.getBalanceCoins(), upgrade.getPrice());
+            throw new AppException("Not enough money to buy upgrade", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    private void validateCondition(Account account, Condition condition) {
+        boolean conditionCompleted = condition == null || account.getUpgrades().stream()
+                .anyMatch(u -> u.getName().equals(condition.getUpgradeName()) &&
+                        u.getLevel() >= condition.getLevel());
+        if (!conditionCompleted) {
+            log.warn("User cannot buy upgrade - condition not completed.");
+            throw new AppException("Condition not completed", HttpStatus.BAD_REQUEST);
+        }
     }
 
     public void handleFrozenAccount(Account account) {
@@ -108,19 +150,26 @@ public class AccountService {
     public AccountDto getAccount(Long userId) {
         Account account = getByUserId(userId);
         updateAccount(account);
-        return accountMapper.toDto(account);
+        return toDto(account);
     }
 
     public void updateAccount(Account account) {
+        updateAccount(account, true);
+    }
+
+    private void updateAccount(Account account, Boolean save) {
         Timestamp lastSync = account.getLastSyncDate();
         Timestamp now = TimeUtil.getCurrentTimestamp();
         Long secondsDiff = TimeUtil.getDifferenceInSeconds(lastSync, now);
+        if (secondsDiff == 0) return;
 
         BigDecimal passiveEarn = calculatePassiveEarn(account.getPassiveEarnPerHour(), secondsDiff);
         updateAccountBalance(account, passiveEarn);
         updateAccountTaps(account, secondsDiff);
         account.setLastSyncDate(now);
-        save(account);
+        if (save) {
+            save(account);
+        }
     }
 
     private void updateAccountBalance(Account account, BigDecimal earned) {
@@ -133,7 +182,7 @@ public class AccountService {
     private void updateAccountTaps(Account account, Long differenceInSecond) {
         long newTapsValue = differenceInSecond * account.getTapsRecoverPerSec() + account.getAvailableTaps();
         if (newTapsValue > Integer.MAX_VALUE) {
-             account.setAvailableTaps(account.getMaxTaps());
+            account.setAvailableTaps(account.getMaxTaps());
         } else {
             account.setAvailableTaps(Math.min((int) newTapsValue, account.getMaxTaps()));
         }

@@ -11,6 +11,7 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,13 +26,16 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @IdClass(UpgradeKey.class)
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Upgrade {
     @Id
     @Column(name = "name")
+    @EqualsAndHashCode.Include
     String name;
 
     @Id
     @Column(name = "level")
+    @EqualsAndHashCode.Include
     Integer level;
 
     @ManyToOne
