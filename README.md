@@ -57,9 +57,11 @@ For Test environment run `vcasino-backend/docker/test/docker-compose.yml`
 **Description**
 - The main way to earn game currency (vcoins) which in the future can be exchanged for $ to user's wallet
 
-**Features**
+**Admin functionality**
+- Можно добавить vcoins пользователю
+- Статистика сколько пользователей забрало различных наград за определенный день
 
-**Sections**
+**App Sections**
 - [Common](#common)
 - [Tap](#tap-section)
 - [Upgrade](#upgrade-section)
