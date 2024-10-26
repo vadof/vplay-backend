@@ -1,8 +1,7 @@
 # VCasino Documentation
 
-- **Services**
-- **Local environment setup**
-- **Clicker**
+- **[Local environment setup](#local-environment-setup)**
+- **[Services](#services)**
 
 # Local environment setup
 
@@ -11,144 +10,87 @@ For Test environment run `vcasino-backend/docker/test/docker-compose.yml`
 
 # Services:
 
-## User Service
-
-**Задачи:**
-
-- Регистрация и аутентификация пользователей.
-- Хранение информации о пользователях.
-
-**Необходимые компоненты:**
-
-- Spring Security для аутентификации и авторизации.
-- База данных (например, MySQL или PostgreSQL) для хранения данных пользователей.
-
-## Game Service
-
-**Задачи:**
-
--   Предостовление доступных игр (рулетка, слоты и т.д.).
-
-## Betting Service
-
-**Задачи:**
-
--   Обработка ставок пользователей.
--   Взаимодействие с wallet сервисом для обновления баланса.
-
-**Необходимые компоненты:**
-
--   База данных для хранения информации о ставках.
-
-## Wallet Service
-
-**Задачи:**
-
--   Управление балансом пользователей.
--   Пополнение и вывод средств.
--   Ведение истории транзакций.
-
-**Необходимые компоненты:**
-
--   Интеграция с платежными системами.
--   База данных для хранения информации о транзакциях.
-
-## Notification Service
-
-**Задачи:**
-
--   Отправка уведомлений пользователям (например, уведомления о выигрыше/проигрыше).
--   Поддержка различных каналов связи (email, SMS).
-
-**Необходимые компоненты:**
-
--   Интеграция с внешними сервисами для отправки email и SMS.
--   Очереди сообщений (например, RabbitMQ или Kafka) для обработки уведомлений асинхронно.
-
-## Analytics Service
-
-**Задачи:**
-
--   Сбор и анализ данных о поведении пользователей и игре.
--   Создание отчетов и метрик для бизнеса.
-
-**Необходимые компоненты:**
-
--   База данных для хранения аналитических данных.
--   Инструменты для визуализации данных (например, Grafana или Kibana).
-
-## Admin Service
-
-**Задачи:**
-
--   Управление и мониторинг системой.
--   Инструменты для модерации и поддержки пользователей.
--   Просмотр и управление данными всех остальных сервисов.
-
-**Необходимые компоненты:**
-
--   Веб-интерфейс для администраторов.
--   Инструменты мониторинга (например, Spring Boot Admin).
+- [API Gateway](#api-gateway)
+- [Eureka Service](#eureka-service)
+- [User Service](#user-service)
+- [Clicker service](#clicker-service)
+- [Game Service](#game-service)
+- [Betting Service](#betting-service)
+- [Wallet Service](#wallet-service)
+- [Notification Service](#notification-service)
+- [Analytics Service](#analytics-service)
+- [Admin Service](#admin-service)
+- [Circuit Breaker](#circuit-breaker)
+- [Logging and Monitoring Service](#logging-and-monitoring-service)
 
 ## API Gateway
 
-**Задачи:**
+**Description**
+- Централизованная точка входа для всех клиентов.
+- Маршрутизация запросов к соответствующим микросервисам.
+- Управление аутентификацией и авторизацией на уровне шлюза.
 
--   Централизованная точка входа для всех клиентов.
--   Маршрутизация запросов к соответствующим микросервисам.
--   Управление аутентификацией и авторизацией на уровне шлюза.
-
-**Необходимые компоненты:**
-
--   Spring Cloud Gateway для маршрутизации и управления API.
+**Components**
+- Spring Cloud Gateway для маршрутизации и управления API.
 
 ## Eureka Service
 
-**Задачи:**
+**Description**
+- Обнаружение и регистрация микросервисов.
+- Обеспечение динамической маршрутизации и балансировки нагрузки.
 
--   Обнаружение и регистрация микросервисов.
--   Обеспечение динамической маршрутизации и балансировки нагрузки.
+**Components**
+- Netflix Eureka
 
-**Необходимые компоненты:**
+## User Service
 
--   Netflix Eureka или Consul для обнаружения сервисов.
+**Description**
+- Регистрация и аутентификация пользователей.
+- Хранение информации о пользователях.
 
-## Circuit Breaker
+**Components**
+- Spring Security для аутентификации и авторизации.
+- База данных PostgreSQL для хранения данных пользователей.
 
-**Задачи:**
+## Clicker service
 
--   Обеспечение отказоустойчивости и устойчивости системы при сбоях.
--   Управление отказами и восстановление после сбоев.
+**Description**
+- The main way to earn game currency (vcoins) which in the future can be exchanged for $ to user's wallet
 
-**Необходимые компоненты:**
+**Features**
 
--   Netflix Hystrix или Resilience4j для управления отказами.
+**Sections**
+- [Common](#common)
+- [Tap](#tap-section)
+- [Upgrade](#upgrade-section)
+- [Friends](#friends-section)
+- [Rewards](#rewards-section)
+- [Top](#top-section)
 
-## Logging and Monitoring Service
+### Common
+- Видна почти во всех секциях
+- текущий баланс
+- заработок в час
+- Текущий уровень пользователя на который он может нажать и посмотреть информацию о всех уровнях <br> 
+Last user level = 10 (Net worth: 1_000_000_000)
+- Окно настроек где пользователь может ? (TODO)
+  - User can exchange 10000 vcoins for 1$ to his wallet <br>
 
-
-**Задачи:**
-
--   Сбор и анализ логов всех микросервисов.
--   Мониторинг состояния системы и выявление аномалий.
-
-**Необходимые компоненты:**
-
--   ELK Stack (Elasticsearch, Logstash, Kibana) или Prometheus и Grafana для логирования и мониторинга.
-
-# Clicker
-
-User can change 10000 vcoins to 1$ <br>
-User can change 1$ to 9000 vcoins (10% commission) <br>
-Last user level - 10 (Net worth: 1_000_000_000)
-
-## Upgrades
-
+### Tap section
+**TapToEarn = 1-10**<br>
+**Energy = 100-1000 (TODO clarify)**
+- Основная механика зарабатывания vcoins - tap to earn
+- У пользователя есть определенное количество энергии 1 energy = 1 EarnPerTap
+- For each level, the user's earnings per tap improve. EarnPerTap = lvl
+- В секунду регенируется определенное количество энергии (3)
+- The user can improve the maximum energy reserve, max value = ?.
+- There is a boost tab where you can replenish all your energy ? times a day
+### Upgrade section
+Улучшения отвечают за пассивный доход <br>
 Maximum possible earn per hour 1,000,000 vcoins -> 1,000$<br>
 100/200/200/500 -> 100$
 
-Price for upgrade is determined based on earn per hour
-<i>profit_per_hour_delta</i> * <i>hours_to_payback</i><br>
+Price for upgrade is determined based on upgrade's (<i>profit_per_hour_delta</i> * <i>hours_to_payback</i>)<br>
 
 | Section        | Level | Days to payback | Hours to payback |
 |----------------|:-----:|:---------------:|:----------------:|
@@ -228,3 +170,91 @@ Price for upgrade is determined based on earn per hour
 | Microsoft |    10     |    80,000     |
 | Apple     |    10     |    135,000    |
 | **Total** |           |    500,000    |
+
+### Friends section
+- The user can invite friends, when going through the referral system, the user receives a bonus of ? vcoins
+- If a user's friend levels up, the user gets a reward for that vcoins * lvl
+- The user can add friends (for top tab)
+
+### Rewards section
+- Every day, when logging in, the user can pick up a daily bonus. 1-10 days. After picking up the daily 10th prize, the counter is reset.
+- Every day, a new video appears, upon viewing which the user can receive a reward.
+
+### Top section
+- Пользователь может посмотреть топ по миру
+- Пользователь может посмотреть топ среди друзей
+- Топ обновляется каждый день в 00:00 по UTC
+
+## Game Service
+
+**Description**
+- Предостовление доступных игр (рулетка, слоты и т.д.).
+
+## Betting Service
+
+**Description**
+- Обработка ставок пользователей.
+- Взаимодействие с wallet сервисом для обновления баланса.
+
+## Wallet Service
+
+**Description**
+- Управление балансом пользователей.
+- Пополнение и вывод средств.
+- Ведение истории транзакций.
+
+**Components**
+- Интеграция с платежными системами.
+- База данных для хранения информации о транзакциях.
+
+**Feautures**
+- User can change 1$ to 9000 vcoins (10% commission)
+
+## Notification Service
+
+**Description:**
+- Отправка уведомлений пользователям (например, уведомления о выигрыше/проигрыше).
+- Поддержка различных каналов связи (email, SMS).
+
+**Components**
+- Интеграция с внешними сервисами для отправки email и SMS.
+- Очереди сообщений (например, RabbitMQ или Kafka) для обработки уведомлений асинхронно.
+
+## Analytics Service
+
+**Description**
+- Сбор и анализ данных о поведении пользователей и игре.
+- Создание отчетов и метрик для бизнеса.
+
+**Components**
+- База данных для хранения аналитических данных.
+- Инструменты для визуализации данных (например, Grafana или Kibana).
+
+## Admin Service
+
+**Description**
+- Управление и мониторинг системой.
+- Инструменты для модерации и поддержки пользователей.
+- Просмотр и управление данными всех остальных сервисов.
+
+**Components**
+- Веб-интерфейс для администраторов.
+- Инструменты мониторинга (например, Spring Boot Admin).
+
+## Circuit Breaker
+
+**Description**
+- Обеспечение отказоустойчивости и устойчивости системы при сбоях.
+- Управление отказами и восстановление после сбоев.
+
+**Components**
+- Netflix Hystrix или Resilience4j для управления отказами.
+
+## Logging and Monitoring Service
+
+**Description**
+- Сбор и анализ логов всех микросервисов.
+- Мониторинг состояния системы и выявление аномалий.
+
+**Components**
+- ELK Stack (Elasticsearch, Logstash, Kibana) или Prometheus и Grafana для логирования и мониторинга.
