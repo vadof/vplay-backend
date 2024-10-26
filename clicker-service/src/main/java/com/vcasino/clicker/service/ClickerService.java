@@ -19,8 +19,8 @@ public class ClickerService {
 
     private final AccountService accountService;
 
-    public AccountDto tap(Tap tap, Long userId) {
-        Account account = accountService.getByUserId(userId);
+    public AccountDto tap(Tap tap, Long accountId) {
+        Account account = accountService.getById(accountId);
         log.info("Account#{} tapped {} times", account.getId(), tap.getAmount());
 
         if (tap.getAvailableTaps() > account.getMaxTaps()) {

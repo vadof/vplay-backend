@@ -39,12 +39,12 @@ public class AccountService {
         return toDto(account);
     }
 
-    private Account buildAccount(Long userId) {
+    private Account buildAccount(Long id) {
         List<Upgrade> upgrades = upgradeService.getInitialUpgrades();
         Level level = levelService.getLevelAccordingNetWorth(AccountConstants.BALANCE_COINS);
 
         return Account.builder()
-                .userId(userId)
+                .id(id)
                 .level(level.getValue())
                 .balanceCoins(AccountConstants.BALANCE_COINS)
                 .netWorth(AccountConstants.BALANCE_COINS)
@@ -67,15 +67,8 @@ public class AccountService {
         return account;
     }
 
-    public Account getByUserId(Long userId) {
-        Account account = accountRepository.findByUserId(userId).orElseThrow(
-                () -> new AppException("Account with userId#" + userId + " not found", HttpStatus.NOT_FOUND));
-        handleFrozenAccount(account);
-        return account;
-    }
-
-    public AccountDto updateUpgrade(UpgradeUpdateRequest request, Long userId) {
-        Account account = getByUserId(userId);
+    public AccountDto updateUpgrade(UpgradeUpdateRequest request, Long accountId) {
+        Account account = getById(accountId);
         updateAccount(account, false);
 
         Upgrade upgrade = upgradeService.findUpgradeInAccount(account, request.getUpgradeName(), request.getUpgradeLevel());
@@ -142,8 +135,8 @@ public class AccountService {
         updateAccountBalance(account, amount);
     }
 
-    public AccountDto getAccount(Long userId) {
-        Account account = getByUserId(userId);
+    public AccountDto getAccount(Long id) {
+        Account account = getById(id);
         updateAccount(account);
         return toDto(account);
     }

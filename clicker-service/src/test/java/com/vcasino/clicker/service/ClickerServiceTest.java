@@ -51,7 +51,7 @@ public class ClickerServiceTest {
         account.setAvailableTaps(100);
         account.setMaxTaps(100);
 
-        when(accountService.getByUserId(1L)).thenReturn(account);
+        when(accountService.getById(1L)).thenReturn(account);
         when(accountService.calculatePassiveEarn(any(), any())).thenReturn(new BigDecimal(0));
 
         try (MockedStatic<TimeUtil> ignored = mockStatic(TimeUtil.class)) {
@@ -79,7 +79,7 @@ public class ClickerServiceTest {
         account.setAvailableTaps(100);
         account.setMaxTaps(100);
 
-        when(accountService.getByUserId(1L)).thenReturn(account);
+        when(accountService.getById(1L)).thenReturn(account);
 
         try (MockedStatic<TimeUtil> ignored = mockStatic(TimeUtil.class)) {
             Tap tap = new Tap(100, 0, tapTime);
@@ -108,7 +108,7 @@ public class ClickerServiceTest {
         account.setSuspiciousActionsNumber(0);
         account.setFrozen(false);
 
-        when(accountService.getByUserId(1L)).thenReturn(account);
+        when(accountService.getById(1L)).thenReturn(account);
 
         try (MockedStatic<TimeUtil> ignored = mockStatic(TimeUtil.class)) {
             Tap tap = new Tap(100, 0, tapTime);
@@ -141,7 +141,7 @@ public class ClickerServiceTest {
         account.setSuspiciousActionsNumber(0);
         account.setFrozen(false);
 
-        when(accountService.getByUserId(1L)).thenReturn(account);
+        when(accountService.getById(1L)).thenReturn(account);
 
         try (MockedStatic<TimeUtil> ignored = mockStatic(TimeUtil.class)) {
             Tap tap = new Tap(30, 101, tapTime);
@@ -174,7 +174,7 @@ public class ClickerServiceTest {
         account.setSuspiciousActionsNumber(0);
         account.setFrozen(false);
 
-        when(accountService.getByUserId(1L)).thenReturn(account);
+        when(accountService.getById(1L)).thenReturn(account);
 
         try (MockedStatic<TimeUtil> ignored = mockStatic(TimeUtil.class)) {
             Tap tap = new Tap(200, 100, tapTime);

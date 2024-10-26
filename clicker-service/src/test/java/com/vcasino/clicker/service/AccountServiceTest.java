@@ -181,26 +181,9 @@ public class AccountServiceTest {
 
         Account foundAccount = accountService.getById(account.getId());
 
-        assertEquals(account.getUserId(), foundAccount.getUserId());
         assertEquals(account.getId(), foundAccount.getId());
 
         assertThrows(AppException.class, () -> accountService.getById(account.getId() + 1));
-    }
-
-    @Test
-    @DisplayName("Get account by user id")
-    void getAccountByUserId() {
-        Account account = AccountMocks.getAccountMock(1L);
-        account.setId(1L);
-
-        when(accountRepository.findByUserId(account.getId())).thenReturn(Optional.of(account));
-
-        Account foundAccount = accountService.getByUserId(account.getUserId());
-
-        assertEquals(account.getUserId(), foundAccount.getUserId());
-        assertEquals(account.getId(), foundAccount.getId());
-
-        assertThrows(AppException.class, () -> accountService.getByUserId(account.getUserId() + 1));
     }
 
     @Test
@@ -273,7 +256,7 @@ public class AccountServiceTest {
         account.setPassiveEarnPerHour(36000);
         account.setLevel(0);
 
-        when(accountRepository.findByUserId(account.getUserId())).thenReturn(Optional.of(account));
+        when(accountRepository.findById(account.getId())).thenReturn(Optional.of(account));
 
         Timestamp lastSync = getTimestamp(0L);
         account.setLastSyncDate(lastSync);
@@ -283,7 +266,7 @@ public class AccountServiceTest {
 
             when(levelService.getLevelAccordingNetWorth(100L)).thenReturn(new Level(2, "d", 100L));
 
-            accountService.getAccount(account.getUserId());
+            accountService.getAccount(account.getId());
 
             assertEquals(new BigDecimal(100), account.getBalanceCoins());
             assertEquals(new BigDecimal(100), account.getNetWorth());
@@ -299,7 +282,7 @@ public class AccountServiceTest {
         account.setAvailableTaps(0);
         account.setTapsRecoverPerSec(1);
 
-        when(accountRepository.findByUserId(account.getUserId())).thenReturn(Optional.of(account));
+        when(accountRepository.findById(account.getId())).thenReturn(Optional.of(account));
 
         Timestamp lastSync = getTimestamp(0L);
         account.setLastSyncDate(lastSync);
@@ -309,7 +292,7 @@ public class AccountServiceTest {
 
             when(levelService.getLevelAccordingNetWorth(any(Long.class))).thenReturn(LevelMocks.getLevelMock());
 
-            accountService.getAccount(account.getUserId());
+            accountService.getAccount(account.getId());
 
             assertEquals(10, account.getAvailableTaps());
             assertEquals(account.getLastSyncDate(), Timestamp.from(Instant.ofEpochMilli(lastSync.getNanos() + 10 * 1000)));
@@ -349,17 +332,15 @@ public class AccountServiceTest {
         account.setFrozen(true);
 
         when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
-        when(accountRepository.findByUserId(1L)).thenReturn(Optional.of(account));
 
         assertThrows(AppException.class, () -> accountService.getById(1L));
-        assertThrows(AppException.class, () -> accountService.getByUserId(1L));
     }
 
     @Test
     @DisplayName("Update upgrade")
     void updateUpgrade() {
         Account account = AccountMocks.getAccountMock(1L);
-        when(accountRepository.findByUserId(account.getUserId())).thenReturn(Optional.of(account));
+        when(accountRepository.findById(account.getId())).thenReturn(Optional.of(account));
 
         Upgrade toUpdate = UpgradeMocks.getUpgradeMock("1", 0);
         List<Upgrade> upgrades = new ArrayList<>();
@@ -376,10 +357,7 @@ public class AccountServiceTest {
         when(upgradeService.calculatePassiveEarnPerHour(any())).thenReturn(expectedNew.getProfitPerHour() + upgrades.get(1).getProfitPerHour());
 
         UpgradeUpdateRequest upgradeUpdateRequest = new UpgradeUpdateRequest(toUpdate.getName(), toUpdate.getLevel());
-        accountService.updateUpgrade(upgradeUpdateRequest, account.getUserId());
-
-//        verify(accountRepository, times(1)).save(accountArgumentCaptor.capture());
-//        Account updatedAccount = accountArgumentCaptor.getValue();
+        accountService.updateUpgrade(upgradeUpdateRequest, account.getId());
 
         List<Upgrade> updatedUpgrades = account.getUpgrades();
         assertEquals(2, updatedUpgrades.size());
@@ -395,7 +373,7 @@ public class AccountServiceTest {
     @DisplayName("Upgrade is already max level")
     void upgradeNotInAccount() {
         Account account = AccountMocks.getAccountMock(1L);
-        when(accountRepository.findByUserId(account.getUserId())).thenReturn(Optional.of(account));
+        when(accountRepository.findById(account.getId())).thenReturn(Optional.of(account));
 
         Upgrade toUpdate = UpgradeMocks.getUpgradeMock("1", 10);
         toUpdate.setMaxLevel(true);
@@ -407,14 +385,14 @@ public class AccountServiceTest {
         when(upgradeService.findUpgradeInAccount(account, toUpdate.getName(), toUpdate.getLevel())).thenReturn(toUpdate);
         UpgradeUpdateRequest upgradeUpdateRequest = new UpgradeUpdateRequest(toUpdate.getName(), toUpdate.getLevel());
 
-        assertThrows(AppException.class, () -> accountService.updateUpgrade(upgradeUpdateRequest, account.getUserId()));
+        assertThrows(AppException.class, () -> accountService.updateUpgrade(upgradeUpdateRequest, account.getId()));
     }
 
     @Test
     @DisplayName("Update upgrade not enough money")
     void updateUpgradeNotEnoughMoney() {
         Account account = AccountMocks.getAccountMock(1L);
-        when(accountRepository.findByUserId(account.getUserId())).thenReturn(Optional.of(account));
+        when(accountRepository.findById(account.getId())).thenReturn(Optional.of(account));
 
         Upgrade toUpdate = UpgradeMocks.getUpgradeMock("1", 0);
         toUpdate.setPrice(10000);
@@ -428,14 +406,14 @@ public class AccountServiceTest {
         when(upgradeService.findUpgradeInAccount(account, toUpdate.getName(), toUpdate.getLevel())).thenReturn(toUpdate);
 
         UpgradeUpdateRequest upgradeUpdateRequest = new UpgradeUpdateRequest(toUpdate.getName(), toUpdate.getLevel());
-        assertThrows(AppException.class, () -> accountService.updateUpgrade(upgradeUpdateRequest, account.getUserId()));
+        assertThrows(AppException.class, () -> accountService.updateUpgrade(upgradeUpdateRequest, account.getId()));
     }
 
     @Test
     @DisplayName("Update upgrade condition not completed")
     void updateUpgradeConditionNotCompleted() {
         Account account = AccountMocks.getAccountMock(1L);
-        when(accountRepository.findByUserId(account.getUserId())).thenReturn(Optional.of(account));
+        when(accountRepository.findById(account.getId())).thenReturn(Optional.of(account));
 
         List<Upgrade> upgrades = new ArrayList<>();
         upgrades.add(UpgradeMocks.getUpgradeMock("1", 0));
@@ -449,7 +427,7 @@ public class AccountServiceTest {
         when(upgradeService.findUpgradeInAccount(account, toUpdate.getName(), toUpdate.getLevel())).thenReturn(toUpdate);
 
         UpgradeUpdateRequest upgradeUpdateRequest = new UpgradeUpdateRequest(toUpdate.getName(), toUpdate.getLevel());
-        assertThrows(AppException.class, () -> accountService.updateUpgrade(upgradeUpdateRequest, account.getUserId()));
+        assertThrows(AppException.class, () -> accountService.updateUpgrade(upgradeUpdateRequest, account.getId()));
     }
 
     private void skipTime(Timestamp start, long seconds) {

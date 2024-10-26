@@ -8,10 +8,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class AccountMocks {
-    public static Account getAccountMock(Long userId) {
+    public static Account getAccountMock(Long id) {
         return Account.builder()
                 .id(1L)
-                .userId(userId)
                 .level(0)
                 .balanceCoins(new BigDecimal(0))
                 .netWorth(new BigDecimal(0))

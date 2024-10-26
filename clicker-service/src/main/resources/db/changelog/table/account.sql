@@ -1,7 +1,6 @@
 CREATE TABLE account
 (
-    id                          BIGINT GENERATED ALWAYS AS IDENTITY,
-    user_id                     BIGINT         NOT NULL,
+    id                          BIGINT,
     level                       SMALLINT       NOT NULL DEFAULT 1,
     net_worth                   DECIMAL(21, 3) NOT NULL DEFAULT 0,
     balance_coins               DECIMAL(21, 3) NOT NULL DEFAULT 0,
@@ -15,7 +14,6 @@ CREATE TABLE account
     frozen                      BOOLEAN        NOT NULL DEFAULT FALSE,
 
     CONSTRAINT pk_clicker_account PRIMARY KEY (id),
-    CONSTRAINT unq_clicker_account_user_id UNIQUE (user_id),
     CONSTRAINT chk_clicker_account_not_negative CHECK (
         level > 0 AND net_worth >= 0 AND balance_coins >= 0 AND available_taps >= 0
             AND max_taps >= 0 AND earn_per_tap >= 0 AND taps_recover_per_sec >= 0

@@ -21,16 +21,16 @@ public abstract class GenericController {
         }
     }
 
-    protected Long getUserId() {
-        String userId = request.getHeader(CustomHeader.LOGGED_IN_USER.getValue());
-        if (userId == null) {
+    protected Long getAccountId() {
+        String id = request.getHeader(CustomHeader.LOGGED_IN_USER.getValue());
+        if (id == null) {
             log.warn("User ID header not found");
             throw new AppException("User ID header not found", HttpStatus.UNAUTHORIZED);
         }
         try {
-            return Long.parseLong(userId);
+            return Long.parseLong(id);
         } catch (NumberFormatException e) {
-            log.error("Invalid user ID format: {}", userId);
+            log.error("Invalid user ID format: {}", id);
             throw new AppException("Invalid user ID format", HttpStatus.BAD_REQUEST);
         }
     }

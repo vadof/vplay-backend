@@ -43,7 +43,7 @@ public class AccountController extends GenericController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccountDto> getAccount() {
         log.info("REST request to get Account");
-        AccountDto account = accountService.getAccount(getUserId());
+        AccountDto account = accountService.getAccount(getAccountId());
         return ResponseEntity.ok().body(account);
     }
 
