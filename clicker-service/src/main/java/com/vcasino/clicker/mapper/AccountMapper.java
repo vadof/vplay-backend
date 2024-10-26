@@ -61,6 +61,11 @@ public abstract class AccountMapper implements EntityMapper<Account, AccountDto>
 
     protected void setAvailable(UpgradeDto userUpgrade, Map<String, Upgrade> userUpgrades) {
         ConditionDto condition = userUpgrade.getCondition();
+        if (userUpgrade.getMaxLevel()) {
+            userUpgrade.setAvailable(false);
+            return;
+        }
+
         if (condition == null) {
             userUpgrade.setAvailable(true);
         } else {
