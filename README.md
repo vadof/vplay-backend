@@ -138,14 +138,14 @@ For Test environment run `vcasino-backend/docker/test/docker-compose.yml`
 
 # Clicker
 
-User can change 1000 vcoins to 1$ <br>
-User can change 1$ to 900 vcoins (10% commission) <br>
+User can change 10000 vcoins to 1$ <br>
+User can change 1$ to 9000 vcoins (10% commission) <br>
 Last user level - 10 (Net worth: 1_000_000_000)
 
 ## Upgrades
 
 Maximum possible earn per hour 1,000,000 vcoins -> 1,000$<br>
-100/200/200/500 -> 1,000$
+100/200/200/500 -> 100$
 
 Price for upgrade is determined based on earn per hour
 <i>profit_per_hour_delta</i> * <i>hours_to_payback</i><br>

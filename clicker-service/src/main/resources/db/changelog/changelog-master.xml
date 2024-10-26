@@ -35,259 +35,160 @@
         <sqlFile path="data/section.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
 
-    <changeSet author="vadim" id="data/upgrade/social/facebook.sql">
+    <changeSet author="vadim" id="data/upgrade/social">
         <sqlFile path="data/upgrade/social/facebook.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/social/instagram.sql">
         <sqlFile path="data/upgrade/social/instagram.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/social/reddit.sql">
         <sqlFile path="data/upgrade/social/reddit.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/social/snapchat.sql">
         <sqlFile path="data/upgrade/social/snapchat.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/social/telegram.sql">
         <sqlFile path="data/upgrade/social/telegram.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/social/tiktok.sql">
         <sqlFile path="data/upgrade/social/tiktok.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/social/wechat.sql">
         <sqlFile path="data/upgrade/social/wechat.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/social/whatsapp.sql">
         <sqlFile path="data/upgrade/social/whatsapp.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/social/x.sql">
         <sqlFile path="data/upgrade/social/x.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/social/youtube.sql">
         <sqlFile path="data/upgrade/social/youtube.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
 
-    <changeSet author="vadim" id="data/upgrade/airlines/american-airlines.sql">
+    <changeSet author="vadim" id="data/upgrade/airlines">
         <sqlFile path="data/upgrade/airlines/american-airlines.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/airlines/china-eastern-airlines.sql">
         <sqlFile path="data/upgrade/airlines/china-eastern-airlines.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/airlines/china-western-airlines.sql">
         <sqlFile path="data/upgrade/airlines/china-western-airlines.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/airlines/delta-airlines.sql">
         <sqlFile path="data/upgrade/airlines/delta-airlines.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/airlines/emirates.sql">
         <sqlFile path="data/upgrade/airlines/emirates.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/airlines/interglobe-aviation.sql">
         <sqlFile path="data/upgrade/airlines/interglobe-aviation.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/airlines/lufthansa.sql">
         <sqlFile path="data/upgrade/airlines/lufthansa.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/airlines/ryanair.sql">
         <sqlFile path="data/upgrade/airlines/ryanair.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/airlines/singapore-airlines.sql">
         <sqlFile path="data/upgrade/airlines/singapore-airlines.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/airlines/southwest-airlines.sql">
         <sqlFile path="data/upgrade/airlines/southwest-airlines.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
 
-    <changeSet author="vadim" id="data/upgrade/pharmaceutical/abbvie.sql">
+    <changeSet author="vadim" id="data/upgrade/pharmaceutical">
         <sqlFile path="data/upgrade/pharmaceutical/abbvie.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/pharmaceutical/astrazeneca.sql">
         <sqlFile path="data/upgrade/pharmaceutical/astrazeneca.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/pharmaceutical/bayer.sql">
         <sqlFile path="data/upgrade/pharmaceutical/bayer.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/pharmaceutical/johnson-johnson.sql">
         <sqlFile path="data/upgrade/pharmaceutical/johnson-johnson.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/pharmaceutical/merck-co.sql">
         <sqlFile path="data/upgrade/pharmaceutical/merck-co.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/pharmaceutical/novartis.sql">
         <sqlFile path="data/upgrade/pharmaceutical/novartis.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/pharmaceutical/pfizer.sql">
         <sqlFile path="data/upgrade/pharmaceutical/pfizer.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/pharmaceutical/roche-holding.sql">
         <sqlFile path="data/upgrade/pharmaceutical/roche-holding.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/pharmaceutical/sanofi.sql">
         <sqlFile path="data/upgrade/pharmaceutical/sanofi.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/pharmaceutical/sinopharm.sql">
         <sqlFile path="data/upgrade/pharmaceutical/sinopharm.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
 
-    <changeSet author="vadim" id="data/upgrade/it/adobe.sql">
+    <changeSet author="vadim" id="data/upgrade/it">
         <sqlFile path="data/upgrade/it/adobe.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/it/amazon.sql">
         <sqlFile path="data/upgrade/it/amazon.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/it/apple.sql">
         <sqlFile path="data/upgrade/it/apple.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/it/google.sql">
         <sqlFile path="data/upgrade/it/google.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/it/meta.sql">
         <sqlFile path="data/upgrade/it/meta.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/it/microsoft.sql">
         <sqlFile path="data/upgrade/it/microsoft.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/it/netflix.sql">
         <sqlFile path="data/upgrade/it/netflix.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/it/nvidia.sql">
         <sqlFile path="data/upgrade/it/nvidia.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/it/samsung.sql">
         <sqlFile path="data/upgrade/it/samsung.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade/it/tesla.sql">
         <sqlFile path="data/upgrade/it/tesla.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
 
-    <changeSet author="vadim" id="data/condition/social/facebook.sql">
+    <changeSet author="vadim" id="data/condition/social">
         <sqlFile path="data/condition/social/facebook.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/social/instagram.sql">
         <sqlFile path="data/condition/social/instagram.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/social/reddit.sql">
         <sqlFile path="data/condition/social/reddit.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/social/snapchat.sql">
         <sqlFile path="data/condition/social/snapchat.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/social/telegram.sql">
         <sqlFile path="data/condition/social/telegram.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/social/tiktok.sql">
         <sqlFile path="data/condition/social/tiktok.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/social/wechat.sql">
         <sqlFile path="data/condition/social/wechat.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/social/whatsapp.sql">
         <sqlFile path="data/condition/social/whatsapp.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/social/x.sql">
         <sqlFile path="data/condition/social/x.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/social/youtube.sql">
         <sqlFile path="data/condition/social/youtube.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
 
-    <changeSet author="vadim" id="data/condition/airlines/american-airlines.sql">
+    <changeSet author="vadim" id="data/condition/airlines">
         <sqlFile path="data/condition/airlines/american-airlines.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/airlines/china-eastern-airlines.sql">
         <sqlFile path="data/condition/airlines/china-eastern-airlines.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/airlines/china-western-airlines.sql">
         <sqlFile path="data/condition/airlines/china-western-airlines.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/airlines/delta-airlines.sql">
         <sqlFile path="data/condition/airlines/delta-airlines.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/airlines/emirates.sql">
         <sqlFile path="data/condition/airlines/emirates.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/airlines/interglobe-aviation.sql">
         <sqlFile path="data/condition/airlines/interglobe-aviation.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/airlines/lufthansa.sql">
         <sqlFile path="data/condition/airlines/lufthansa.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/airlines/ryanair.sql">
         <sqlFile path="data/condition/airlines/ryanair.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/airlines/singapore-airlines.sql">
         <sqlFile path="data/condition/airlines/singapore-airlines.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/airlines/southwest-airlines.sql">
         <sqlFile path="data/condition/airlines/southwest-airlines.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
 
-    <changeSet author="vadim" id="data/condition/pharmaceutical/abbvie.sql">
+    <changeSet author="vadim" id="data/condition/pharmaceutical">
         <sqlFile path="data/condition/pharmaceutical/abbvie.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/pharmaceutical/astrazeneca.sql">
         <sqlFile path="data/condition/pharmaceutical/astrazeneca.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/pharmaceutical/bayer.sql">
         <sqlFile path="data/condition/pharmaceutical/bayer.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/pharmaceutical/johnson-johnson.sql">
         <sqlFile path="data/condition/pharmaceutical/johnson-johnson.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/pharmaceutical/merck-co.sql">
         <sqlFile path="data/condition/pharmaceutical/merck-co.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/pharmaceutical/novartis.sql">
         <sqlFile path="data/condition/pharmaceutical/novartis.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/pharmaceutical/pfizer.sql">
         <sqlFile path="data/condition/pharmaceutical/pfizer.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/pharmaceutical/roche-holding.sql">
         <sqlFile path="data/condition/pharmaceutical/roche-holding.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/pharmaceutical/sanofi.sql">
         <sqlFile path="data/condition/pharmaceutical/sanofi.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/pharmaceutical/sinopharm.sql">
         <sqlFile path="data/condition/pharmaceutical/sinopharm.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
 
-    <changeSet author="vadim" id="data/upgrade-condition/social/reddit.sql">
-        <sqlFile path="data/upgrade-condition/social/reddit.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/upgrade-condition/social/snapchat.sql">
-        <sqlFile path="data/upgrade-condition/social/snapchat.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+    <changeSet author="vadim" id="data/condition/it">
+        <sqlFile path="data/condition/it/adobe.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/condition/it/amazon.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/condition/it/apple.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/condition/it/google.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/condition/it/meta.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/condition/it/microsoft.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/condition/it/netflix.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/condition/it/nvidia.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/condition/it/samsung.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/condition/it/tesla.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
 
-    <changeSet author="vadim" id="data/condition/it/adobe.sql">
-        <sqlFile path="data/condition/it/adobe.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+    <changeSet author="vadim" id="data/upgrade-condition/social">
+        <sqlFile path="data/upgrade-condition/social/facebook.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/social/instagram.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/social/reddit.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/social/snapchat.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/social/telegram.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/social/tiktok.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/social/wechat.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/social/whatsapp.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/social/x.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/social/youtube.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
-    <changeSet author="vadim" id="data/condition/it/amazon.sql">
-        <sqlFile path="data/condition/it/amazon.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+
+    <changeSet author="vadim" id="data/upgrade-condition/airlines">
+        <sqlFile path="data/upgrade-condition/airlines/american-airlines.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/airlines/china-eastern-airlines.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/airlines/china-western-airlines.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/airlines/delta-airlines.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/airlines/emirates.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/airlines/interglobe-aviation.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/airlines/lufthansa.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/airlines/ryanair.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/airlines/singapore-airlines.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/airlines/southwest-airlines.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
-    <changeSet author="vadim" id="data/condition/it/apple.sql">
-        <sqlFile path="data/condition/it/apple.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+
+    <changeSet author="vadim" id="data/upgrade-condition/pharmaceutical">
+        <sqlFile path="data/upgrade-condition/pharmaceutical/abbvie.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/pharmaceutical/astrazeneca.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/pharmaceutical/bayer.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/pharmaceutical/johnson-johnson.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/pharmaceutical/merck-co.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/pharmaceutical/novartis.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/pharmaceutical/pfizer.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/pharmaceutical/roche-holding.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/pharmaceutical/sanofi.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/pharmaceutical/sinopharm.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
-    <changeSet author="vadim" id="data/condition/it/google.sql">
-        <sqlFile path="data/condition/it/google.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/it/meta.sql">
-        <sqlFile path="data/condition/it/meta.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/it/microsoft.sql">
-        <sqlFile path="data/condition/it/microsoft.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/it/netflix.sql">
-        <sqlFile path="data/condition/it/netflix.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/it/nvidia.sql">
-        <sqlFile path="data/condition/it/nvidia.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/it/samsung.sql">
-        <sqlFile path="data/condition/it/samsung.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/condition/it/tesla.sql">
-        <sqlFile path="data/condition/it/tesla.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+
+    <changeSet author="vadim" id="data/upgrade-condition/it">
+        <sqlFile path="data/upgrade-condition/it/adobe.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/it/amazon.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/it/apple.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/it/google.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/it/meta.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/it/microsoft.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/it/netflix.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/it/nvidia.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/it/samsung.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+        <sqlFile path="data/upgrade-condition/it/tesla.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
 
     <changeSet author="vadim" id="data/boost.sql">
