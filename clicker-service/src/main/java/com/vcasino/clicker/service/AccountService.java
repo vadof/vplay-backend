@@ -121,7 +121,7 @@ public class AccountService {
     }
 
     public Account save(Account account) {
-        account = accountRepository.saveAndFlush(account);
+        account = accountRepository.save(account);
         return account;
     }
 
@@ -130,12 +130,7 @@ public class AccountService {
     }
 
     public void addCoins(Account account, Long amount) {
-        log.info("Add {} coins to Account#{}", amount, account.getId());
-        if (amount < 0) {
-            throw new IllegalArgumentException("Amount cannot be negative");
-        }
-
-        updateAccountBalance(account, new BigDecimal(amount));
+        addCoins(account, new BigDecimal(amount));
     }
 
     public void addCoins(Account account, BigDecimal amount) {

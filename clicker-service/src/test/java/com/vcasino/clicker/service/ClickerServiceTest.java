@@ -19,13 +19,13 @@ import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 /**
  * UNIT tests for {@link ClickerService}
  */
-
 @ExtendWith(MockitoExtension.class)
 public class ClickerServiceTest {
 
@@ -52,8 +52,7 @@ public class ClickerServiceTest {
         account.setMaxTaps(100);
 
         when(accountService.getByUserId(1L)).thenReturn(account);
-
-
+        when(accountService.calculatePassiveEarn(any(), any())).thenReturn(new BigDecimal(0));
 
         try (MockedStatic<TimeUtil> ignored = mockStatic(TimeUtil.class)) {
             Tap tap = new Tap(100, 0, tapTime);

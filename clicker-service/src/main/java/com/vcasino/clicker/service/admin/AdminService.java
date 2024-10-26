@@ -19,7 +19,7 @@ public class AdminService {
     public Account improveAccount(AccountImprove accountImprove) {
         Account account = accountService.getById(accountImprove.getAccountId());
         accountService.addCoins(account, accountImprove.getAddCoins());
-        account = accountRepository.saveAndFlush(account);
+        account = accountRepository.save(account);
         return account;
     }
 

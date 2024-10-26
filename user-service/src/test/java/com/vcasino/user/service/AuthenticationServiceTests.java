@@ -95,17 +95,17 @@ public class AuthenticationServiceTests {
 
         User userMock = getUserMock();
         userMock.setRole(Role.USER);
-        when(userRepository.saveAndFlush(any())).thenReturn(userMock);
+        when(userRepository.save(any())).thenReturn(userMock);
 
         AuthenticationResponse response = authenticationService.register(toSave, Role.USER);
 
-        verify(userRepository, times(1)).saveAndFlush(userArgumentCaptor.capture());
+        verify(userRepository, times(1)).save(userArgumentCaptor.capture());
 
         User saved = userArgumentCaptor.getValue();
 
         verify(userMapper, times(1)).toEntity(toSave);
         verify(userMapper, times(1)).toDto(saved);
-        verify(userRepository, times(1)).saveAndFlush(saved);
+        verify(userRepository, times(1)).save(saved);
         verify(jwtService, times(1)).generateToken(saved);
         verify(refreshTokenService, times(1)).createRefreshToken(any());
         verify(userProducer, times(1)).sendUserCreated(saved.getId());
@@ -129,17 +129,17 @@ public class AuthenticationServiceTests {
 
         User adminMock = getUserMock();
         adminMock.setRole(Role.ADMIN);
-        when(userRepository.saveAndFlush(any())).thenReturn(adminMock);
+        when(userRepository.save(any())).thenReturn(adminMock);
 
         AuthenticationResponse response = authenticationService.register(toSave, Role.ADMIN);
 
-        verify(userRepository, times(1)).saveAndFlush(userArgumentCaptor.capture());
+        verify(userRepository, times(1)).save(userArgumentCaptor.capture());
 
         User saved = userArgumentCaptor.getValue();
 
         verify(userMapper, times(1)).toEntity(toSave);
         verify(userMapper, times(1)).toDto(saved);
-        verify(userRepository, times(1)).saveAndFlush(saved);
+        verify(userRepository, times(1)).save(saved);
         verify(jwtService, times(1)).generateToken(saved);
         verify(refreshTokenService, times(1)).createRefreshToken(any());
         verify(userProducer, times(1)).sendUserCreated(saved.getId());

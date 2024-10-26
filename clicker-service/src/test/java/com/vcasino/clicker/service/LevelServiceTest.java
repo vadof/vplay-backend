@@ -19,6 +19,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * UNIT tests for {@link LevelService}
+ */
 @ExtendWith(MockitoExtension.class)
 public class LevelServiceTest {
     @Mock
@@ -66,9 +69,7 @@ public class LevelServiceTest {
         assertEquals("Immortal", result.getName());
         assertEquals(10, result.getValue());
 
-        Exception exception = assertThrows(AppException.class, () -> {
-            levelService.getLevelAccordingNetWorth(-500L);
-        });
+        Exception exception = assertThrows(AppException.class, () -> levelService.getLevelAccordingNetWorth(-500L));
 
         String expectedMessage = "Level not found for net worth: -500";
         String actualMessage = exception.getMessage();
