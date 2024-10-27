@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -34,8 +35,9 @@ public class Account {
     @Column(name = "id")
     Long id;
 
-    @Column(name = "level", nullable = false)
-    Integer level;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "level", referencedColumnName = "value", nullable = false)
+    Level level;
 
     @Column(name = "net_worth", nullable = false, columnDefinition = "DECIMAL(21,3)")
     BigDecimal netWorth;
@@ -45,15 +47,6 @@ public class Account {
 
     @Column(name = "available_taps", nullable = false)
     Integer availableTaps;
-
-    @Column(name = "max_taps", nullable = false)
-    Integer maxTaps;
-
-    @Column(name = "earn_per_tap", nullable = false)
-    Integer earnPerTap;
-
-    @Column(name = "taps_recover_per_sec", nullable = false)
-    Integer tapsRecoverPerSec;
 
     @Column(name = "passive_earn_per_hour", nullable = false)
     Integer passiveEarnPerHour;

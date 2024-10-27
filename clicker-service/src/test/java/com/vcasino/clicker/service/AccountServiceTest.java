@@ -88,7 +88,7 @@ public class AccountServiceTest {
     void createAccount() {
         Upgrade mockedUpgrade = UpgradeMocks.getUpgradeMock("Facebook", 0);
         when(upgradeService.getInitialUpgrades()).thenReturn(List.of(mockedUpgrade));
-        when(levelService.getLevelAccordingNetWorth(AccountConstants.BALANCE_COINS)).thenReturn(LevelMocks.getLevelMock());
+        when(levelService.getLevelAccordingNetWorth(AccountConstants.BALANCE_COINS)).thenReturn(LevelMocks.getLevelMock(1));
 
         SectionUpgradesDto sectionUpgrade = SectionUpgradesDto.builder()
                 .order(0)
@@ -107,7 +107,7 @@ public class AccountServiceTest {
 
         verify(accountMapper, times(1)).toDto(any(Account.class));
 
-        assertEquals(mockedAccount.getLevel(), response.getLevel());
+        assertEquals(mockedAccount.getLevel().getValue(), response.getLevel());
         assertEquals(mockedAccount.getBalanceCoins(), response.getBalanceCoins());
         assertEquals(mockedAccount.getNetWorth(), response.getNetWorth());
         assertEquals(mockedAccount.getUpgrades().size(), response.getSectionUpgrades().size());
@@ -117,9 +117,9 @@ public class AccountServiceTest {
         assertTrue(response.getSectionUpgrades().get(0).getUpgrades().get(0).getAvailable());
         assertEquals(mockedAccount.getPassiveEarnPerHour(), response.getPassiveEarnPerHour());
         assertEquals(mockedAccount.getAvailableTaps(), response.getAvailableTaps());
-        assertEquals(mockedAccount.getMaxTaps(), response.getMaxTaps());
-        assertEquals(mockedAccount.getEarnPerTap(), response.getEarnPerTap());
-        assertEquals(mockedAccount.getTapsRecoverPerSec(), response.getTapsRecoverPerSec());
+        assertEquals(mockedAccount.getLevel().getMaxTaps(), response.getMaxTaps());
+        assertEquals(mockedAccount.getLevel().getEarnPerTap(), response.getEarnPerTap());
+        assertEquals(mockedAccount.getLevel().getTapsRecoverPerSec(), response.getTapsRecoverPerSec());
         assertFalse(mockedAccount.getFrozen());
     }
 
@@ -144,7 +144,7 @@ public class AccountServiceTest {
         when(upgradeService.getSectionUpgradesList()).thenReturn(List.of(sectionUpgrade));
 
         when(upgradeService.getInitialUpgrades()).thenReturn(upgrades);
-        when(levelService.getLevelAccordingNetWorth(AccountConstants.BALANCE_COINS)).thenReturn(LevelMocks.getLevelMock());
+        when(levelService.getLevelAccordingNetWorth(AccountConstants.BALANCE_COINS)).thenReturn(LevelMocks.getLevelMock(1));
 
         Account mockedAccount = AccountMocks.getAccountMock(1L);
         mockedAccount.setUpgrades(upgrades);
@@ -194,9 +194,9 @@ public class AccountServiceTest {
         BigDecimal balance = new BigDecimal(0);
         BigDecimal netWorth = new BigDecimal(0);
 
-        int level = 1;
+        Level level = LevelMocks.getLevelMock(1);
         long toAdd = 30;
-        when(levelService.getLevelAccordingNetWorth(any(Long.class))).thenReturn(new Level(1, "lvl", 0L));
+        when(levelService.getLevelAccordingNetWorth(any(Long.class))).thenReturn(level);
 
         account.setBalanceCoins(balance);
         account.setNetWorth(netWorth);
@@ -217,7 +217,7 @@ public class AccountServiceTest {
         BigDecimal balance = new BigDecimal(0);
         BigDecimal netWorth = new BigDecimal(0);
 
-        int level = 1;
+        Level level = LevelMocks.getLevelMock(1);
         long toAdd = -1;
 
         account.setBalanceCoins(balance);
@@ -235,9 +235,9 @@ public class AccountServiceTest {
         BigDecimal balance = new BigDecimal(0);
         BigDecimal netWorth = new BigDecimal(0);
 
-        int level = 1;
+        Level level = LevelMocks.getLevelMock(1);
         long toAdd = 100;
-        when(levelService.getLevelAccordingNetWorth(toAdd)).thenReturn(new Level(2, "lvl2", toAdd));
+        when(levelService.getLevelAccordingNetWorth(toAdd)).thenReturn(LevelMocks.getLevelMock(2));
 
         account.setBalanceCoins(balance);
         account.setNetWorth(netWorth);
@@ -245,7 +245,7 @@ public class AccountServiceTest {
 
         accountService.addCoins(account, toAdd);
 
-        assertEquals(2, account.getLevel());
+        assertEquals(2, account.getLevel().getValue());
     }
 
     @Test
@@ -254,7 +254,7 @@ public class AccountServiceTest {
         Account account = AccountMocks.getAccountMock(0L);
         account.setNetWorth(new BigDecimal(0));
         account.setPassiveEarnPerHour(36000);
-        account.setLevel(0);
+        account.setLevel(LevelMocks.getLevelMock(1));
 
         when(accountRepository.findById(account.getId())).thenReturn(Optional.of(account));
 
@@ -264,13 +264,13 @@ public class AccountServiceTest {
         try (MockedStatic<TimeUtil> ignored = mockStatic(TimeUtil.class)) {
             skipTime(lastSync, 10);
 
-            when(levelService.getLevelAccordingNetWorth(100L)).thenReturn(new Level(2, "d", 100L));
+            when(levelService.getLevelAccordingNetWorth(100L)).thenReturn(LevelMocks.getLevelMock(2));
 
             accountService.getAccount(account.getId());
 
             assertEquals(new BigDecimal(100), account.getBalanceCoins());
             assertEquals(new BigDecimal(100), account.getNetWorth());
-            assertEquals(2, account.getLevel());
+            assertEquals(2, account.getLevel().getValue());
             assertEquals(account.getLastSyncDate(), Timestamp.from(Instant.ofEpochMilli(lastSync.getNanos() + 10 * 1000)));
         }
     }
@@ -280,7 +280,7 @@ public class AccountServiceTest {
     void updateAccountTaps() {
         Account account = AccountMocks.getAccountMock(0L);
         account.setAvailableTaps(0);
-        account.setTapsRecoverPerSec(1);
+        account.getLevel().setTapsRecoverPerSec(1);
 
         when(accountRepository.findById(account.getId())).thenReturn(Optional.of(account));
 
@@ -290,7 +290,7 @@ public class AccountServiceTest {
         try (MockedStatic<TimeUtil> ignored = mockStatic(TimeUtil.class)) {
             skipTime(lastSync, 10);
 
-            when(levelService.getLevelAccordingNetWorth(any(Long.class))).thenReturn(LevelMocks.getLevelMock());
+            when(levelService.getLevelAccordingNetWorth(any(Long.class))).thenReturn(LevelMocks.getLevelMock(1));
 
             accountService.getAccount(account.getId());
 
@@ -305,8 +305,8 @@ public class AccountServiceTest {
         Account account = AccountMocks.getAccountMock(0L);
 
         account.setAvailableTaps(0);
-        account.setMaxTaps(5);
-        account.setTapsRecoverPerSec(1);
+        account.getLevel().setMaxTaps(5);
+        account.getLevel().setTapsRecoverPerSec(1);
 
         Timestamp lastSync = getTimestamp(0L);
         account.setLastSyncDate(lastSync);
@@ -314,7 +314,7 @@ public class AccountServiceTest {
         try (MockedStatic<TimeUtil> ignored = mockStatic(TimeUtil.class)) {
             skipTime(lastSync, 10);
 
-            when(levelService.getLevelAccordingNetWorth(any(Long.class))).thenReturn(LevelMocks.getLevelMock());
+            when(levelService.getLevelAccordingNetWorth(any(Long.class))).thenReturn(LevelMocks.getLevelMock(1));
 
             accountService.updateAccount(account);
 

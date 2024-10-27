@@ -23,7 +23,7 @@ public class ClickerService {
         Account account = accountService.getById(accountId);
         log.info("Account#{} tapped {} times", account.getId(), tap.getAmount());
 
-        if (tap.getAvailableTaps() > account.getMaxTaps()) {
+        if (tap.getAvailableTaps() > account.getLevel().getMaxTaps()) {
             String message = "Available taps is more than max taps";
             return handleSuspiciousBehaviour(new SuspiciousTapAction(account, tap, message));
         }
@@ -41,7 +41,7 @@ public class ClickerService {
         }
 
         long diff = TimeUtil.getDifferenceInSeconds(lastSync, tap.getTimestamp());
-        long recoveredOverTime = account.getTapsRecoverPerSec() * (diff + ClickerConstants.UNCERTAINTY_IN_SECONDS);
+        long recoveredOverTime = account.getLevel().getTapsRecoverPerSec() * (diff + ClickerConstants.UNCERTAINTY_IN_SECONDS);
         long canBeTappedOverTime = account.getAvailableTaps() + recoveredOverTime - tap.getAvailableTaps();
 
         if (tap.getAmount() > canBeTappedOverTime) {
@@ -50,7 +50,7 @@ public class ClickerService {
         }
 
         BigDecimal passiveEarn = accountService.calculatePassiveEarn(account.getPassiveEarnPerHour(), diff);
-        BigDecimal toAdd = passiveEarn.add(new BigDecimal(tap.getAmount() * account.getEarnPerTap()));
+        BigDecimal toAdd = passiveEarn.add(new BigDecimal(tap.getAmount() * account.getLevel().getEarnPerTap()));
         accountService.addCoins(account, toAdd);
 
         account.setAvailableTaps(tap.getAvailableTaps());

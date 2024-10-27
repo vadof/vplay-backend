@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -22,7 +24,7 @@ public class LevelService {
 
     private List<Level> levels;
     private List<LevelDto> levelDtos;
-
+    private final Map<Integer, Level> levelMap = new HashMap<>();
     private final LevelRepository levelRepository;
     private final LevelMapper levelMapper;
 
@@ -45,11 +47,16 @@ public class LevelService {
         return levelDtos;
     }
 
+    public Level getLevel(Integer level) {
+        return levelMap.get(level);
+    }
+
     @PostConstruct
     private void cacheLevels() {
         levels = levelRepository.findAll();
-        levels.sort(Comparator.comparingLong(Level::getNetWorth));
+        levels.sort(Comparator.comparingInt(Level::getValue));
         levelDtos = levelMapper.toDtos(levels);
+        levels.forEach(l -> levelMap.put(l.getValue(), l));
         log.info("Cached {} levels, {} levelDtos", levels.size(), levelDtos.size());
     }
 

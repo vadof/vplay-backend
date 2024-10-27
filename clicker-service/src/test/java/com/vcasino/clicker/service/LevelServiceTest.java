@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.lang.reflect.Field;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,7 +33,9 @@ public class LevelServiceTest {
 
     @BeforeEach
     void setUp() throws IllegalAccessException, NoSuchFieldException {
-        List<Level> mockLevels = LevelMocks.getLevelMocks();
+        List<Level> mockLevels = LevelMocks.getLevels().values().
+                stream().sorted(Comparator.comparingInt(Level::getValue))
+                .toList();
 
         Field levelsField = LevelService.class.getDeclaredField("levels");
         levelsField.setAccessible(true);

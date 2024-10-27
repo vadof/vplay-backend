@@ -44,12 +44,12 @@ public class ClickerServiceTest {
         long currentUnixTime = 10;
         long tapTime = 9;
 
-        account.setEarnPerTap(1);
+        account.getLevel().setEarnPerTap(1);
         account.setBalanceCoins(new BigDecimal(0));
         account.setNetWorth(new BigDecimal(0));
         account.setLastSyncDate(getTimestamp(lastAccountSyncTime));
         account.setAvailableTaps(100);
-        account.setMaxTaps(100);
+        account.getLevel().setMaxTaps(100);
 
         when(accountService.getById(1L)).thenReturn(account);
         when(accountService.calculatePassiveEarn(any(), any())).thenReturn(new BigDecimal(0));
@@ -74,10 +74,10 @@ public class ClickerServiceTest {
         long currentUnixTime = 10;
         long tapTime = 9;
 
-        account.setEarnPerTap(1);
+        account.getLevel().setEarnPerTap(1);
         account.setLastSyncDate(getTimestamp(lastAccountSyncTime));
         account.setAvailableTaps(100);
-        account.setMaxTaps(100);
+        account.getLevel().setMaxTaps(100);
 
         when(accountService.getById(1L)).thenReturn(account);
 
@@ -101,10 +101,10 @@ public class ClickerServiceTest {
         long currentUnixTime = 10;
         long tapTime = 11;
 
-        account.setEarnPerTap(1);
+        account.getLevel().setEarnPerTap(1);
         account.setLastSyncDate(getTimestamp(lastAccountSyncTime));
         account.setAvailableTaps(100);
-        account.setMaxTaps(100);
+        account.getLevel().setMaxTaps(100);
         account.setSuspiciousActionsNumber(0);
         account.setFrozen(false);
 
@@ -134,10 +134,10 @@ public class ClickerServiceTest {
         long currentUnixTime = 10;
         long tapTime = 10;
 
-        account.setEarnPerTap(1);
+        account.getLevel().setEarnPerTap(1);
         account.setLastSyncDate(getTimestamp(lastAccountSyncTime));
         account.setAvailableTaps(100);
-        account.setMaxTaps(100);
+        account.getLevel().setMaxTaps(100);
         account.setSuspiciousActionsNumber(0);
         account.setFrozen(false);
 
@@ -167,10 +167,10 @@ public class ClickerServiceTest {
         long currentUnixTime = 10;
         long tapTime = 10;
 
-        account.setEarnPerTap(1);
+        account.getLevel().setEarnPerTap(1);
         account.setLastSyncDate(getTimestamp(lastAccountSyncTime));
         account.setAvailableTaps(100);
-        account.setMaxTaps(100);
+        account.getLevel().setMaxTaps(100);
         account.setSuspiciousActionsNumber(0);
         account.setFrozen(false);
 

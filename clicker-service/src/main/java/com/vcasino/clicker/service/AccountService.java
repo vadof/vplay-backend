@@ -45,15 +45,12 @@ public class AccountService {
 
         return Account.builder()
                 .id(id)
-                .level(level.getValue())
+                .level(level)
                 .balanceCoins(AccountConstants.BALANCE_COINS)
                 .netWorth(AccountConstants.BALANCE_COINS)
                 .upgrades(upgrades)
                 .passiveEarnPerHour(upgradeService.calculatePassiveEarnPerHour(upgrades))
-                .availableTaps(AccountConstants.MAX_TAPS)
-                .maxTaps(AccountConstants.MAX_TAPS)
-                .earnPerTap(AccountConstants.EARN_PER_TAP)
-                .tapsRecoverPerSec(AccountConstants.TAPS_RECOVER_PER_SEC)
+                .availableTaps(level.getMaxTaps())
                 .lastSyncDate(TimeUtil.getCurrentTimestamp())
                 .suspiciousActionsNumber(0)
                 .frozen(false)
@@ -164,15 +161,17 @@ public class AccountService {
         account.setBalanceCoins(account.getBalanceCoins().add(earned));
         account.setNetWorth(account.getNetWorth().add(earned));
         Level level = levelService.getLevelAccordingNetWorth(account.getNetWorth().longValue());
-        account.setLevel(level.getValue());
+        if (level.getValue() > account.getLevel().getValue()) {
+            account.setLevel(level);
+        }
     }
 
     private void updateAccountTaps(Account account, Long differenceInSecond) {
-        long newTapsValue = differenceInSecond * account.getTapsRecoverPerSec() + account.getAvailableTaps();
+        long newTapsValue = differenceInSecond * account.getLevel().getTapsRecoverPerSec() + account.getAvailableTaps();
         if (newTapsValue > Integer.MAX_VALUE) {
-            account.setAvailableTaps(account.getMaxTaps());
+            account.setAvailableTaps(account.getLevel().getMaxTaps());
         } else {
-            account.setAvailableTaps(Math.min((int) newTapsValue, account.getMaxTaps()));
+            account.setAvailableTaps(Math.min((int) newTapsValue, account.getLevel().getMaxTaps()));
         }
     }
 

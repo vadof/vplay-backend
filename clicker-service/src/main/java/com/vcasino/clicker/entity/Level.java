@@ -1,5 +1,6 @@
 package com.vcasino.clicker.entity;
 
+import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -11,6 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 @Entity
 @Table(name = "level")
@@ -20,6 +23,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class Level {
     @Id
     @Column(name = "value")
@@ -30,4 +35,13 @@ public class Level {
     
     @Column(name = "net_worth", nullable = false, unique = true)
     Long netWorth;
+
+    @Column(name = "earn_per_tap", nullable = false)
+    Integer earnPerTap;
+
+    @Column(name = "taps_recover_per_sec", nullable = false)
+    Integer tapsRecoverPerSec;
+
+    @Column(name = "max_taps", nullable = false)
+    Integer maxTaps;
 }

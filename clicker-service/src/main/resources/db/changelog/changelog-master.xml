@@ -1,6 +1,9 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet author="vadim" id="table/level.sql">
+        <sqlFile path="table/level.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+    </changeSet>
     <changeSet author="vadim" id="table/account.sql">
         <sqlFile path="table/account.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
@@ -21,15 +24,6 @@
     </changeSet>
     <changeSet author="vadim" id="table/account-upgrade.sql">
         <sqlFile path="table/account-upgrade.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="table/boost.sql">
-        <sqlFile path="table/boost.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="modification/boost-fk.sql">
-        <sqlFile path="modification/boost-fk.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="table/level.sql">
-        <sqlFile path="table/level.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
     <changeSet author="vadim" id="data/section.sql">
         <sqlFile path="data/section.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
@@ -191,9 +185,6 @@
         <sqlFile path="data/upgrade-condition/it/tesla.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
 
-    <changeSet author="vadim" id="data/boost.sql">
-        <sqlFile path="data/boost.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
     <changeSet author="vadim" id="data/level.sql">
         <sqlFile path="data/level.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>

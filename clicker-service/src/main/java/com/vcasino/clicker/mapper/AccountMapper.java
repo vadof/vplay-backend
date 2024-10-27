@@ -5,12 +5,15 @@ import com.vcasino.clicker.dto.ConditionDto;
 import com.vcasino.clicker.dto.SectionUpgradesDto;
 import com.vcasino.clicker.dto.UpgradeDto;
 import com.vcasino.clicker.entity.Account;
+import com.vcasino.clicker.entity.Level;
 import com.vcasino.clicker.entity.Upgrade;
 import com.vcasino.clicker.mapper.common.EntityMapper;
+import com.vcasino.clicker.service.LevelService;
 import com.vcasino.clicker.service.UpgradeService;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +35,25 @@ public abstract class AccountMapper implements EntityMapper<Account, AccountDto>
     private UpgradeService upgradeService;
 
     @Autowired
+    private LevelService levelService;
+
+    @Autowired
     private UpgradeMapper upgradeMapper;
 
     @Override
+    @Mapping(target = "level", source = "level.value")
+    @Mapping(target = "maxTaps", source = "level.maxTaps")
+    @Mapping(target = "earnPerTap", source = "level.earnPerTap")
+    @Mapping(target = "tapsRecoverPerSec", source = "level.tapsRecoverPerSec")
     public abstract AccountDto toDto(Account entity);
+
+    @Override
+    @Mapping(target = "level", expression = "java(mapToLevel(dto.getLevel()))")
+    public abstract Account toEntity(AccountDto dto);
+
+    protected Level mapToLevel(Integer level) {
+        return levelService.getLevel(level);
+    }
 
     @AfterMapping
     protected void setSectionUpgrades(@MappingTarget AccountDto dto, Account entity) {
