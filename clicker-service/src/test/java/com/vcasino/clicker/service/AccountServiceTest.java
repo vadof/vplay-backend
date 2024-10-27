@@ -3,7 +3,7 @@ package com.vcasino.clicker.service;
 import com.vcasino.clicker.config.constants.AccountConstants;
 import com.vcasino.clicker.dto.AccountDto;
 import com.vcasino.clicker.dto.SectionUpgradesDto;
-import com.vcasino.clicker.dto.UpgradeUpdateRequest;
+import com.vcasino.clicker.dto.BuyUpgradeRequest;
 import com.vcasino.clicker.entity.Account;
 import com.vcasino.clicker.entity.Level;
 import com.vcasino.clicker.entity.Upgrade;
@@ -337,14 +337,14 @@ public class AccountServiceTest {
     }
 
     @Test
-    @DisplayName("Update upgrade")
-    void updateUpgrade() {
+    @DisplayName("Buy upgrade")
+    void buyUpgrade() {
         Account account = AccountMocks.getAccountMock(1L);
         when(accountRepository.findById(account.getId())).thenReturn(Optional.of(account));
 
-        Upgrade toUpdate = UpgradeMocks.getUpgradeMock("1", 0);
+        Upgrade toBuy = UpgradeMocks.getUpgradeMock("1", 0);
         List<Upgrade> upgrades = new ArrayList<>();
-        upgrades.add(toUpdate);
+        upgrades.add(toBuy);
         upgrades.add(UpgradeMocks.getUpgradeMock("2", 0));
         account.setUpgrades(upgrades);
 
@@ -352,12 +352,12 @@ public class AccountServiceTest {
 
         Upgrade expectedNew = UpgradeMocks.getUpgradeMock("1", 1, 100);
 
-        when(upgradeService.findUpgradeInAccount(account, toUpdate.getName(), toUpdate.getLevel())).thenReturn(toUpdate);
-        when(upgradeService.findUpgrade(toUpdate.getName(), toUpdate.getLevel() + 1)).thenReturn(expectedNew);
+        when(upgradeService.findUpgradeInAccount(account, toBuy.getName(), toBuy.getLevel())).thenReturn(toBuy);
+        when(upgradeService.findUpgrade(toBuy.getName(), toBuy.getLevel() + 1)).thenReturn(expectedNew);
         when(upgradeService.calculatePassiveEarnPerHour(any())).thenReturn(expectedNew.getProfitPerHour() + upgrades.get(1).getProfitPerHour());
 
-        UpgradeUpdateRequest upgradeUpdateRequest = new UpgradeUpdateRequest(toUpdate.getName(), toUpdate.getLevel());
-        accountService.updateUpgrade(upgradeUpdateRequest, account.getId());
+        BuyUpgradeRequest upgradeUpdateRequest = new BuyUpgradeRequest(toBuy.getName(), toBuy.getLevel());
+        accountService.buyUpgrade(upgradeUpdateRequest, account.getId());
 
         List<Upgrade> updatedUpgrades = account.getUpgrades();
         assertEquals(2, updatedUpgrades.size());
@@ -365,8 +365,8 @@ public class AccountServiceTest {
         assertEquals(new BigDecimal(0), account.getBalanceCoins());
         assertTrue(updatedUpgrades.stream().anyMatch(u -> u.getName().equals(expectedNew.getName())
                 && u.getLevel().equals(expectedNew.getLevel())));
-        assertFalse(updatedUpgrades.stream().anyMatch(u -> u.getName().equals(toUpdate.getName())
-                && u.getLevel().equals(toUpdate.getLevel())));
+        assertFalse(updatedUpgrades.stream().anyMatch(u -> u.getName().equals(toBuy.getName())
+                && u.getLevel().equals(toBuy.getLevel())));
     }
 
     @Test
@@ -375,22 +375,22 @@ public class AccountServiceTest {
         Account account = AccountMocks.getAccountMock(1L);
         when(accountRepository.findById(account.getId())).thenReturn(Optional.of(account));
 
-        Upgrade toUpdate = UpgradeMocks.getUpgradeMock("1", 10);
-        toUpdate.setMaxLevel(true);
+        Upgrade toBuy = UpgradeMocks.getUpgradeMock("1", 10);
+        toBuy.setMaxLevel(true);
         List<Upgrade> upgrades = new ArrayList<>();
-        upgrades.add(toUpdate);
+        upgrades.add(toBuy);
         upgrades.add(UpgradeMocks.getUpgradeMock("2", 0));
         account.setUpgrades(upgrades);
 
-        when(upgradeService.findUpgradeInAccount(account, toUpdate.getName(), toUpdate.getLevel())).thenReturn(toUpdate);
-        UpgradeUpdateRequest upgradeUpdateRequest = new UpgradeUpdateRequest(toUpdate.getName(), toUpdate.getLevel());
+        when(upgradeService.findUpgradeInAccount(account, toBuy.getName(), toBuy.getLevel())).thenReturn(toBuy);
+        BuyUpgradeRequest upgradeUpdateRequest = new BuyUpgradeRequest(toBuy.getName(), toBuy.getLevel());
 
-        assertThrows(AppException.class, () -> accountService.updateUpgrade(upgradeUpdateRequest, account.getId()));
+        assertThrows(AppException.class, () -> accountService.buyUpgrade(upgradeUpdateRequest, account.getId()));
     }
 
     @Test
-    @DisplayName("Update upgrade not enough money")
-    void updateUpgradeNotEnoughMoney() {
+    @DisplayName("Buy upgrade not enough money")
+    void buyUpgradeNotEnoughMoney() {
         Account account = AccountMocks.getAccountMock(1L);
         when(accountRepository.findById(account.getId())).thenReturn(Optional.of(account));
 
@@ -405,8 +405,8 @@ public class AccountServiceTest {
 
         when(upgradeService.findUpgradeInAccount(account, toUpdate.getName(), toUpdate.getLevel())).thenReturn(toUpdate);
 
-        UpgradeUpdateRequest upgradeUpdateRequest = new UpgradeUpdateRequest(toUpdate.getName(), toUpdate.getLevel());
-        assertThrows(AppException.class, () -> accountService.updateUpgrade(upgradeUpdateRequest, account.getId()));
+        BuyUpgradeRequest upgradeUpdateRequest = new BuyUpgradeRequest(toUpdate.getName(), toUpdate.getLevel());
+        assertThrows(AppException.class, () -> accountService.buyUpgrade(upgradeUpdateRequest, account.getId()));
     }
 
     @Test
@@ -426,8 +426,8 @@ public class AccountServiceTest {
 
         when(upgradeService.findUpgradeInAccount(account, toUpdate.getName(), toUpdate.getLevel())).thenReturn(toUpdate);
 
-        UpgradeUpdateRequest upgradeUpdateRequest = new UpgradeUpdateRequest(toUpdate.getName(), toUpdate.getLevel());
-        assertThrows(AppException.class, () -> accountService.updateUpgrade(upgradeUpdateRequest, account.getId()));
+        BuyUpgradeRequest upgradeUpdateRequest = new BuyUpgradeRequest(toUpdate.getName(), toUpdate.getLevel());
+        assertThrows(AppException.class, () -> accountService.buyUpgrade(upgradeUpdateRequest, account.getId()));
     }
 
     private void skipTime(Timestamp start, long seconds) {

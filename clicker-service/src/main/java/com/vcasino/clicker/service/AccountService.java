@@ -2,7 +2,7 @@ package com.vcasino.clicker.service;
 
 import com.vcasino.clicker.config.constants.AccountConstants;
 import com.vcasino.clicker.dto.AccountDto;
-import com.vcasino.clicker.dto.UpgradeUpdateRequest;
+import com.vcasino.clicker.dto.BuyUpgradeRequest;
 import com.vcasino.clicker.entity.Account;
 import com.vcasino.clicker.entity.Condition;
 import com.vcasino.clicker.entity.Level;
@@ -67,7 +67,7 @@ public class AccountService {
         return account;
     }
 
-    public AccountDto updateUpgrade(UpgradeUpdateRequest request, Long accountId) {
+    public AccountDto buyUpgrade(BuyUpgradeRequest request, Long accountId) {
         Account account = getById(accountId);
         updateAccount(account, false);
 

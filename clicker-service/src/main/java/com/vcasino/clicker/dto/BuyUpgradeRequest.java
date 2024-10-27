@@ -14,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UpgradeUpdateRequest {
+public class BuyUpgradeRequest {
     @NotBlank(message = "Field cannot be blank")
     String upgradeName;
     @NotNull(message = "Field cannot be null")

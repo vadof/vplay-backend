@@ -3,7 +3,7 @@ package com.vcasino.clicker.controller;
 import com.vcasino.clicker.controller.common.GenericController;
 import com.vcasino.clicker.dto.AccountDto;
 import com.vcasino.clicker.dto.SectionUpgradesDto;
-import com.vcasino.clicker.dto.UpgradeUpdateRequest;
+import com.vcasino.clicker.dto.BuyUpgradeRequest;
 import com.vcasino.clicker.service.AccountService;
 import com.vcasino.clicker.service.UpgradeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -54,13 +54,13 @@ public class UpgradeController extends GenericController {
         return ResponseEntity.ok().body(sectionUpgradesList);
     }
 
-    @Operation(summary = "Update Upgrade")
-    @ApiResponse(responseCode = "200", description = "Successful update",
+    @Operation(summary = "Buy Upgrade")
+    @ApiResponse(responseCode = "200", description = "Successful purchase",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AccountDto.class)))
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccountDto> updateUpgrade(@RequestBody @Valid UpgradeUpdateRequest request) {
+    public ResponseEntity<AccountDto> buyUpgrade(@RequestBody @Valid BuyUpgradeRequest request) {
         log.info("Rest request to buy Upgrade");
-        AccountDto updatedAccount = accountService.updateUpgrade(request, getAccountId());
+        AccountDto updatedAccount = accountService.buyUpgrade(request, getAccountId());
         return ResponseEntity.ok().body(updatedAccount);
     }
 
