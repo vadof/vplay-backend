@@ -96,6 +96,7 @@ For Test environment run `vcasino-backend/docker/test/docker-compose.yml`
 
 - Можно добавить vcoins пользователю
 - Статистика сколько пользователей забрало различных наград за определенный день
+- Админ может добавлять видео за просмотр которого пользователь получает награду. (input=link,reward,date)
 
 **App Sections**
 
@@ -119,7 +120,7 @@ For Test environment run `vcasino-backend/docker/test/docker-compose.yml`
 ### Tap section
 
 **TapToEarn = 1-10**<br>
-**Energy = 100-1000 (TODO clarify)**
+**Energy = 1000-10000**
 
 - Основная механика зарабатывания vcoins - tap to earn
 - У пользователя есть определенное количество энергии 1 energy = 1 EarnPerTap

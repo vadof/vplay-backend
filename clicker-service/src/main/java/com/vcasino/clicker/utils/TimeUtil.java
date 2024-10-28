@@ -3,6 +3,7 @@ package com.vcasino.clicker.utils;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -18,6 +19,18 @@ public class TimeUtil {
 
     public static Instant toInstant(LocalDateTime localDateTime) {
         return localDateTime.toInstant(zoneOffset);
+    }
+
+    public static LocalDate getCurrentDate() {
+        return LocalDate.now();
+    }
+
+    public static boolean isToday(LocalDate date) {
+        return date.isEqual(getCurrentDate());
+    }
+
+    public static boolean isYesterday(LocalDate date) {
+        return date.isEqual(getCurrentDate().minusDays(1));
     }
 
     public static Timestamp toTimestamp(LocalDateTime localDateTime) {

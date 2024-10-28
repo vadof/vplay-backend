@@ -119,6 +119,10 @@ public class AccountService {
         return accountMapper.toDto(account);
     }
 
+    public void addCoins(Account account, Integer amount) {
+        addCoins(account, new BigDecimal(amount));
+    }
+
     public void addCoins(Account account, Long amount) {
         addCoins(account, new BigDecimal(amount));
     }

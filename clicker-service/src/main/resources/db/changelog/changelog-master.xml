@@ -188,5 +188,8 @@
     <changeSet author="vadim" id="data/level.sql">
         <sqlFile path="data/level.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
+    <changeSet author="vadim" id="table/streak.sql">
+        <sqlFile path="table/streak.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+    </changeSet>
 
 </databaseChangeLog>
