@@ -19,7 +19,7 @@ public class StreakMocks {
                 new DayReward(4, 5000),
                 new DayReward(5, 15000),
                 new DayReward(6, 25000),
-                new DayReward(7, 10000),
+                new DayReward(7, 100000),
                 new DayReward(8, 250000),
                 new DayReward(9, 500000),
                 new DayReward(10, 1000000)

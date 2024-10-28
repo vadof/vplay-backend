@@ -89,7 +89,7 @@ public class StreakService {
         dayRewards.add(new DayReward(4, 5000));
         dayRewards.add(new DayReward(5, 15000));
         dayRewards.add(new DayReward(6, 25000));
-        dayRewards.add(new DayReward(7, 10000));
+        dayRewards.add(new DayReward(7, 100000));
         dayRewards.add(new DayReward(8, 250000));
         dayRewards.add(new DayReward(9, 500000));
         dayRewards.add(new DayReward(10, 1000000));
