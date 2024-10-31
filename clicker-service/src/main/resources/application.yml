@@ -27,3 +27,6 @@ eureka:
   instance:
     preferIpAddress: true
 #    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+youtube:
+  api-key: ${youtube.api-key}
