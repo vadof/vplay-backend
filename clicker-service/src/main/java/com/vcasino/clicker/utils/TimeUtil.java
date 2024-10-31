@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 public class TimeUtil {
 
     private final static ZoneOffset zoneOffset = ZoneOffset.of("+00:00");
-    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
     public static Instant getCurrentInstant() {
         return Instant.now();
@@ -49,6 +49,14 @@ public class TimeUtil {
         return Timestamp.from(getCurrentInstant());
     }
 
+    public static LocalDateTime getCurrentDateTime() {
+        return LocalDateTime.now();
+    }
+
+    public static LocalDateTime parseDateTime(String date) {
+        return LocalDateTime.parse(date, formatter);
+    }
+
     public static LocalDateTime toLocalDateTime(Instant instant) {
         return LocalDateTime.ofInstant(instant, zoneOffset);
     }
@@ -67,6 +75,10 @@ public class TimeUtil {
 
     public static Long getCurrentUnixTime() {
         return getCurrentInstant().getEpochSecond();
+    }
+
+    public static Long getDifferenceInSeconds(LocalDateTime start, LocalDateTime end) {
+        return getDuration(start, end).getSeconds();
     }
 
     public static Long getDifferenceInSeconds(Long unixStartTime, Long unixEndTime) {

@@ -2,7 +2,7 @@ package com.vcasino.clicker.mock;
 
 import com.vcasino.clicker.dto.ConditionDto;
 import com.vcasino.clicker.entity.Condition;
-import com.vcasino.clicker.entity.ConditionType;
+import com.vcasino.clicker.entity.enums.ConditionType;
 
 public class ConditionMocks {
 

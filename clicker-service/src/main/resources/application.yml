@@ -29,4 +29,4 @@ eureka:
 #    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
 youtube:
-  api-key: ${youtube.api-key}
+  api-key: ${YOUTUBE_API_KEY}

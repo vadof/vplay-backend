@@ -2,8 +2,10 @@ package com.vcasino.clicker.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vcasino.clicker.config.ApiKeys;
+import com.vcasino.clicker.config.IntegratedService;
 import com.vcasino.clicker.dto.youtube.VideoInfo;
 import com.vcasino.clicker.exception.AppException;
+import com.vcasino.clicker.service.video.YoutubeService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,6 +43,12 @@ public class VideoServiceTest {
 
     @InjectMocks
     YoutubeService youtubeService;
+
+    @Test
+    @DisplayName(value = "Get integrated service")
+    void getIntegratedService() {
+        assertEquals(IntegratedService.YOUTUBE, youtubeService.getIntegratedService());
+    }
 
     @Test
     @DisplayName(value = "Get video info")

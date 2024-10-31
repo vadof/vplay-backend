@@ -1,11 +1,11 @@
-package com.vcasino.clicker.service;
+package com.vcasino.clicker.service.video;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vcasino.clicker.config.ApiKeys;
+import com.vcasino.clicker.config.IntegratedService;
 import com.vcasino.clicker.dto.youtube.VideoInfo;
 import com.vcasino.clicker.exception.AppException;
-import com.vcasino.clicker.service.video.VideoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -58,4 +58,7 @@ public class YoutubeService extends VideoService {
         }
     }
 
+    public IntegratedService getIntegratedService() {
+        return IntegratedService.YOUTUBE;
+    }
 }

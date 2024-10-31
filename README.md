@@ -8,6 +8,8 @@
 For Dev environment run `vcasino-backend/docker/dev/docker-compose.yml` <br>
 For Test environment run `vcasino-backend/docker/test/docker-compose.yml`
 
+To do actions with YouTube you need to set YOUTUBE_API_KEY env variable
+
 # Services:
 
 - [API Gateway](#api-gateway)

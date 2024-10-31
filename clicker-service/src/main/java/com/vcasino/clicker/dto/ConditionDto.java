@@ -1,6 +1,6 @@
 package com.vcasino.clicker.dto;
 
-import com.vcasino.clicker.entity.ConditionType;
+import com.vcasino.clicker.entity.enums.ConditionType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

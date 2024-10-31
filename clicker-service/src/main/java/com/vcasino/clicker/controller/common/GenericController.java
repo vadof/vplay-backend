@@ -6,8 +6,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
+@RequestMapping("/api/v1/clicker")
 @AllArgsConstructor
 public abstract class GenericController {
 
@@ -17,7 +19,7 @@ public abstract class GenericController {
         String role = getRole();
         if (!role.equals("ROLE_ADMIN")) {
             log.warn("Unauthorized access attempt");
-            throw new AppException("", HttpStatus.FORBIDDEN);
+            throw new AppException(null, HttpStatus.FORBIDDEN);
         }
     }
 

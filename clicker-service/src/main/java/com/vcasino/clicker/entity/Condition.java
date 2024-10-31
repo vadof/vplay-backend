@@ -1,5 +1,6 @@
 package com.vcasino.clicker.entity;
 
+import com.vcasino.clicker.entity.enums.ConditionType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
