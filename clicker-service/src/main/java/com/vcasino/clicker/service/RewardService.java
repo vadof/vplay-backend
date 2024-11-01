@@ -155,12 +155,9 @@ public class RewardService {
     private void validateClickTime(LocalDateTime clickTime, Reward reward) {
         LocalDateTime now = TimeUtil.getCurrentDateTime();
 
-        int durationInSeconds = reward.getDurationInSeconds() == null ? 0 : 120;
-        int rewardMarginInSeconds = durationInSeconds + 120;
-
         boolean clickAfterRewardAppeared = clickTime.isAfter(reward.getValidFrom());
         boolean clickBeforeRewardExpired = reward.getEndsIn() == null ||
-                clickTime.isBefore(reward.getEndsIn().plusSeconds(rewardMarginInSeconds));
+                clickTime.isBefore(reward.getEndsIn());
         boolean clickBeforeCurrentDate = clickTime.isBefore(now);
         boolean clickWasNoMoreThanOneDayAgo = clickTime.isAfter(now.minusDays(1));
 

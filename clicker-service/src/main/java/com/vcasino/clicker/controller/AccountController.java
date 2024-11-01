@@ -23,7 +23,7 @@ import java.util.List;
 
 @Tag(name = "Authentication", description = "API operations with Clicker")
 @RestController
-@RequestMapping("/accounts")
+@RequestMapping("/api/v1/clicker/accounts")
 @Validated
 @Slf4j
 public class AccountController extends GenericController {

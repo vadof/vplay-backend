@@ -22,7 +22,7 @@ public class RewardDto {
     String name;
     String link;
     Integer durationInSeconds;
-    IntegratedService integratedService;
+    IntegratedService service;
     Integer rewardCoins;
     LocalDateTime endsIn;
     Boolean received;

@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/rewards")
+@RequestMapping("/api/v1/clicker/rewards")
 @Validated
 @Slf4j
 public class RewardController extends GenericController {

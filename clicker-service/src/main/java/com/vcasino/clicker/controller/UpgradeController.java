@@ -27,7 +27,7 @@ import java.util.List;
 
 @Tag(name = "Upgrade", description = "API operations with Upgrades")
 @RestController
-@RequestMapping("/upgrades")
+@RequestMapping("/api/v1/clicker/upgrades")
 @Validated
 @Slf4j
 public class UpgradeController extends GenericController {

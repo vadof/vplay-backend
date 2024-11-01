@@ -33,8 +33,8 @@ public enum RewardType {
     public boolean serviceIsSupported(IntegratedService integratedService) {
         return switch (this) {
             case WATCH -> switch (integratedService) {
-                case TELEGRAM -> true;
-                case YOUTUBE -> false;
+                case TELEGRAM -> false;
+                case YOUTUBE -> true;
             };
             case SUBSCRIBE -> true;
         };

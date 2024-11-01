@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Hidden
 @RestController
-@RequestMapping("/admin/accounts")
+@RequestMapping("/api/v1/clicker/admin/accounts")
 @Validated
 @Slf4j
 public class AdminAccountController extends GenericController {

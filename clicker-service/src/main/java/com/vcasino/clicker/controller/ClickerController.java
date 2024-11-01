@@ -18,10 +18,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Clicker", description = "API operations with Clicker")
 @RestController
+@RequestMapping("/api/v1/clicker")
 @Validated
 @Slf4j
 public class ClickerController extends GenericController {

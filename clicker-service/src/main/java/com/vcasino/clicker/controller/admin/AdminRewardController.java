@@ -25,7 +25,7 @@ import java.util.Map;
 
 @Hidden
 @RestController
-@RequestMapping("/admin/rewards")
+@RequestMapping("/api/v1/clicker/admin/rewards")
 @Validated
 @Slf4j
 public class AdminRewardController extends GenericController {
