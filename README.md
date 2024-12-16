@@ -1,4 +1,4 @@
-# VCasino Documentation
+# Documentation
 
 - **[Local environment setup](#local-environment-setup)**
 - **[Services](#services)**
@@ -29,20 +29,20 @@ To do actions with YouTube you need to set YOUTUBE_API_KEY env variable
 
 **Description**
 
-- Централизованная точка входа для всех клиентов.
-- Маршрутизация запросов к соответствующим микросервисам.
-- Управление аутентификацией и авторизацией на уровне шлюза.
+- Centralized entry point for all clients.
+- Routing requests to the appropriate microservices.
+- Gateway-level authentication and authorization management.
 
 **Components**
 
-- Spring Cloud Gateway для маршрутизации и управления API.
+- Spring Cloud Gateway for API routing and management.
 
 ## Eureka Service
 
 **Description**
 
-- Обнаружение и регистрация микросервисов.
-- Обеспечение динамической маршрутизации и балансировки нагрузки.
+- Discovery and registration of microservices.
+- Providing dynamic routing and load balancing.
 
 **Components**
 
@@ -52,13 +52,13 @@ To do actions with YouTube you need to set YOUTUBE_API_KEY env variable
 
 **Description**
 
-- Регистрация и аутентификация пользователей.
-- Хранение информации о пользователях.
+- Registration and authentication of users.
+- Storage of information about users.
 
 **Components**
 
-- Spring Security для аутентификации и авторизации.
-- База данных PostgreSQL для хранения данных пользователей.
+- Spring Security for authentication and authorization.
+- PostgreSQL database for storing user data.
 
 ## Clicker service
 
@@ -96,9 +96,9 @@ To do actions with YouTube you need to set YOUTUBE_API_KEY env variable
 
 **Admin functionality**
 
-- Можно добавить vcoins пользователю
-- Статистика сколько пользователей забрало различных наград за определенный день
-- Админ может добавлять видео за просмотр которого пользователь получает награду. (input=link,reward,date)
+- Add vcoins to a user
+- Statistics on how many users have taken various rewards for a certain day
+- The admin can add a video for viewing which the user receives a reward. (input=link,reward,date)
 
 **App Sections**
 
@@ -107,33 +107,34 @@ To do actions with YouTube you need to set YOUTUBE_API_KEY env variable
 - [Upgrade](#upgrade-section)
 - [Friends](#friends-section)
 - [Rewards](#rewards-section)
+- [Company](#company-section)
 - [Top](#top-section)
 
 ### Common
 
-- Видна почти во всех секциях
-- текущий баланс
-- заработок в час
-- Текущий уровень пользователя на который он может нажать и посмотреть информацию о всех уровнях <br>
+- Visible in almost all sections
+- current balance
+- earnings per hour
+- Current user level which he can click on and see information about all levels <br>
   Last user level = 10 (Net worth: 1_000_000_000)
-- Окно настроек где пользователь может ? (TODO)
-    - User can exchange 100_000 vcoins for 1$ to his wallet <br>
+- Settings window where the user can? (TODO)
+- User can exchange 100_000 vcoins for 1$ to his wallet <br>
 
 ### Tap section
 
 **TapToEarn = 1-10**<br>
 **Energy = 1000-10000**
 
-- Основная механика зарабатывания vcoins - tap to earn
-- У пользователя есть определенное количество энергии 1 energy = 1 EarnPerTap
+- The main mechanics of earning vcoins is tap to earn
+- The user has a certain amount of energy 1 energy = 1 EarnPerTap
 - For each level, the user's earnings per tap improve. EarnPerTap = lvl
-- В секунду регенируется определенное количество энергии (3)
+- A certain amount of energy is regenerated per second (3)
 - The user can improve the maximum energy reserve, max value = ?.
 - There is a boost tab where you can replenish all your energy ? times a day
 
 ### Upgrade section
 
-Улучшения отвечают за пассивный доход <br>
+Upgrades are responsible for passive income <br>
 Maximum possible earn per hour 1,000,000 vcoins -> 1,000$<br>
 100/200/200/500 -> 100$
 
@@ -230,37 +231,79 @@ Price for upgrade is determined based on upgrade's (<i>profit_per_hour_delta</i>
   counter is reset.
 - Every day, a new video appears, upon viewing which the user can receive a reward.
 
+### Company section
+
+**Description**
+- The user will have a choice to create their own company or get a job in a company
+- Players can apply for jobs in companies (optional can specify the desired fixed salary and % of revenue), and the owners (or managers) accept them.
+* To create a company you need:
+  - Company name
+  - Unique company code
+  - Description
+  - Start-up capital (min 5M)
+  - Minimum number of clicks per week (optional)
+- Maximum number of employees = 10
+- Maximum number of employees can be improved
+- Each employee in the company has a role (custom ones can be made)
+- Company reports are updated every day
+- The company can go bankrupt if the company's capital falls to 0
+- Share system (???)
+(Storing daily report in json structure)
+
+
+
+|             | Earn (d) | Salary (fixed/%) | Company income (50%) | Employee salary |
+|-------------|:--------:|:----------------:|:--------------------:|:---------------:|
+| Employee 1  |   20K    |      2K/5%       |         10K          |    2K+1K=3K     |
+| Employee 2  |   20K    |      10K/5%      |         10K          |   10K+1K=11K    |
+| Employee 3  |   20K    |      10K/5%      |         10K          |   10K+1K=11K    |
+| Employee 4  |   100K   |     10K/10%      |         50K          |   10K+10K=20K   |
+| Employee 5  |   100K   |     10K/10%      |         50K          |   10K+10K=20K   |
+| Employee 6  |   100K   |     10K/10%      |         50K          |   10K+10K=20K   |
+| Employee 7  |   200K   |     20K/20%      |         100K         |   20K+40K=60K   |
+| Employee 8  |   200K   |     20K/20%      |         100K         |   20K+40K=60K   |
+| Employee 9  |   200K   |     20K/20%      |         100K         |   20K+40K=60K   |
+| Employee 10 |   200K   |     20K/20%      |         100K         |   20K+40K=60K   |
+| Total       |          |                  |         580K         |      294K       |
+
+**Income tax (10%)**: (Company income - Employee salary) * Tax<br>
+**Income tax (10%)**: (580K - 294K) * 0.1 = 28.6K<br>
+**Day tax**: Number of employees * 5K<br>
+**Day tax**: 10 * 5K = 50K<br>
+**Net profit**: Company income - Employee salary - Income tax - Day tax<br>
+**Net profit**: 580K - 294K - 28.6K - 50K = 207,4K<br>
+
 ### Top section
 
-- Пользователь может посмотреть топ по миру
-- Пользователь может посмотреть топ среди друзей
-- Топ обновляется каждый день в 00:00 по UTC
+- User can see top in the world
+- User can see top among friends
+- Top is updated every day at 00:00 UTC
 
 ## Game Service
 
 **Description**
 
-- Предостовление доступных игр (рулетка, слоты и т.д.).
+- Provision of available games (roulette, slots, etc.).
 
 ## Betting Service
 
 **Description**
 
-- Обработка ставок пользователей.
-- Взаимодействие с wallet сервисом для обновления баланса.
+- Processing user bets.
+- Interaction with the wallet service to update the balance.
 
 ## Wallet Service
 
 **Description**
 
-- Управление балансом пользователей.
-- Пополнение и вывод средств.
-- Ведение истории транзакций.
+- Managing user balances.
+- Depositing and withdrawing funds.
+- Maintaining transaction history.
 
 **Components**
 
-- Интеграция с платежными системами.
-- База данных для хранения информации о транзакциях.
+- Integration with payment systems.
+- Database for storing transaction information.
 
 **Feautures**
 
@@ -270,57 +313,57 @@ Price for upgrade is determined based on upgrade's (<i>profit_per_hour_delta</i>
 
 **Description:**
 
-- Отправка уведомлений пользователям (например, уведомления о выигрыше/проигрыше).
-- Поддержка различных каналов связи (email, SMS).
+- Sending notifications to users (e.g. notifications about winning/losing).
+- Support for various communication channels (email, SMS).
 
 **Components**
 
-- Интеграция с внешними сервисами для отправки email и SMS.
-- Очереди сообщений (например, RabbitMQ или Kafka) для обработки уведомлений асинхронно.
+- Integration with external services for sending email and SMS.
+- Message queues (e.g. RabbitMQ or Kafka) for processing notifications asynchronously.
 
 ## Analytics Service
 
 **Description**
 
-- Сбор и анализ данных о поведении пользователей и игре.
-- Создание отчетов и метрик для бизнеса.
+- Collection and analysis of user behavior and game data.
+- Creation of reports and metrics for business.
 
 **Components**
 
-- База данных для хранения аналитических данных.
-- Инструменты для визуализации данных (например, Grafana или Kibana).
+- Database for storing analytical data.
+- Tools for data visualization (e.g. Grafana or Kibana).
 
 ## Admin Service
 
 **Description**
 
-- Управление и мониторинг системой.
-- Инструменты для модерации и поддержки пользователей.
-- Просмотр и управление данными всех остальных сервисов.
+- System management and monitoring.
+- Tools for moderation and user support.
+- Viewing and managing data from all other services.
 
 **Components**
 
-- Веб-интерфейс для администраторов.
-- Инструменты мониторинга (например, Spring Boot Admin).
+- Web interface for administrators.
+- Monitoring tools (e.g. Spring Boot Admin).
 
 ## Circuit Breaker
 
 **Description**
 
-- Обеспечение отказоустойчивости и устойчивости системы при сбоях.
-- Управление отказами и восстановление после сбоев.
+- Ensuring fault tolerance and system resilience during failures.
+- Failure management and recovery from failures.
 
 **Components**
 
-- Netflix Hystrix или Resilience4j для управления отказами.
+- Netflix Hystrix or Resilience4j for failure management.
 
 ## Logging and Monitoring Service
 
 **Description**
 
-- Сбор и анализ логов всех микросервисов.
-- Мониторинг состояния системы и выявление аномалий.
+- Collection and analysis of logs of all microservices.
+- Monitoring the system status and identifying anomalies.
 
 **Components**
 
-- ELK Stack (Elasticsearch, Logstash, Kibana) или Prometheus и Grafana для логирования и мониторинга.
+- ELK Stack (Elasticsearch, Logstash, Kibana) or Prometheus and Grafana for logging and monitoring.

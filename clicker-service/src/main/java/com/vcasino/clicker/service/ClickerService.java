@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 @Service
 @AllArgsConstructor
@@ -28,7 +29,12 @@ public class ClickerService {
             return handleSuspiciousBehaviour(new SuspiciousTapAction(account, tap, message));
         }
 
+        // TODO check invalid timestamp Martin -- 1733592048 // My - 1733592046
         if (tap.getTimestamp() > TimeUtil.getCurrentUnixTime()) {
+            System.out.println("USERS");
+            System.out.println(tap.getTimestamp());
+            System.out.println("MY");
+            System.out.println(TimeUtil.getCurrentUnixTime());
             String message = "Does the user live in the future???";
             return handleSuspiciousBehaviour(new SuspiciousTapAction(account, tap, message));
         }
