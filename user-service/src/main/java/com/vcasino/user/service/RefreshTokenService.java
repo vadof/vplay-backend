@@ -17,7 +17,7 @@ import java.util.UUID;
 @Service
 public class RefreshTokenService {
     @Value("${jwt.refreshExpirationMs}")
-    private Long refreshExpiration;
+    private Long jwtRefreshExpiration;
 
     @Autowired
     private RefreshTokenRepository refreshTokenRepository;
@@ -43,7 +43,7 @@ public class RefreshTokenService {
             refreshToken.setUser(user);
         }
 
-        refreshToken.setExpiryDate(Instant.now().plusMillis(refreshExpiration));
+        refreshToken.setExpiryDate(Instant.now().plusMillis(jwtRefreshExpiration));
         refreshToken.setToken(UUID.randomUUID().toString());
 
         refreshToken = refreshTokenRepository.save(refreshToken);

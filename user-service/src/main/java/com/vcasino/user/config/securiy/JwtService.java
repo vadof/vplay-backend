@@ -4,27 +4,40 @@ import com.vcasino.user.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
 @Service
+@Slf4j
 public class JwtService {
 
-    @Value("${jwt.secret}")
-    private String secretKey;
-
     @Value("${jwt.expirationMs}")
-    private Long expiration;
+    private Long jwtExpiration;
+
+    @Value("${jwt.keys.path}")
+    private String keysPath;
+
+    private PrivateKey privateKey;
+    private PublicKey publicKey;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -60,22 +73,50 @@ public class JwtService {
                 .setClaims(extractClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .signWith(privateKey, SignatureAlgorithm.RS256)
                 .compact();
     }
 
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(getSignInKey())
+                .setSigningKey(publicKey)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
 
-    private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
+    @PostConstruct
+    private void generateRsaKeys() throws Exception {
+        Path privateKeyPath = Paths.get( keysPath + "/private.key");
+        Path publicKeyPath = Paths.get(keysPath + "/public.key");
+
+        if (Files.exists(privateKeyPath) && Files.exists(publicKeyPath)) {
+            log.info("RSA keys found");
+            byte[] privateKeyBytes = Files.readAllBytes(privateKeyPath);
+            byte[] publicKeyBytes = Files.readAllBytes(publicKeyPath);
+
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+
+            PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
+            X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicKeyBytes);
+
+            privateKey = keyFactory.generatePrivate(privateKeySpec);
+            publicKey = keyFactory.generatePublic(publicKeySpec);
+        } else {
+            log.info("RSA keys not found, generating...");
+            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+            keyPairGenerator.initialize(4096);
+            KeyPair keyPair = keyPairGenerator.generateKeyPair();
+
+            privateKey = keyPair.getPrivate();
+            publicKey = keyPair.getPublic();
+
+            Files.write(privateKeyPath, keyPair.getPrivate().getEncoded());
+            Files.write(publicKeyPath, keyPair.getPublic().getEncoded());
+
+            log.info("RSA keys generated and written");
+        }
     }
 
 }

@@ -14,6 +14,7 @@ import com.vcasino.user.exception.AppException;
 import com.vcasino.user.kafka.producer.UserProducer;
 import com.vcasino.user.mapper.UserMapper;
 import com.vcasino.user.repository.UserRepository;
+import com.vcasino.utils.RegexUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 @AllArgsConstructor
@@ -50,8 +52,11 @@ public class AuthenticationService {
         validateEmail(userDto.getEmail());
         validateUsername(userDto.getUsername());
 
-        User user = userMapper.toEntity(userDto);
+        if (role.equals(Role.ADMIN)) {
+            validatePassword(userDto.getPassword());
+        }
 
+        User user = userMapper.toEntity(userDto);
         user.setRegisterDate(LocalDateTime.now());
         user.setModifiedAt(LocalDateTime.now());
         user.setFrozen(false);
@@ -90,10 +95,14 @@ public class AuthenticationService {
         RefreshToken refreshToken = refreshTokenService.findByToken(request.getRefreshToken());
         refreshTokenService.verifyExpiration(refreshToken);
         String token = jwtService.generateToken(refreshToken.getUser());
-        return new TokenRefreshResponse(token, request.getRefreshToken());
+        return new TokenRefreshResponse(token);
     }
 
     private void validateUsername(String username) {
+        if (!username.matches(RegexUtil.USERNAME_REGEX)) {
+            throw new AppException("Username can only contain english letters, numbers and underscores", HttpStatus.BAD_REQUEST);
+        }
+
         if (userRepository.findByUsername(username).isPresent()) {
             throw new AppException("Username already exists", HttpStatus.BAD_REQUEST);
         }
@@ -103,5 +112,51 @@ public class AuthenticationService {
         if (userRepository.findByEmail(email).isPresent()) {
             throw new AppException("Email already in use", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    private void validatePassword(String password) {
+        if (password.length() < 12) {
+            throw new AppException("Min password length is 12 symbols", HttpStatus.BAD_REQUEST);
+        }
+
+        String invalidChars = getInvalidCharacters(password);
+        if (!invalidChars.isEmpty()) {
+            throw new AppException("Password cannot contain: " + invalidChars, HttpStatus.BAD_REQUEST);
+        }
+
+        if (!passwordContainsSpecialSymbol(password)) {
+            throw new AppException("Password must contain at least 1 special symbol", HttpStatus.BAD_REQUEST);
+        }
+
+        if (!passwordContainsCapitalLetter(password)) {
+            throw new AppException("Password must contain at least 1 capital letter", HttpStatus.BAD_REQUEST);
+        }
+
+        if (!passwordContainsNumber(password)) {
+            throw new AppException("Password must contain at least 1 number", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    private String getInvalidCharacters(String password) {
+        StringBuilder invalidChars = new StringBuilder();
+        for (char ch : password.toCharArray()) {
+            if (!String.valueOf(ch).matches(RegexUtil.PASSWORD_REGEX)) {
+                invalidChars.append(ch);
+            }
+        }
+        return invalidChars.toString();
+    }
+
+    private boolean passwordContainsSpecialSymbol(String password) {
+        Pattern r = Pattern.compile(RegexUtil.SPECIAL_SYMBOL_REGEX);
+        return r.matcher(password).find();
+    }
+
+    private boolean passwordContainsCapitalLetter(String password) {
+        return password.matches(".*" + RegexUtil.CAPITAL_LETTER_REGEX + ".*");
+    }
+
+    private boolean passwordContainsNumber(String password) {
+        return password.matches(".*" + RegexUtil.NUMBER_REGEX + ".*");
     }
 }

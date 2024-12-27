@@ -49,13 +49,15 @@ public class AuthFilter implements GatewayFilter {
             }
 
             try {
+                if (jwtUtil.isTokenExpired(token)) {
+                    return onError(exchange, HttpStatus.UNAUTHORIZED);
+                }
+
                 Claims claims = jwtUtil.extractAllClaims(token);
 
                 if (path.contains("admin") && !hasAdminRole(claims)) {
                     return onError(exchange, HttpStatus.FORBIDDEN);
                 }
-
-                jwtUtil.validateToken(token);
 
                 request = request.mutate()
                         .header("loggedInUser", getUserId(claims))

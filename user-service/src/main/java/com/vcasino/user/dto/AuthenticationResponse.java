@@ -1,14 +1,17 @@
 package com.vcasino.user.dto;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthenticationResponse {
-    private String token;
-    private String refreshToken;
-    private UserDto user;
+    String token;
+    String refreshToken;
+    UserDto user;
 }
