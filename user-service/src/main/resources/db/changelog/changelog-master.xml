@@ -2,14 +2,11 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <changeSet author="vadim" id="table/country.sql">
-        <sqlFile path="table/country.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
     <changeSet author="vadim" id="table/user.sql">
         <sqlFile path="table/user.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
-    <changeSet author="vadim" id="table/refresh-token.sql">
-        <sqlFile path="table/refresh-token.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+    <changeSet author="vadim" id="table/token.sql">
+        <sqlFile path="table/token.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
     <changeSet author="vadim" id="table/user-wallet.sql">
         <sqlFile path="table/user-wallet.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
@@ -19,9 +16,6 @@
     </changeSet>
     <changeSet author="vadim" id="table/report.sql">
         <sqlFile path="table/report.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
-    <changeSet author="vadim" id="data/country.sql">
-        <sqlFile path="data/country.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
 
 </databaseChangeLog>

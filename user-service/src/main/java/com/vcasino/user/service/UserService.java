@@ -14,11 +14,12 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 @Slf4j
 public class UserService {
+
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    public UserDto getUser(Long id) {
-        return userMapper.toDto(getUserById(id));
+    public UserDto getUser(User user) {
+        return userMapper.toDto(user);
     }
 
     private User getUserById(Long id) {

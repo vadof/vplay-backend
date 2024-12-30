@@ -1,5 +1,6 @@
 package com.vcasino.user.config.securiy;
 
+import com.vcasino.user.ouath2.OAuth2LoginSuccessHandler;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +20,9 @@ public class SecurityConfiguration {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 
+    // TODO oauth is always on /login page
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
@@ -27,6 +30,7 @@ public class SecurityConfiguration {
                         request.requestMatchers(permittedEndpoints()).permitAll()
                                 .requestMatchers(adminEndpoints()).hasRole("ADMIN")
                                 .anyRequest().authenticated())
+                .oauth2Login(auth -> auth.successHandler(oAuth2LoginSuccessHandler))
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
@@ -36,6 +40,7 @@ public class SecurityConfiguration {
     private String[] permittedEndpoints() {
         return new String[]{
                 "/api/*/users/auth/*",
+                "/oauth2/**",
                 "/swagger-ui/**",
                 "/v3/api-docs",
                 "/v3/api-docs/swagger-config"

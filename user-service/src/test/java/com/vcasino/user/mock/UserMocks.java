@@ -6,10 +6,8 @@ import com.vcasino.user.entity.User;
 public class UserMocks {
     public static UserDto getUserDtoMock() {
         return UserDto.builder()
-                .firstname("John")
-                .lastname("Doe")
+                .name("John Doe")
                 .email("test@gmail.com")
-                .country(CountryMocks.getCountryDtoMock())
                 .password("test1234")
                 .username("test")
                 .build();
@@ -17,10 +15,8 @@ public class UserMocks {
 
     public static User getUserMock() {
         return User.builder()
-                .firstname("John")
-                .lastname("Doe")
+                .name("John Doe")
                 .email("test@gmail.com")
-                .country(CountryMocks.getCountryMock())
                 .password("test1234")
                 .username("test")
                 .build();

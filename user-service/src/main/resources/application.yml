@@ -19,6 +19,34 @@ spring:
     change-log: classpath:db/changelog/changelog-master.xml
   kafka:
     bootstrap-servers: localhost:29092
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_OAUTH_CLIENT_ID}
+            client-secret: ${GOOGLE_OAUTH_CLIENT_SECRET}
+            scope:
+              - openid
+              - email
+              - profile
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+          github:
+            client-id: ${GITHUB_OAUTH_CLIENT_ID}
+            client-secret: ${GITHUB_OAUTH_CLIENT_SECRET}
+            scope:
+              - read:user
+              - user:email
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+          github:
+            authorization-uri: https://github.com/login/oauth/authorize
+            token-uri: https://github.com/login/oauth/access_token
+            user-info-uri: https://api.github.com/user
 
 eureka:
   client:
@@ -33,3 +61,9 @@ jwt:
   refreshExpirationMs: ${JWT_REFRESH_EXPIRATION}
   keys:
     path: ${KEYS_PATH}
+
+production: ${PRODUCTION}
+
+verification:
+  token:
+    expirationMs: ${VERIFICATION_TOKEN_EXPIRATION_MS}

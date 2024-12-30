@@ -6,17 +6,15 @@ import com.vcasino.user.dto.AuthenticationResponse;
 import com.vcasino.user.dto.TokenRefreshRequest;
 import com.vcasino.user.dto.TokenRefreshResponse;
 import com.vcasino.user.dto.UserDto;
-import com.vcasino.user.entity.RefreshToken;
+import com.vcasino.user.entity.Token;
 import com.vcasino.user.entity.Role;
+import com.vcasino.user.entity.TokenType;
 import com.vcasino.user.entity.User;
 import com.vcasino.user.exception.AppException;
 import com.vcasino.user.kafka.producer.UserProducer;
-import com.vcasino.user.mapper.CountryMapper;
-import com.vcasino.user.mapper.CountryMapperImpl;
 import com.vcasino.user.mapper.UserMapper;
 import com.vcasino.user.mapper.UserMapperImpl;
 import com.vcasino.user.repository.UserRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +27,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -46,7 +43,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/** UNIT tests for {@link AuthenticationService} */
+/**
+ * UNIT tests for {@link AuthenticationService}
+ */
 
 @ExtendWith(MockitoExtension.class)
 public class AuthenticationServiceTests {
@@ -76,21 +75,15 @@ public class AuthenticationServiceTests {
     private ArgumentCaptor<User> userArgumentCaptor;
 
     @Mock
-    private RefreshTokenService refreshTokenService;
-
-    @BeforeEach
-    void iniMapperDependencies() {
-        CountryMapper countryMapper = new CountryMapperImpl();
-        ReflectionTestUtils.setField(userMapper, "countryMapper", countryMapper);
-    }
+    private TokenService refreshTokenService;
 
     @Test
     @DisplayName("Register user")
     void register() {
         UserDto toSave = getUserDtoMock();
 
-        RefreshToken refreshToken = getRefreshTokenMock();
-        when(refreshTokenService.createRefreshToken(any())).thenReturn(refreshToken);
+        Token refreshToken = getRefreshTokenMock();
+        when(refreshTokenService.createToken(any(), TokenType.REFRESH)).thenReturn(refreshToken);
         when(jwtService.generateToken(any())).thenReturn("token");
 
         User userMock = getUserMock();
@@ -107,13 +100,13 @@ public class AuthenticationServiceTests {
         verify(userMapper, times(1)).toDto(saved);
         verify(userRepository, times(1)).save(saved);
         verify(jwtService, times(1)).generateToken(saved);
-        verify(refreshTokenService, times(1)).createRefreshToken(any());
+        verify(refreshTokenService, times(1)).createToken(any(), TokenType.REFRESH);
         verify(userProducer, times(1)).sendUserCreated(saved.getId());
 
         assertEquals(userMock.getRole(), saved.getRole());
         assertEquals(toSave.getEmail(), response.getUser().getEmail());
         assertEquals(toSave.getUsername(), response.getUser().getUsername());
-        assertEquals(toSave.getCountry().getCode(), response.getUser().getCountry().getCode());
+        assertEquals(toSave.getName(), response.getUser().getName());
         assertNotNull(response.getRefreshToken());
         assertNotNull(response.getToken());
     }
@@ -123,8 +116,8 @@ public class AuthenticationServiceTests {
     void registerAdmin() {
         UserDto toSave = getUserDtoMock();
 
-        RefreshToken refreshToken = getRefreshTokenMock();
-        when(refreshTokenService.createRefreshToken(any())).thenReturn(refreshToken);
+        Token refreshToken = getRefreshTokenMock();
+        when(refreshTokenService.createToken(any(), TokenType.REFRESH)).thenReturn(refreshToken);
         when(jwtService.generateToken(any())).thenReturn("token");
 
         User adminMock = getUserMock();
@@ -141,13 +134,13 @@ public class AuthenticationServiceTests {
         verify(userMapper, times(1)).toDto(saved);
         verify(userRepository, times(1)).save(saved);
         verify(jwtService, times(1)).generateToken(saved);
-        verify(refreshTokenService, times(1)).createRefreshToken(any());
+        verify(refreshTokenService, times(1)).createToken(any(), TokenType.REFRESH);
         verify(userProducer, times(1)).sendUserCreated(saved.getId());
 
         assertEquals(adminMock.getRole(), saved.getRole());
+        assertEquals(adminMock.getName(), saved.getName());
         assertEquals(toSave.getEmail(), response.getUser().getEmail());
         assertEquals(toSave.getUsername(), response.getUser().getUsername());
-        assertEquals(toSave.getCountry().getCode(), response.getUser().getCountry().getCode());
         assertNotNull(response.getRefreshToken());
         assertNotNull(response.getToken());
     }
@@ -183,14 +176,14 @@ public class AuthenticationServiceTests {
     void authenticate() {
         UserDto userDto = getUserDtoMock();
         User user = getUserMock();
-        RefreshToken refreshToken = getRefreshTokenMock();
+        Token refreshToken = getRefreshTokenMock();
 
         AuthenticationRequest request = new AuthenticationRequest(userDto.getUsername(), userDto.getPassword());
         when(authenticationManager.authenticate(any())).thenReturn(any());
 
         when(userRepository.findByUsername(request.getUsername())).thenReturn(Optional.of(user));
         when(jwtService.generateToken(user)).thenReturn("token");
-        when(refreshTokenService.createRefreshToken(user.getId())).thenReturn(refreshToken);
+        when(refreshTokenService.createToken(user.getId(), TokenType.REFRESH)).thenReturn(refreshToken);
 
         AuthenticationResponse response = authenticationService.authenticate(request);
 
@@ -202,24 +195,23 @@ public class AuthenticationServiceTests {
     @Test
     @DisplayName("Refresh token")
     void refreshToken() {
-        RefreshToken refreshToken = getRefreshTokenMock();
+        Token refreshToken = getRefreshTokenMock();
         refreshToken.setExpiryDate(Instant.now().plusSeconds(60));
 
-        when(refreshTokenService.findByToken(refreshToken.getToken())).thenReturn(refreshToken);
+        when(refreshTokenService.findByToken(refreshToken.getToken(), TokenType.REFRESH)).thenReturn(refreshToken);
         when(jwtService.generateToken(any())).thenReturn("token");
 
         TokenRefreshResponse response = authenticationService.refreshToken(new TokenRefreshRequest(refreshToken.getToken()));
 
         assertEquals("token", response.getToken());
-        assertEquals(refreshToken.getToken(), response.getRefreshToken());
     }
 
     @Test
     @DisplayName("Refresh token expired")
     void refreshExpiredToken() {
-        RefreshToken refreshToken = getRefreshTokenMock();
+        Token refreshToken = getRefreshTokenMock();
 
-        when(refreshTokenService.findByToken(refreshToken.getToken())).thenReturn(refreshToken);
+        when(refreshTokenService.findByToken(refreshToken.getToken(), TokenType.REFRESH)).thenReturn(refreshToken);
         when(refreshTokenService.verifyExpiration(refreshToken)).thenThrow(
                 new AppException("Refresh token was expired. Please make a new login request", HttpStatus.UNAUTHORIZED));
 
@@ -227,6 +219,6 @@ public class AuthenticationServiceTests {
                 () -> authenticationService.refreshToken(new TokenRefreshRequest(refreshToken.getToken())));
 
         assertEquals("Refresh token was expired. Please make a new login request", exception.getMessage());
-        assertEquals( HttpStatus.UNAUTHORIZED, exception.getHttpStatus());
+        assertEquals(HttpStatus.UNAUTHORIZED, exception.getHttpStatus());
     }
 }

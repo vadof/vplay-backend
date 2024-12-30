@@ -3,20 +3,21 @@ package com.vcasino.user.service;
 import com.vcasino.user.config.securiy.JwtService;
 import com.vcasino.user.dto.AuthenticationRequest;
 import com.vcasino.user.dto.AuthenticationResponse;
-import com.vcasino.user.dto.CountryDto;
 import com.vcasino.user.dto.TokenRefreshRequest;
 import com.vcasino.user.dto.TokenRefreshResponse;
 import com.vcasino.user.dto.UserDto;
-import com.vcasino.user.entity.RefreshToken;
+import com.vcasino.user.entity.Token;
 import com.vcasino.user.entity.Role;
+import com.vcasino.user.entity.TokenType;
 import com.vcasino.user.entity.User;
 import com.vcasino.user.exception.AppException;
 import com.vcasino.user.kafka.producer.UserProducer;
 import com.vcasino.user.mapper.UserMapper;
 import com.vcasino.user.repository.UserRepository;
 import com.vcasino.utils.RegexUtil;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,11 +26,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
+// TODO handle all pending accounts
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class AuthenticationService {
 
@@ -41,12 +43,10 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    private final RefreshTokenService refreshTokenService;
-    private final CountryService countryService;
+    private final TokenService refreshTokenService;
 
-    public List<CountryDto> getCountries() {
-        return countryService.getCountries();
-    }
+    @Value("${production}")
+    private Boolean production;
 
     public AuthenticationResponse register(UserDto userDto, Role role) {
         validateEmail(userDto.getEmail());
@@ -58,17 +58,24 @@ public class AuthenticationService {
 
         User user = userMapper.toEntity(userDto);
         user.setRegisterDate(LocalDateTime.now());
-        user.setModifiedAt(LocalDateTime.now());
         user.setFrozen(false);
         user.setRole(role);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        // TODO email verification
+        if (production || role.equals(Role.ADMIN)) {
+            user.setActive(true);
+        } else {
+            user.setActive(false);
+        }
 
         user = userRepository.save(user);
 
         String jwtToken = jwtService.generateToken(user);
 
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
+        Token refreshToken = refreshTokenService.createToken(user.getId(), TokenType.REFRESH);
 
+        // TODO redirect user
         log.info(String.format("User with username \"%s\" saved to database", user.getUsername()));
 
         userProducer.sendUserCreated(user.getId());
@@ -78,21 +85,25 @@ public class AuthenticationService {
 
     @Transactional
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        // TODO figure out why it returns 200 status code with oauth page
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new AppException("Unauthorized access", HttpStatus.FORBIDDEN));
 
+        // TODO handle
+//        if (!user.getActive())
+
         String jwtToken = jwtService.generateToken(user);
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
+        Token refreshToken = refreshTokenService.createToken(user.getId(), TokenType.REFRESH);
 
         return new AuthenticationResponse(jwtToken, refreshToken.getToken(), userMapper.toDto(user));
     }
 
     @Transactional
     public TokenRefreshResponse refreshToken(TokenRefreshRequest request) {
-        RefreshToken refreshToken = refreshTokenService.findByToken(request.getRefreshToken());
+        Token refreshToken = refreshTokenService.findByToken(request.getRefreshToken(), TokenType.REFRESH);
         refreshTokenService.verifyExpiration(refreshToken);
         String token = jwtService.generateToken(refreshToken.getUser());
         return new TokenRefreshResponse(token);
@@ -103,15 +114,31 @@ public class AuthenticationService {
             throw new AppException("Username can only contain english letters, numbers and underscores", HttpStatus.BAD_REQUEST);
         }
 
-        if (userRepository.findByUsername(username).isPresent()) {
-            throw new AppException("Username already exists", HttpStatus.BAD_REQUEST);
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            if (user.getActive() || !deleteUserIfNotActive(user)) {
+                throw new AppException("Username already exists", HttpStatus.BAD_REQUEST);
+            }
         }
     }
 
     private void validateEmail(String email) {
-        if (userRepository.findByEmail(email).isPresent()) {
-            throw new AppException("Email already in use", HttpStatus.BAD_REQUEST);
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            if (user.getActive() || !deleteUserIfNotActive(user)) {
+                throw new AppException("Email already in use", HttpStatus.BAD_REQUEST);
+            }
         }
+    }
+
+    private boolean deleteUserIfNotActive(User user) {
+        if (LocalDateTime.now().minusHours(1).isAfter(user.getRegisterDate())) {
+            userRepository.delete(user);
+            return true;
+        }
+        return false;
     }
 
     private void validatePassword(String password) {

@@ -3,7 +3,6 @@ package com.vcasino.user.controller;
 
 import com.vcasino.user.dto.AuthenticationRequest;
 import com.vcasino.user.dto.AuthenticationResponse;
-import com.vcasino.user.dto.CountryDto;
 import com.vcasino.user.dto.TokenRefreshRequest;
 import com.vcasino.user.dto.TokenRefreshResponse;
 import com.vcasino.user.dto.UserDto;
@@ -21,13 +20,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 
 @Tag(name = "Authentication", description = "API operations with Authentication")
@@ -39,16 +35,6 @@ import java.util.List;
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
-
-    @Operation(summary = "Get countries for registration")
-    @ApiResponse(responseCode = "200", description = "Return countries",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = CountryDto[].class)))
-    @GetMapping(value = "/countries", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<CountryDto>> getCountries() {
-        log.info("REST request to get Countries");
-        List<CountryDto> response = authenticationService.getCountries();
-        return ResponseEntity.ok().body(response);
-    }
 
     @Operation(summary = "Register new account")
     @ApiResponse(responseCode = "200", description = "Account created",
