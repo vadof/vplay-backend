@@ -3,6 +3,7 @@ package com.vcasino.user.controller;
 
 import com.vcasino.user.dto.AuthenticationRequest;
 import com.vcasino.user.dto.AuthenticationResponse;
+import com.vcasino.user.dto.OAuthConfirmation;
 import com.vcasino.user.dto.TokenRefreshRequest;
 import com.vcasino.user.dto.TokenRefreshResponse;
 import com.vcasino.user.dto.UserDto;
@@ -20,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -73,4 +75,17 @@ public class AuthenticationController {
         TokenRefreshResponse response = authenticationService.refreshToken(request);
         return ResponseEntity.ok().body(response);
     }
+
+    @Operation(summary = "OAuth2 registration confirmation")
+    @ApiResponse(responseCode = "200", description = "Account created",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AuthenticationResponse.class)))
+    @PostMapping(value = "/confirmation", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AuthenticationResponse> oAuthConfirmation(
+            @RequestBody @Valid OAuthConfirmation oAuthConfirmation,
+            @CookieValue("confirmationToken") String confirmationToken) {
+        log.info("REST request to confirm oauth registration");
+        AuthenticationResponse response = authenticationService.oAuthConfirmation(oAuthConfirmation.getUsername(), confirmationToken);
+        return ResponseEntity.ok().headers(response.getHeaders()).body(response);
+    }
+
 }

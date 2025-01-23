@@ -38,6 +38,21 @@ spring:
               - read:user
               - user:email
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+          facebook:
+            client-id: ${FACEBOOK_OAUTH_CLIENT_ID}
+            client-secret: ${FACEBOOK_OAUTH_CLIENT_SECRET}
+            scope:
+              - email
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+          discord:
+            client-id: ${DISCORD_OAUTH_CLIENT_ID}
+            client-secret: ${DISCORD_OAUTH_CLIENT_SECRET}
+            clientAuthenticationMethod: client_secret_post
+            authorizationGrantType: authorization_code
+            scope:
+              - identify
+              - email
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
         provider:
           google:
             authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
@@ -47,6 +62,15 @@ spring:
             authorization-uri: https://github.com/login/oauth/authorize
             token-uri: https://github.com/login/oauth/access_token
             user-info-uri: https://api.github.com/user
+          facebook:
+            authorization-uri: https://www.facebook.com/v9.0/dialog/oauth
+            token-uri: https://graph.facebook.com/v9.0/oauth/access_token
+            user-info-uri: https://graph.facebook.com/me?fields=id,name,email
+          discord:
+            authorization-uri: https://discord.com/api/oauth2/authorize
+            token-uri: https://discord.com/api/oauth2/token
+            user-info-uri: https://discord.com/api/users/@me
+            user-name-attribute: username
 
 eureka:
   client:
@@ -56,14 +80,13 @@ eureka:
     preferIpAddress: true
 #    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
-jwt:
-  expirationMs: ${JWT_EXPIRATION}
-  refreshExpirationMs: ${JWT_REFRESH_EXPIRATION}
-  keys:
-    path: ${KEYS_PATH}
-
-production: ${PRODUCTION}
-
-verification:
-  token:
-    expirationMs: ${VERIFICATION_TOKEN_EXPIRATION_MS}
+config:
+  production: ${PRODUCTION}
+  jwt:
+    expirationMs: ${JWT_EXPIRATION}
+    refreshExpirationMs: ${JWT_REFRESH_EXPIRATION}
+    keys-path: ${KEYS_PATH}
+  client-url: ${CLIENT_URL}
+  confirmation:
+    token:
+      expirationMs: ${CONFIRMATION_TOKEN_EXPIRATION_MS}

@@ -1,5 +1,5 @@
 package com.vcasino.user.entity;
 
 public enum OAuthProvider {
-    GOOGLE, GITHUB
+    GOOGLE, FACEBOOK, DISCORD, GITHUB
 }

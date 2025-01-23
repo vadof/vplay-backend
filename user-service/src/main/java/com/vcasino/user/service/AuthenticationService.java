@@ -1,23 +1,24 @@
 package com.vcasino.user.service;
 
+import com.vcasino.user.config.ApplicationConfig;
 import com.vcasino.user.config.securiy.JwtService;
 import com.vcasino.user.dto.AuthenticationRequest;
 import com.vcasino.user.dto.AuthenticationResponse;
 import com.vcasino.user.dto.TokenRefreshRequest;
 import com.vcasino.user.dto.TokenRefreshResponse;
 import com.vcasino.user.dto.UserDto;
-import com.vcasino.user.entity.Token;
 import com.vcasino.user.entity.Role;
+import com.vcasino.user.entity.Token;
 import com.vcasino.user.entity.TokenType;
 import com.vcasino.user.entity.User;
 import com.vcasino.user.exception.AppException;
 import com.vcasino.user.kafka.producer.UserProducer;
 import com.vcasino.user.mapper.UserMapper;
 import com.vcasino.user.repository.UserRepository;
-import com.vcasino.utils.RegexUtil;
-import lombok.RequiredArgsConstructor;
+import com.vcasino.user.utils.RegexUtil;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,7 +32,7 @@ import java.util.regex.Pattern;
 
 // TODO handle all pending accounts
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Slf4j
 public class AuthenticationService {
 
@@ -43,11 +44,12 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    private final TokenService refreshTokenService;
+    private final TokenService tokenService;
+    private final CookieService cookieService;
 
-    @Value("${production}")
-    private Boolean production;
+    private final ApplicationConfig applicationConfig;
 
+    @Transactional
     public AuthenticationResponse register(UserDto userDto, Role role) {
         validateEmail(userDto.getEmail());
         validateUsername(userDto.getUsername());
@@ -63,48 +65,78 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         // TODO email verification
-        if (production || role.equals(Role.ADMIN)) {
-            user.setActive(true);
-        } else {
-            user.setActive(false);
-        }
+        user.setActive(!applicationConfig.getProduction() || role.equals(Role.ADMIN));
 
         user = userRepository.save(user);
 
         String jwtToken = jwtService.generateToken(user);
-
-        Token refreshToken = refreshTokenService.createToken(user.getId(), TokenType.REFRESH);
+        Token refreshToken = tokenService.createToken(user, TokenType.REFRESH);
 
         // TODO redirect user
-        log.info(String.format("User with username \"%s\" saved to database", user.getUsername()));
+        log.info("User#{} saved to database", user.getId());
 
         userProducer.sendUserCreated(user.getId());
 
-        return new AuthenticationResponse(jwtToken, refreshToken.getToken(), userMapper.toDto(user));
+        return new AuthenticationResponse(jwtToken, refreshToken.getToken(), userMapper.toDto(user), null);
     }
 
-    @Transactional
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        // TODO figure out why it returns 200 status code with oauth page
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
         User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new AppException("Unauthorized access", HttpStatus.FORBIDDEN));
+                .orElseThrow(() -> new AppException("Unauthorized access", HttpStatus.UNAUTHORIZED));
 
-        // TODO handle
-//        if (!user.getActive())
+        // TODO Please check an email
+        if (!user.getActive()) {
+            Token token = tokenService.createToken(user, TokenType.CONFIRMATION);
+
+        }
 
         String jwtToken = jwtService.generateToken(user);
-        Token refreshToken = refreshTokenService.createToken(user.getId(), TokenType.REFRESH);
+        Token refreshToken = tokenService.createToken(user, TokenType.REFRESH);
 
-        return new AuthenticationResponse(jwtToken, refreshToken.getToken(), userMapper.toDto(user));
+        return new AuthenticationResponse(jwtToken, refreshToken.getToken(), userMapper.toDto(user), null);
+    }
+
+    public AuthenticationResponse oAuthConfirmation(String username, String confirmationToken) {
+        Token token = tokenService.findByTokenAndType(confirmationToken, TokenType.CONFIRMATION);
+        tokenService.verifyExpiration(token);
+        User user = token.getUser();
+
+        if (user.getActive()) {
+            log.warn("User#{} is already active", user.getId());
+            throw new AppException(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        if (!username.equals(user.getUsername())) {
+            validateUsername(username);
+            user.setUsername(username);
+        }
+
+        user.setModifiedAt(LocalDateTime.now());
+        user.setActive(true);
+
+        userRepository.save(user);
+
+        String jwtToken = jwtService.generateToken(user);
+        Token refreshToken = tokenService.createToken(user, TokenType.REFRESH);
+
+        log.info("User#{} has activated the account", user.getId());
+
+        userProducer.sendUserCreated(user.getId());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.SET_COOKIE,
+                cookieService.resetConfirmationCookie().toString());
+
+        return new AuthenticationResponse(jwtToken, refreshToken.getToken(), userMapper.toDto(user), headers);
     }
 
     @Transactional
     public TokenRefreshResponse refreshToken(TokenRefreshRequest request) {
-        Token refreshToken = refreshTokenService.findByToken(request.getRefreshToken(), TokenType.REFRESH);
-        refreshTokenService.verifyExpiration(refreshToken);
+        Token refreshToken = tokenService.findByTokenAndType(request.getRefreshToken(), TokenType.REFRESH);
+        tokenService.verifyExpiration(refreshToken);
         String token = jwtService.generateToken(refreshToken.getUser());
         return new TokenRefreshResponse(token);
     }
@@ -134,7 +166,8 @@ public class AuthenticationService {
     }
 
     private boolean deleteUserIfNotActive(User user) {
-        if (LocalDateTime.now().minusHours(1).isAfter(user.getRegisterDate())) {
+        long tokenExpirationInSeconds = applicationConfig.getConfirmation().getToken().getExpirationMs() / 1000;
+        if (LocalDateTime.now().minusSeconds(tokenExpirationInSeconds).isAfter(user.getRegisterDate())) {
             userRepository.delete(user);
             return true;
         }

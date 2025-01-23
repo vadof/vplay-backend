@@ -1,12 +1,12 @@
 package com.vcasino.user.config.securiy;
 
+import com.vcasino.user.config.ApplicationConfig;
 import com.vcasino.user.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -30,11 +30,11 @@ import java.util.function.Function;
 @Slf4j
 public class JwtService {
 
-    @Value("${jwt.expirationMs}")
-    private Long jwtExpiration;
+    private final ApplicationConfig.JwtProperties jwtConfig;
 
-    @Value("${jwt.keys.path}")
-    private String keysPath;
+    public JwtService(ApplicationConfig constantsConfig) {
+        this.jwtConfig = constantsConfig.getJwt();
+    }
 
     private PrivateKey privateKey;
     private PublicKey publicKey;
@@ -73,7 +73,7 @@ public class JwtService {
                 .setClaims(extractClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtConfig.getExpirationMs()))
                 .signWith(privateKey, SignatureAlgorithm.RS256)
                 .compact();
     }
@@ -88,8 +88,8 @@ public class JwtService {
 
     @PostConstruct
     private void generateRsaKeys() throws Exception {
-        Path privateKeyPath = Paths.get( keysPath + "/private.key");
-        Path publicKeyPath = Paths.get(keysPath + "/public.key");
+        Path privateKeyPath = Paths.get( jwtConfig.getKeysPath() + "/private.key");
+        Path publicKeyPath = Paths.get(jwtConfig.getKeysPath() + "/public.key");
 
         if (Files.exists(privateKeyPath) && Files.exists(publicKeyPath)) {
             log.info("RSA keys found");

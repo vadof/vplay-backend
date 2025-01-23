@@ -1,4 +1,4 @@
-package com.vcasino.utils;
+package com.vcasino.user.utils;
 
 public class RegexUtil {
     public static final String PASSWORD_REGEX = "[\\u0020-\\u007E]+";

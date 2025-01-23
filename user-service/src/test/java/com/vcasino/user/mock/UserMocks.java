@@ -19,6 +19,8 @@ public class UserMocks {
                 .email("test@gmail.com")
                 .password("test1234")
                 .username("test")
+                .active(true)
+                .frozen(false)
                 .build();
     }
 }

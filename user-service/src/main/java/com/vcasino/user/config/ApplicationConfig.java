@@ -1,54 +1,39 @@
 package com.vcasino.user.config;
 
-import jakarta.annotation.PostConstruct;
-import lombok.AllArgsConstructor;
-import com.vcasino.user.repository.UserRepository;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
-import java.util.TimeZone;
-
-@Configuration
-@AllArgsConstructor
+@Setter
+@Getter
+@Component
+@ConfigurationProperties(prefix = "config")
 public class ApplicationConfig {
 
-    private final UserRepository userRepository;
+    private Boolean production;
+    private JwtProperties jwt;
+    private String clientUrl;
+    private ConfirmationProperties confirmation;
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return username ->
-                userRepository.findByUsername(username)
-                        .orElseThrow(() -> new UsernameNotFoundException(username + " not found"));
+    @Setter
+    @Getter
+    public static class JwtProperties {
+        private long expirationMs;
+        private long refreshExpirationMs;
+        private String keysPath;
     }
 
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService());
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
-    }
+    @Setter
+    @Getter
+    public static class ConfirmationProperties {
+        private TokenProperties token;
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @PostConstruct
-    public void setApplicationTimezone() {
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+        @Setter
+        @Getter
+        public static class TokenProperties {
+            private long expirationMs;
+        }
     }
 }
+
