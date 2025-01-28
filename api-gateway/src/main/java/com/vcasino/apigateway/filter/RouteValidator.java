@@ -11,7 +11,10 @@ public class RouteValidator {
             "/api/v1/users/auth/login",
             "/api/v1/users/auth/register",
             "/api/v1/users/auth/refreshToken",
-            "/api/v1/users/auth/confirmation",
+            "/api/v1/users/auth/email-confirmation",
+            "/api/v1/users/auth/email-confirmation-resend",
+            "/api/v1/users/auth/username-confirmation",
+            "/api/v1/users/auth/delete-pending-user",
             "/eureka"
     );
 

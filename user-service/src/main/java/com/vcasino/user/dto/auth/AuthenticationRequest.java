@@ -1,4 +1,4 @@
-package com.vcasino.user.dto;
+package com.vcasino.user.dto.auth;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AccessLevel;

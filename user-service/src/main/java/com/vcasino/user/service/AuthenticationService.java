@@ -2,11 +2,12 @@ package com.vcasino.user.service;
 
 import com.vcasino.user.config.ApplicationConfig;
 import com.vcasino.user.config.securiy.JwtService;
-import com.vcasino.user.dto.AuthenticationRequest;
-import com.vcasino.user.dto.AuthenticationResponse;
-import com.vcasino.user.dto.TokenRefreshRequest;
-import com.vcasino.user.dto.TokenRefreshResponse;
 import com.vcasino.user.dto.UserDto;
+import com.vcasino.user.dto.auth.AuthenticationRequest;
+import com.vcasino.user.dto.auth.AuthenticationResponse;
+import com.vcasino.user.dto.auth.TokenRefreshRequest;
+import com.vcasino.user.dto.auth.TokenRefreshResponse;
+import com.vcasino.user.dto.email.EmailTokenOptionsDto;
 import com.vcasino.user.entity.Role;
 import com.vcasino.user.entity.Token;
 import com.vcasino.user.entity.TokenType;
@@ -26,11 +27,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
-// TODO handle all pending accounts
+import static com.vcasino.user.utils.EmailTemplate.buildEmailConfirmationTemplate;
+
+// TODO didn't get the code? Send email again (same verification token maximum 3 times, 30 seconds interval)
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -45,41 +50,53 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     private final TokenService tokenService;
+    private final EmailService emailService;
     private final CookieService cookieService;
 
     private final ApplicationConfig applicationConfig;
 
     @Transactional
-    public AuthenticationResponse register(UserDto userDto, Role role) {
-        validateEmail(userDto.getEmail());
-        validateUsername(userDto.getUsername());
+    public EmailTokenOptionsDto registerUser(UserDto userDto) {
+        User user = validateUserFields(userDto, Role.USER);
+        Token confirmationToken = tokenService.createEmailConfirmationToken(user);
 
-        if (role.equals(Role.ADMIN)) {
+        log.info("Pending User#{} saved to database", user.getId());
+
+        EmailTokenOptionsDto options = tokenService.getEmailTokenOptionsDtoFromToken(confirmationToken);
+        options.setEmail(user.getEmail());
+        options.setCanResend(true);
+
+        sendEmailConfirmation(user.getEmail(), confirmationToken.getToken());
+
+        return options;
+    }
+
+    public void registerAdmin(UserDto userDto) {
+        User user = validateUserFields(userDto, Role.ADMIN);
+        log.info("Admin#{} saved to database", user.getId());
+        userProducer.sendUserCreated(user.getId());
+    }
+
+    private User validateUserFields(UserDto userDto, Role role) {
+        boolean admin = role.equals(Role.ADMIN);
+        if (admin) {
             validatePassword(userDto.getPassword());
         }
 
+        validateEmail(userDto.getEmail());
+        validateUsername(userDto.getUsername());
+
         User user = userMapper.toEntity(userDto);
         user.setRegisterDate(LocalDateTime.now());
-        user.setFrozen(false);
-        user.setRole(role);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(role);
+        user.setFrozen(false);
+        user.setActive(admin);
 
-        // TODO email verification
-        user.setActive(!applicationConfig.getProduction() || role.equals(Role.ADMIN));
-
-        user = userRepository.save(user);
-
-        String jwtToken = jwtService.generateToken(user);
-        Token refreshToken = tokenService.createToken(user, TokenType.REFRESH);
-
-        // TODO redirect user
-        log.info("User#{} saved to database", user.getId());
-
-        userProducer.sendUserCreated(user.getId());
-
-        return new AuthenticationResponse(jwtToken, refreshToken.getToken(), userMapper.toDto(user), null);
+        return userRepository.save(user);
     }
 
+    @Transactional(noRollbackFor = AppException.class)
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
@@ -87,10 +104,20 @@ public class AuthenticationService {
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new AppException("Unauthorized access", HttpStatus.UNAUTHORIZED));
 
-        // TODO Please check an email
         if (!user.getActive()) {
-            Token token = tokenService.createToken(user, TokenType.CONFIRMATION);
+            Token token = tokenService.findByUserAndType(user, TokenType.EMAIL_CONFIRMATION)
+                    .orElseThrow(() -> {
+                        log.warn("Inactive User#{} without a token", user.getId());
+                        userRepository.delete(user);
+                        return new AppException(null, HttpStatus.INTERNAL_SERVER_ERROR);
+                    });
 
+            if (tokenService.isTokenExpired(token)) {
+                deletePendingUser(user);
+                throw new AppException("Invalid Username or Password!", HttpStatus.UNAUTHORIZED);
+            } else {
+                throw new AppException("Check " + user.getEmail() + " for an email to complete your account setup", HttpStatus.BAD_REQUEST);
+            }
         }
 
         String jwtToken = jwtService.generateToken(user);
@@ -100,8 +127,37 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse oAuthConfirmation(String username, String confirmationToken) {
-        Token token = tokenService.findByTokenAndType(confirmationToken, TokenType.CONFIRMATION);
-        tokenService.verifyExpiration(token);
+        return processConfirmation(
+                confirmationToken,
+                TokenType.USERNAME_CONFIRMATION,
+                true,
+                user -> {
+                    if (!username.equals(user.getUsername())) {
+                        validateUsername(username);
+                        user.setUsername(username);
+                    }
+                }
+        );
+    }
+
+    public AuthenticationResponse confirmEmail(String confirmationToken) {
+        return processConfirmation(
+                confirmationToken,
+                TokenType.EMAIL_CONFIRMATION,
+                false,
+                user -> {
+                }
+        );
+    }
+
+    private AuthenticationResponse processConfirmation(
+            String confirmationToken,
+            TokenType tokenType,
+            boolean includeHeaders,
+            Consumer<User> userUpdater
+    ) {
+        Token token = tokenService.findByTokenAndType(confirmationToken, tokenType);
+        tokenService.verifyExpiration(token, "Registration time has expired, please complete it again");
         User user = token.getUser();
 
         if (user.getActive()) {
@@ -109,34 +165,100 @@ public class AuthenticationService {
             throw new AppException(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        if (!username.equals(user.getUsername())) {
-            validateUsername(username);
-            user.setUsername(username);
-        }
+        userUpdater.accept(user);
 
         user.setModifiedAt(LocalDateTime.now());
         user.setActive(true);
-
         userRepository.save(user);
 
         String jwtToken = jwtService.generateToken(user);
         Token refreshToken = tokenService.createToken(user, TokenType.REFRESH);
 
         log.info("User#{} has activated the account", user.getId());
-
         userProducer.sendUserCreated(user.getId());
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.SET_COOKIE,
-                cookieService.resetConfirmationCookie().toString());
+        HttpHeaders headers = null;
+        if (includeHeaders) {
+            headers = new HttpHeaders();
+            headers.add(HttpHeaders.SET_COOKIE, cookieService.resetConfirmationCookie().toString());
+        }
 
         return new AuthenticationResponse(jwtToken, refreshToken.getToken(), userMapper.toDto(user), headers);
+    }
+
+    @Transactional(noRollbackFor = AppException.class)
+    public EmailTokenOptionsDto resendEmail(EmailTokenOptionsDto emailTokenOptions) {
+        User user = userRepository.findByEmail(emailTokenOptions.getEmail())
+                .orElseThrow(() -> new AppException("Email not found", HttpStatus.NOT_FOUND));
+
+        Token token = tokenService.findByUserAndType(user, TokenType.EMAIL_CONFIRMATION).orElseThrow(
+                () -> new AppException(null, HttpStatus.FORBIDDEN));
+
+        if (tokenService.isTokenExpired(token)) {
+            deletePendingUser(user);
+            throw new AppException("Registration time has expired, please complete it again.", HttpStatus.FORBIDDEN);
+        }
+
+        Token.EmailTokenOptions options = tokenService.getEmailTokenOptionsFromToken(token);
+
+        if (!options.getResendToken().equals(emailTokenOptions.getResendToken())) {
+            log.warn("Unauthorized access to send an email to {}", user.getEmail());
+            throw new AppException(null, HttpStatus.FORBIDDEN);
+        }
+
+        int maxEmailsNumber = 3;
+        long emailResendIntervalMultiplier = 30L;
+
+        if (options.getEmailsSent() >= maxEmailsNumber) {
+            String logStr = "The limit for sending letters to %s has been reached".formatted(user.getEmail());
+            log.info(logStr);
+            throw new AppException(logStr + " , please wait or contact support.", HttpStatus.BAD_REQUEST);
+        }
+
+        Instant now = Instant.now();
+        if (options.getSentAt().plusSeconds(emailResendIntervalMultiplier * options.getEmailsSent()).isAfter(now)) {
+            throw new AppException("Please wait before resending the email.", HttpStatus.BAD_REQUEST);
+        }
+
+        options.setEmailsSent(options.getEmailsSent() + 1);
+        options.setSentAt(Instant.now());
+        tokenService.updateTokenOptions(token, options);
+
+        sendEmailConfirmation(user.getEmail(), token.getToken());
+
+        return new EmailTokenOptionsDto(user.getEmail(), options.getResendToken(),
+                options.getEmailsSent(), options.getEmailsSent() != maxEmailsNumber);
+    }
+
+    @Transactional
+    public void deletePendingUser(EmailTokenOptionsDto emailTokenOptions) {
+        User user = userRepository.findByEmail(emailTokenOptions.getEmail())
+                .orElseThrow(() -> new AppException("Email not found", HttpStatus.NOT_FOUND));
+
+        Token token = tokenService.findByUserAndType(user, TokenType.EMAIL_CONFIRMATION).orElseThrow(
+                () -> new AppException(null, HttpStatus.FORBIDDEN));
+
+        Token.EmailTokenOptions options = tokenService.getEmailTokenOptionsFromToken(token);
+
+        if (!options.getResendToken().equals(emailTokenOptions.getResendToken())) {
+            log.warn("Unauthorized access to clear pending user {}", user.getEmail());
+            throw new AppException(null, HttpStatus.FORBIDDEN);
+        }
+
+        deletePendingUser(user);
+    }
+
+    public void sendEmailConfirmation(String email, String confirmationToken) {
+        String confirmationUrl = "%s/register/confirmation?type=email&confirmationToken=%s"
+                .formatted(applicationConfig.getClientUrl(), confirmationToken);
+
+        emailService.send(email, buildEmailConfirmationTemplate(confirmationUrl));
     }
 
     @Transactional
     public TokenRefreshResponse refreshToken(TokenRefreshRequest request) {
         Token refreshToken = tokenService.findByTokenAndType(request.getRefreshToken(), TokenType.REFRESH);
-        tokenService.verifyExpiration(refreshToken);
+        tokenService.verifyExpiration(refreshToken, null);
         String token = jwtService.generateToken(refreshToken.getUser());
         return new TokenRefreshResponse(token);
     }
@@ -168,10 +290,16 @@ public class AuthenticationService {
     private boolean deleteUserIfNotActive(User user) {
         long tokenExpirationInSeconds = applicationConfig.getConfirmation().getToken().getExpirationMs() / 1000;
         if (LocalDateTime.now().minusSeconds(tokenExpirationInSeconds).isAfter(user.getRegisterDate())) {
-            userRepository.delete(user);
+            deletePendingUser(user);
             return true;
         }
         return false;
+    }
+
+    private void deletePendingUser(User user) {
+        log.info("Pending User#{} deleted from database", user.getId());
+        tokenService.deleteTokenByUser(user);
+        userRepository.delete(user);
     }
 
     private void validatePassword(String password) {

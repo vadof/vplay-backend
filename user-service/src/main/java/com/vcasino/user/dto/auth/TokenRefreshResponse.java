@@ -1,4 +1,4 @@
-package com.vcasino.user.dto;
+package com.vcasino.user.dto.auth;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
