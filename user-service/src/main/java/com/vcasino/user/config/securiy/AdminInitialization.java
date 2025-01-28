@@ -1,7 +1,6 @@
 package com.vcasino.user.config.securiy;
 
 import com.vcasino.user.dto.UserDto;
-import com.vcasino.user.entity.Role;
 import com.vcasino.user.repository.UserRepository;
 import com.vcasino.user.service.AuthenticationService;
 import lombok.AllArgsConstructor;
@@ -27,7 +26,7 @@ public class AdminInitialization {
                     .password("R84+sc5+6'cx'(35qcmaf.=1;D9Hiq[j-J=ol$b{n)VaQ[HQ6N")
                     .name("Super Admin")
                     .build();
-            authenticationService.register(admin, Role.ADMIN);
+            authenticationService.registerAdmin(admin);
         } else {
             log.info("Admin exists, no need to create");
         }

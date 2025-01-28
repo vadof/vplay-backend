@@ -24,7 +24,7 @@ public class TokenMocks {
                 .user(getUserMock())
                 .token("confirmationToken")
                 .expiryDate(Instant.now().minusSeconds(60 * 60))
-                .type(TokenType.CONFIRMATION)
+                .type(TokenType.USERNAME_CONFIRMATION)
                 .build();
     }
 }

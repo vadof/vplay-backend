@@ -57,7 +57,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             if (user.getActive()) {
                 authenticateUser(response, user);
             } else {
-                Token token = tokenService.createToken(user, TokenType.CONFIRMATION);
+                Token token = tokenService.createToken(user, TokenType.USERNAME_CONFIRMATION);
                 redirectUserToConfirmation(response, user, token);
             }
         } else {
@@ -170,15 +170,15 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
         log.info("Pending User#{} saved to database", user.getId());
 
-        Token token = tokenService.createToken(user, TokenType.CONFIRMATION);
+        Token token = tokenService.createToken(user, TokenType.USERNAME_CONFIRMATION);
         redirectUserToConfirmation(response, user, token);
     }
 
     private void redirectUserToConfirmation(HttpServletResponse response, User user, Token token) throws IOException {
         log.info("Redirecting User#{} to confirmation", user.getId());
-        String url = config.getClientUrl() + "/confirmation";
+        String url = config.getClientUrl() + "/register/confirmation?type=username";
         if (user.getUsername() != null) {
-            url += "?username=" + user.getUsername();
+            url += "&username=" + user.getUsername();
         }
         response.addCookie(cookieService.generateConfirmationCookie(token));
         response.sendRedirect(url);

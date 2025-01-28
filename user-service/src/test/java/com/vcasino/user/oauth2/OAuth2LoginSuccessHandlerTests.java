@@ -168,7 +168,7 @@ public class OAuth2LoginSuccessHandlerTests {
         when(userRepository.findByOauthProviderAndOauthProviderId(provider, ID)).thenReturn(Optional.of(user));
 
         Token confirmationToken = getConfirmationTokenMock();
-        when(tokenService.createToken(user, TokenType.CONFIRMATION)).thenReturn(confirmationToken);
+        when(tokenService.createToken(user, TokenType.USERNAME_CONFIRMATION)).thenReturn(confirmationToken);
         Cookie cookie = new Cookie("confirmationToken", confirmationToken.getToken());
         when(cookieService.generateConfirmationCookie(confirmationToken)).thenReturn(cookie);
 
@@ -352,7 +352,7 @@ public class OAuth2LoginSuccessHandlerTests {
     }
 
     private String getConfirmationUrl(String username) {
-        String url = config.getClientUrl() + "/confirmation";
+        String url = config.getClientUrl() + "/register/confirmation";
         if (username != null) {
             url += "?username=" + username;
         }
