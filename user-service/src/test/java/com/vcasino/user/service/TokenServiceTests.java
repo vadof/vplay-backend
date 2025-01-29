@@ -1,5 +1,7 @@
 package com.vcasino.user.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vcasino.user.config.ApplicationConfig;
 import com.vcasino.user.entity.Token;
 import com.vcasino.user.entity.TokenType;
@@ -19,8 +21,9 @@ import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.Optional;
 
-import static com.vcasino.user.mock.TokenMocks.getConfirmationTokenMock;
+import static com.vcasino.user.mock.TokenMocks.getEmailConfirmationTokenMock;
 import static com.vcasino.user.mock.TokenMocks.getRefreshTokenMock;
+import static com.vcasino.user.mock.TokenMocks.getUsernameConfirmationTokenMock;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -41,6 +44,9 @@ public class TokenServiceTests {
 
     @InjectMocks
     private TokenService tokenService;
+
+    @Mock
+    private ObjectMapper objectMapper;
 
     private final long TOKEN_EXPIRATION_MS = 1000 * 60 * 60;
 
@@ -66,7 +72,7 @@ public class TokenServiceTests {
     @DisplayName("Find by token and type")
     void findByTokenAndType() {
         Token refreshToken = getRefreshTokenMock();
-        Token confirmationToken = getConfirmationTokenMock();
+        Token confirmationToken = getUsernameConfirmationTokenMock();
 
         when(tokenRepository.findByTokenAndType(refreshToken.getToken(), TokenType.REFRESH))
                 .thenReturn(Optional.of(refreshToken));
@@ -74,7 +80,7 @@ public class TokenServiceTests {
         Token res = tokenService.findByTokenAndType(refreshToken.getToken(), refreshToken.getType());
         assertEquals(refreshToken, res);
 
-        when(tokenRepository.findByTokenAndType(confirmationToken.getToken(), TokenType.CONFIRMATION))
+        when(tokenRepository.findByTokenAndType(confirmationToken.getToken(), TokenType.USERNAME_CONFIRMATION))
                 .thenReturn(Optional.of(confirmationToken));
 
         res = tokenService.findByTokenAndType(confirmationToken.getToken(), confirmationToken.getType());
@@ -86,7 +92,7 @@ public class TokenServiceTests {
         assertThrows(AppException.class,
                 () -> tokenService.findByTokenAndType(refreshToken.getToken() + "1", refreshToken.getType()));
 
-        when(tokenRepository.findByTokenAndType(confirmationToken.getToken() + "1", TokenType.CONFIRMATION))
+        when(tokenRepository.findByTokenAndType(confirmationToken.getToken() + "1", TokenType.USERNAME_CONFIRMATION))
                 .thenReturn(Optional.empty());
 
         assertThrows(AppException.class,
@@ -121,11 +127,11 @@ public class TokenServiceTests {
         String tokenValue = token.getToken();
         when(tokenRepository.findByUser(token.getUser())).thenReturn(Optional.of(token));
 
-        tokenService.createToken(token.getUser(), TokenType.CONFIRMATION);
+        tokenService.createToken(token.getUser(), TokenType.USERNAME_CONFIRMATION);
 
         verify(tokenRepository, times(1)).save(token);
 
-        assertEquals(TokenType.CONFIRMATION, token.getType());
+        assertEquals(TokenType.USERNAME_CONFIRMATION, token.getType());
         assertNotEquals(tokenValue, token.getToken());
     }
 
@@ -150,15 +156,35 @@ public class TokenServiceTests {
         Token token = getRefreshTokenMock();
         token.setExpiryDate(Instant.now().minusSeconds(60));
 
-        AppException exception = assertThrows(AppException.class, () -> tokenService.verifyExpiration(token));
+        AppException exception = assertThrows(AppException.class, () -> tokenService.verifyExpiration(token, null));
 
         verify(tokenRepository, times(1)).delete(token);
         assertTrue(exception.getMessage().contains("expired"));
         assertEquals(HttpStatus.FORBIDDEN, exception.getHttpStatus());
 
         token.setExpiryDate(Instant.now().plusSeconds(60));
-        Token res = tokenService.verifyExpiration(token);
+        Token res = tokenService.verifyExpiration(token, null);
         assertEquals(res, token);
+    }
+
+    @Test
+    @DisplayName("Create email confirmation token")
+    void createEmailConfirmationToken() throws JsonProcessingException {
+        Token token = getEmailConfirmationTokenMock();
+
+        when(objectMapper.writeValueAsString(any(Token.EmailTokenOptions.class))).thenReturn(token.getOptions());
+        when(tokenRepository.save(any(Token.class))).thenReturn(token);
+
+        Token res = tokenService.createEmailConfirmationToken(token.getUser());
+
+        verify(tokenRepository, times(1)).save(any(Token.class));
+
+        assertEquals(TokenType.EMAIL_CONFIRMATION, res.getType());
+        assertEquals("{\"resendToken\":\"emailResendToken\",\"emailsSent\":1,\"sentAt\":\"2025-01-01T00:00:00.0Z\"}", res.getOptions());
+
+        Instant less = Instant.now().minusMillis((long) (TOKEN_EXPIRATION_MS * 1.1));
+        Instant more = Instant.now().plusMillis((long) (TOKEN_EXPIRATION_MS * 0.1));
+        assertTrue(token.getExpiryDate().isAfter(less) && token.getExpiryDate().isBefore(more));
     }
 
 }

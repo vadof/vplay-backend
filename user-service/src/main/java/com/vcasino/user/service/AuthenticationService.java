@@ -35,7 +35,6 @@ import java.util.regex.Pattern;
 
 import static com.vcasino.user.utils.EmailTemplate.buildEmailConfirmationTemplate;
 
-// TODO didn't get the code? Send email again (same verification token maximum 3 times, 30 seconds interval)
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -120,13 +119,14 @@ public class AuthenticationService {
             }
         }
 
-        String jwtToken = jwtService.generateToken(user);
+        String jwtToken = jwtService.generateJwtToken(user);
         Token refreshToken = tokenService.createToken(user, TokenType.REFRESH);
 
         return new AuthenticationResponse(jwtToken, refreshToken.getToken(), userMapper.toDto(user), null);
     }
 
-    public AuthenticationResponse oAuthConfirmation(String username, String confirmationToken) {
+    @Transactional(noRollbackFor = AppException.class)
+    public AuthenticationResponse confirmUsername(String username, String confirmationToken) {
         return processConfirmation(
                 confirmationToken,
                 TokenType.USERNAME_CONFIRMATION,
@@ -157,11 +157,15 @@ public class AuthenticationService {
             Consumer<User> userUpdater
     ) {
         Token token = tokenService.findByTokenAndType(confirmationToken, tokenType);
-        tokenService.verifyExpiration(token, "Registration time has expired, please complete it again");
         User user = token.getUser();
 
+        if (tokenService.isTokenExpired(token)) {
+            deletePendingUser(user);
+            throw new AppException("Registration time has expired, please complete it again", HttpStatus.FORBIDDEN);
+        }
+
         if (user.getActive()) {
-            log.warn("User#{} is already active", user.getId());
+            log.warn("Active User#{} with confirmation token", user.getId());
             throw new AppException(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -171,7 +175,7 @@ public class AuthenticationService {
         user.setActive(true);
         userRepository.save(user);
 
-        String jwtToken = jwtService.generateToken(user);
+        String jwtToken = jwtService.generateJwtToken(user);
         Token refreshToken = tokenService.createToken(user, TokenType.REFRESH);
 
         log.info("User#{} has activated the account", user.getId());
@@ -187,9 +191,9 @@ public class AuthenticationService {
     }
 
     @Transactional(noRollbackFor = AppException.class)
-    public EmailTokenOptionsDto resendEmail(EmailTokenOptionsDto emailTokenOptions) {
+    public EmailTokenOptionsDto resendConfirmationEmail(EmailTokenOptionsDto emailTokenOptions) {
         User user = userRepository.findByEmail(emailTokenOptions.getEmail())
-                .orElseThrow(() -> new AppException("Email not found", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new AppException(null, HttpStatus.FORBIDDEN));
 
         Token token = tokenService.findByUserAndType(user, TokenType.EMAIL_CONFIRMATION).orElseThrow(
                 () -> new AppException(null, HttpStatus.FORBIDDEN));
@@ -233,7 +237,7 @@ public class AuthenticationService {
     @Transactional
     public void deletePendingUser(EmailTokenOptionsDto emailTokenOptions) {
         User user = userRepository.findByEmail(emailTokenOptions.getEmail())
-                .orElseThrow(() -> new AppException("Email not found", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new AppException(null, HttpStatus.NOT_FOUND));
 
         Token token = tokenService.findByUserAndType(user, TokenType.EMAIL_CONFIRMATION).orElseThrow(
                 () -> new AppException(null, HttpStatus.FORBIDDEN));
@@ -248,7 +252,7 @@ public class AuthenticationService {
         deletePendingUser(user);
     }
 
-    public void sendEmailConfirmation(String email, String confirmationToken) {
+    private void sendEmailConfirmation(String email, String confirmationToken) {
         String confirmationUrl = "%s/register/confirmation?type=email&confirmationToken=%s"
                 .formatted(applicationConfig.getClientUrl(), confirmationToken);
 
@@ -259,7 +263,7 @@ public class AuthenticationService {
     public TokenRefreshResponse refreshToken(TokenRefreshRequest request) {
         Token refreshToken = tokenService.findByTokenAndType(request.getRefreshToken(), TokenType.REFRESH);
         tokenService.verifyExpiration(refreshToken, null);
-        String token = jwtService.generateToken(refreshToken.getUser());
+        String token = jwtService.generateJwtToken(refreshToken.getUser());
         return new TokenRefreshResponse(token);
     }
 

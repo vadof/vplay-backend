@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.vcasino.user.mock.TokenMocks.getConfirmationTokenMock;
+import static com.vcasino.user.mock.TokenMocks.getUsernameConfirmationTokenMock;
 import static com.vcasino.user.mock.TokenMocks.getRefreshTokenMock;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -142,7 +142,7 @@ public class OAuth2LoginSuccessHandlerTests {
         String jwtToken = "AAA-BBB-CCC";
         Token refreshToken = getRefreshTokenMock();
 
-        when(jwtService.generateToken(user)).thenReturn(jwtToken);
+        when(jwtService.generateJwtToken(user)).thenReturn(jwtToken);
         when(tokenService.createToken(user, TokenType.REFRESH)).thenReturn(refreshToken);
 
         Cookie jwtCookie = new Cookie("jwt", "AAA-BBB-CCC");
@@ -167,7 +167,7 @@ public class OAuth2LoginSuccessHandlerTests {
 
         when(userRepository.findByOauthProviderAndOauthProviderId(provider, ID)).thenReturn(Optional.of(user));
 
-        Token confirmationToken = getConfirmationTokenMock();
+        Token confirmationToken = getUsernameConfirmationTokenMock();
         when(tokenService.createToken(user, TokenType.USERNAME_CONFIRMATION)).thenReturn(confirmationToken);
         Cookie cookie = new Cookie("confirmationToken", confirmationToken.getToken());
         when(cookieService.generateConfirmationCookie(confirmationToken)).thenReturn(cookie);
@@ -253,7 +253,7 @@ public class OAuth2LoginSuccessHandlerTests {
         when(userRepository.findByOauthProviderAndOauthProviderId(provider, ID)).thenReturn(Optional.empty());
         when(userRepository.findByUsernameOrEmail(USERNAME, EMAIL)).thenReturn(List.of(existingUserByEmail));
 
-        Token token = getConfirmationTokenMock();
+        Token token = getUsernameConfirmationTokenMock();
         when(tokenService.createToken(any(), any())).thenReturn(token);
         Cookie cookie = new Cookie("confirmationToken", token.getToken());
         when(cookieService.generateConfirmationCookie(token)).thenReturn(cookie);
@@ -270,7 +270,7 @@ public class OAuth2LoginSuccessHandlerTests {
     }
 
     void createPendingUser(OAuth2AuthenticationToken oAuthToken, String name, String email, String username, OAuthProvider provider) throws Exception {
-        Token token = getConfirmationTokenMock();
+        Token token = getUsernameConfirmationTokenMock();
 
         when(userRepository.findByOauthProviderAndOauthProviderId(provider, ID)).thenReturn(Optional.empty());
         when(userRepository.findByUsernameOrEmail(username, email)).thenReturn(new ArrayList<>());
@@ -352,9 +352,9 @@ public class OAuth2LoginSuccessHandlerTests {
     }
 
     private String getConfirmationUrl(String username) {
-        String url = config.getClientUrl() + "/register/confirmation";
+        String url = config.getClientUrl() + "/register/confirmation?type=username";
         if (username != null) {
-            url += "?username=" + username;
+            url += "&username=" + username;
         }
         return url;
     }

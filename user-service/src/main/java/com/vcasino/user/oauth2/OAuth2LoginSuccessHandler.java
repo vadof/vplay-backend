@@ -186,7 +186,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
     private void authenticateUser(HttpServletResponse response, User user) throws IOException {
         log.info("Authenticating User#{}", user.getId());
-        String jwtToken = jwtService.generateToken(user);
+        String jwtToken = jwtService.generateJwtToken(user);
         Token refreshToken = tokenService.createToken(user, TokenType.REFRESH);
         String url = "%s/login/success?name=%s&username=%s&email=%s"
                 .formatted(config.getClientUrl(), user.getName(), user.getUsername(), user.getEmail());

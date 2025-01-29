@@ -77,15 +77,15 @@ public class AuthenticationController {
         return ResponseEntity.ok().body(response);
     }
 
-    @Operation(summary = "OAuth2 registration confirmation")
+    @Operation(summary = "After OAuth2 registration user must confirm his username")
     @ApiResponse(responseCode = "200", description = "Account created",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AuthenticationResponse.class)))
     @PostMapping(value = "/username-confirmation", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AuthenticationResponse> oAuthConfirmation(
+    public ResponseEntity<AuthenticationResponse> usernameConfirmation(
             @RequestBody @Valid OAuthConfirmation oAuthConfirmation,
             @CookieValue("confirmationToken") String confirmationToken) {
         log.info("REST request to confirm oauth registration");
-        AuthenticationResponse response = authenticationService.oAuthConfirmation(oAuthConfirmation.getUsername(), confirmationToken);
+        AuthenticationResponse response = authenticationService.confirmUsername(oAuthConfirmation.getUsername(), confirmationToken);
         return ResponseEntity.ok().headers(response.getHeaders()).body(response);
     }
 
@@ -103,9 +103,9 @@ public class AuthenticationController {
     @ApiResponse(responseCode = "200", description = "Email sent",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = EmailTokenOptionsDto.class)))
     @PostMapping(value = "/email-confirmation-resend", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<EmailTokenOptionsDto> emailConfirmation(@RequestBody @Valid EmailTokenOptionsDto tokenOptions) {
+    public ResponseEntity<EmailTokenOptionsDto> resendConfirmationEmail(@RequestBody @Valid EmailTokenOptionsDto tokenOptions) {
         log.info("REST request to resend confirmation email to {}", tokenOptions.getEmail());
-        EmailTokenOptionsDto res = authenticationService.resendEmail(tokenOptions);
+        EmailTokenOptionsDto res = authenticationService.resendConfirmationEmail(tokenOptions);
         return ResponseEntity.ok().body(res);
     }
 

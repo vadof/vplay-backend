@@ -1,7 +1,10 @@
 package com.vcasino.user.mock;
 
 import com.vcasino.user.dto.UserDto;
+import com.vcasino.user.entity.Role;
 import com.vcasino.user.entity.User;
+
+import java.time.LocalDateTime;
 
 public class UserMocks {
     public static UserDto getUserDtoMock() {
@@ -13,13 +16,16 @@ public class UserMocks {
                 .build();
     }
 
-    public static User getUserMock() {
+    public static User getUserMock(boolean active) {
         return User.builder()
+                .id(1L)
                 .name("John Doe")
                 .email("test@gmail.com")
                 .password("test1234")
                 .username("test")
-                .active(true)
+                .active(active)
+                .role(Role.USER)
+                .registerDate(LocalDateTime.now())
                 .frozen(false)
                 .build();
     }
