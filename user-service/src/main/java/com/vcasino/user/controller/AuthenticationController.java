@@ -1,13 +1,14 @@
 package com.vcasino.user.controller;
 
 
-import com.vcasino.user.dto.AuthenticationRequest;
-import com.vcasino.user.dto.AuthenticationResponse;
-import com.vcasino.user.dto.CountryDto;
-import com.vcasino.user.dto.TokenRefreshRequest;
-import com.vcasino.user.dto.TokenRefreshResponse;
 import com.vcasino.user.dto.UserDto;
-import com.vcasino.user.entity.Role;
+import com.vcasino.user.dto.auth.AuthenticationRequest;
+import com.vcasino.user.dto.auth.AuthenticationResponse;
+import com.vcasino.user.dto.auth.OAuthConfirmation;
+import com.vcasino.user.dto.auth.TokenRefreshRequest;
+import com.vcasino.user.dto.auth.TokenRefreshResponse;
+import com.vcasino.user.dto.email.EmailConfirmation;
+import com.vcasino.user.dto.email.EmailTokenOptionsDto;
 import com.vcasino.user.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,18 +19,17 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
-
+// TODO check documentation
 @Tag(name = "Authentication", description = "API operations with Authentication")
 @RestController
 @RequestMapping("/api/v1/users/auth")
@@ -40,32 +40,21 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
-    @Operation(summary = "Get countries for registration")
-    @ApiResponse(responseCode = "200", description = "Return countries",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = CountryDto[].class)))
-    @GetMapping(value = "/countries", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<CountryDto>> getCountries() {
-        log.info("REST request to get Countries");
-        List<CountryDto> response = authenticationService.getCountries();
-        return ResponseEntity.ok().body(response);
-    }
-
     @Operation(summary = "Register new account")
-    @ApiResponse(responseCode = "200", description = "Account created",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AuthenticationResponse.class)))
-    @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody @Valid UserDto userDto) {
+    @ApiResponse(responseCode = "200", description = "An email has been sent to confirm an email. The email can be resent in emailsSent * 30 seconds")
+    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<EmailTokenOptionsDto> register(@RequestBody @Valid UserDto userDto) {
         log.info("REST request to register User");
-        AuthenticationResponse response = authenticationService.register(userDto, Role.USER);
-        return ResponseEntity.ok().body(response);
+        EmailTokenOptionsDto tokenOptions = authenticationService.registerUser(userDto);
+        return ResponseEntity.ok().body(tokenOptions);
     }
 
     @Hidden
     @PostMapping(value = "/admin/register", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AuthenticationResponse> registerAdmin(@RequestBody @Valid UserDto userDto) {
+    public ResponseEntity<Void> registerAdmin(@RequestBody @Valid UserDto userDto) {
         log.info("REST request to register Admin");
-        AuthenticationResponse response = authenticationService.register(userDto, Role.ADMIN);
-        return ResponseEntity.ok().body(response);
+        authenticationService.registerAdmin(userDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 
     @Operation(summary = "Login to account")
@@ -83,8 +72,50 @@ public class AuthenticationController {
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = TokenRefreshResponse.class)))
     @PostMapping(value = "/refreshToken", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TokenRefreshResponse> refreshToken(@RequestBody @Valid TokenRefreshRequest request) {
-        log.info("REST request to refresh token {}", request.getRefreshToken());
+        log.info("REST request to refresh token");
         TokenRefreshResponse response = authenticationService.refreshToken(request);
         return ResponseEntity.ok().body(response);
     }
+
+    @Operation(summary = "After OAuth2 registration user must confirm his username")
+    @ApiResponse(responseCode = "200", description = "Account created",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AuthenticationResponse.class)))
+    @PostMapping(value = "/username-confirmation", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AuthenticationResponse> usernameConfirmation(
+            @RequestBody @Valid OAuthConfirmation oAuthConfirmation,
+            @CookieValue("confirmationToken") String confirmationToken) {
+        log.info("REST request to confirm oauth registration");
+        AuthenticationResponse response = authenticationService.confirmUsername(oAuthConfirmation.getUsername(), confirmationToken);
+        return ResponseEntity.ok().headers(response.getHeaders()).body(response);
+    }
+
+    @Operation(summary = "Email confirmation")
+    @ApiResponse(responseCode = "200", description = "Account created",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AuthenticationResponse.class)))
+    @PostMapping(value = "/email-confirmation", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AuthenticationResponse> emailConfirmation(@RequestBody @Valid EmailConfirmation emailConfirmation) {
+        log.info("REST request to confirm an email");
+        AuthenticationResponse response = authenticationService.confirmEmail(emailConfirmation.getConfirmationToken());
+        return ResponseEntity.ok().body(response);
+    }
+
+    @Operation(summary = "Resend confirmation email. The email can be resent if canResend = true with interval emailsSent * 30 seconds")
+    @ApiResponse(responseCode = "200", description = "Email sent",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = EmailTokenOptionsDto.class)))
+    @PostMapping(value = "/email-confirmation-resend", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<EmailTokenOptionsDto> resendConfirmationEmail(@RequestBody @Valid EmailTokenOptionsDto tokenOptions) {
+        log.info("REST request to resend confirmation email to {}", tokenOptions.getEmail());
+        EmailTokenOptionsDto res = authenticationService.resendConfirmationEmail(tokenOptions);
+        return ResponseEntity.ok().body(res);
+    }
+
+    @Operation(summary = "If a user has registered with an invalid email address, the pending user can be deleted")
+    @ApiResponse(responseCode = "200", description = "The pending user has been deleted")
+    @PostMapping(value = "/delete-pending-user", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> deletePendingUser(@RequestBody @Valid EmailTokenOptionsDto tokenOptions) {
+        log.info("REST request to delete pending user with email {}", tokenOptions.getEmail());
+        authenticationService.deletePendingUser(tokenOptions);
+        return ResponseEntity.ok().body(null);
+    }
+
 }

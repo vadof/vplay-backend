@@ -1,17 +1,24 @@
-package com.vcasino.user.dto;
+package com.vcasino.user.dto.email;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TokenRefreshRequest {
+public class EmailTokenOptionsDto {
     @NotEmpty(message = "Field cannot be empty")
-    String refreshToken;
+    String email;
+    @NotEmpty(message = "Field cannot be empty")
+    String resendToken;
+
+    Integer emailsSent;
+    Boolean canResend;
 }

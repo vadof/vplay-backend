@@ -13,7 +13,7 @@ public class UserProducer extends AbstractProducer {
     }
 
     public void sendUserCreated(Long userId) {
-        log.info("Send user-create event - User#{}", userId);
+        log.info("Send user-create event for User#{}", userId);
         send(Topic.USER_CREATE.getName(), new UserCreate(userId));
     }
 

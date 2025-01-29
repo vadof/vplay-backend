@@ -1,12 +1,12 @@
 package com.vcasino.user.config.securiy;
 
+import com.vcasino.user.config.ApplicationConfig;
 import com.vcasino.user.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -30,11 +30,11 @@ import java.util.function.Function;
 @Slf4j
 public class JwtService {
 
-    @Value("${jwt.expirationMs}")
-    private Long jwtExpiration;
+    private final ApplicationConfig.JwtProperties jwtConfig;
 
-    @Value("${jwt.keys.path}")
-    private String keysPath;
+    public JwtService(ApplicationConfig constantsConfig) {
+        this.jwtConfig = constantsConfig.getJwt();
+    }
 
     private PrivateKey privateKey;
     private PublicKey publicKey;
@@ -48,11 +48,11 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(User user) {
+    public String generateJwtToken(User user) {
         List<String> roles = user.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .toList();
-        return generateToken(Map.of("roles", roles, "id", user.getId()), user);
+        return generateJwtToken(Map.of("roles", roles, "id", user.getId()), user);
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
@@ -68,12 +68,12 @@ public class JwtService {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    public String generateToken(Map<String, Object> extractClaims, UserDetails userDetails) {
+    public String generateJwtToken(Map<String, Object> extractClaims, UserDetails userDetails) {
         return Jwts.builder()
                 .setClaims(extractClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtConfig.getExpirationMs()))
                 .signWith(privateKey, SignatureAlgorithm.RS256)
                 .compact();
     }
@@ -88,8 +88,8 @@ public class JwtService {
 
     @PostConstruct
     private void generateRsaKeys() throws Exception {
-        Path privateKeyPath = Paths.get( keysPath + "/private.key");
-        Path publicKeyPath = Paths.get(keysPath + "/public.key");
+        Path privateKeyPath = Paths.get( jwtConfig.getKeysPath() + "/private.key");
+        Path publicKeyPath = Paths.get(jwtConfig.getKeysPath() + "/public.key");
 
         if (Files.exists(privateKeyPath) && Files.exists(publicKeyPath)) {
             log.info("RSA keys found");

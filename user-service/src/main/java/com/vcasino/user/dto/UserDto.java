@@ -3,7 +3,6 @@ package com.vcasino.user.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -20,10 +19,7 @@ import lombok.experimental.FieldDefaults;
 public class UserDto {
 
     @NotEmpty(message = "Field cannot be empty")
-    String firstname;
-
-    @NotEmpty(message = "Field cannot be empty")
-    String lastname;
+    String name;
 
     @NotEmpty(message = "Field cannot be empty")
     String username;
@@ -36,7 +32,4 @@ public class UserDto {
     @NotEmpty(message = "Field cannot be empty")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     String password;
-
-    @NotNull(message = "Field cannot be null")
-    CountryDto country;
 }

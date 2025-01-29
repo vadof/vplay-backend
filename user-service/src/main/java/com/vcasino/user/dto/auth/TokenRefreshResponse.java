@@ -1,16 +1,15 @@
-package com.vcasino.user.dto;
+package com.vcasino.user.dto.auth;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-@AllArgsConstructor
 @Data
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CountryDto {
-    String code;
-    String name;
+public class TokenRefreshResponse {
+    String token;
 }

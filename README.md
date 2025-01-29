@@ -8,6 +8,17 @@
 For Dev environment run `vcasino-backend/docker/dev/docker-compose.yml` <br>
 For Test environment run `vcasino-backend/docker/test/docker-compose.yml`
 
+Environment variables
+```
+YOUTUBE_API_KEY (key to interact with youtube videos)
+GOOGLE_OAUTH_CLIENT_ID (Google OAuth2)
+GOOGLE_OAUTH_CLIENT_SECRET (Google OAuth2)
+JWT_EXPIRATION (number in ms)
+JWT_REFRESH_EXPIRATION (number in ms)
+KEYS_PATH (public.key/private.key path for jwt auth)
+PUBLIC_KEY_PATH (public.key path for jwt auth)
+```
+
 To do actions with YouTube you need to set YOUTUBE_API_KEY env variable
 
 # Services:
@@ -107,6 +118,7 @@ To do actions with YouTube you need to set YOUTUBE_API_KEY env variable
 - [Upgrade](#upgrade-section)
 - [Friends](#friends-section)
 - [Rewards](#rewards-section)
+- [Company](#company-section)
 - [Top](#top-section)
 
 ### Common
@@ -229,6 +241,48 @@ Price for upgrade is determined based on upgrade's (<i>profit_per_hour_delta</i>
 - Every day, when logging in, the user can pick up a daily bonus. 1-10 days. After picking up the daily 10th prize, the
   counter is reset.
 - Every day, a new video appears, upon viewing which the user can receive a reward.
+
+### Company section
+
+**Description**
+- У пользователя будет выбор, создать свою компанию или устроится в компанию
+- Игроки могут подавать заявки на работу в компаниях (optional может указать желаемую фиксированную зарплату и % от выручки), а владельцы (или менеджеры) принимают их.
+* Для создания компании необходимо:
+  - Название компании
+  - Уникальный код компании
+  - Описание
+  - Стартовый капитал (min 5M)
+  - Минимальное количество кликов за неделю (optional)
+- Максимальное число сотрудников = 10
+- Максимальное число сотрудников можно улучшать
+- В компании у каждого сотрудника есть роль (можно делать кастомные)
+- Каждый день отчеты компании обновляются
+- Компания может обанкротиться если капитал компании упадёт до 0
+- Система акций (???)
+(Хранить отчёт за день в json структуре)
+
+
+
+|             | Earn (d) | Salary (fixed/%) | Company income (50%) | Employee salary |
+|-------------|:--------:|:----------------:|:--------------------:|:---------------:|
+| Employee 1  |   20K    |      2K/5%       |         10K          |    2K+1K=3K     |
+| Employee 2  |   20K    |      10K/5%      |         10K          |   10K+1K=11K    |
+| Employee 3  |   20K    |      10K/5%      |         10K          |   10K+1K=11K    |
+| Employee 4  |   100K   |     10K/10%      |         50K          |   10K+10K=20K   |
+| Employee 5  |   100K   |     10K/10%      |         50K          |   10K+10K=20K   |
+| Employee 6  |   100K   |     10K/10%      |         50K          |   10K+10K=20K   |
+| Employee 7  |   200K   |     20K/20%      |         100K         |   20K+40K=60K   |
+| Employee 8  |   200K   |     20K/20%      |         100K         |   20K+40K=60K   |
+| Employee 9  |   200K   |     20K/20%      |         100K         |   20K+40K=60K   |
+| Employee 10 |   200K   |     20K/20%      |         100K         |   20K+40K=60K   |
+| Total       |          |                  |         580K         |      294K       |
+
+**Income tax (10%)**: (Company income - Employee salary) * Tax<br>
+**Income tax (10%)**: (580K - 294K) * 0.1 = 28.6K<br>
+**Day tax**: Number of employees * 5K<br>
+**Day tax**: 10 * 5K = 50K<br>
+**Net profit**: Company income - Employee salary - Income tax - Day tax<br>
+**Net profit**: 580K - 294K - 28.6K - 50K = 207,4K<br>
 
 ### Top section
 
