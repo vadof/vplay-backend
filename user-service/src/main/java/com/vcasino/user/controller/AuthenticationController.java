@@ -10,7 +10,6 @@ import com.vcasino.user.dto.auth.TokenRefreshResponse;
 import com.vcasino.user.dto.email.EmailConfirmation;
 import com.vcasino.user.dto.email.EmailTokenOptionsDto;
 import com.vcasino.user.service.AuthenticationService;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -29,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-// TODO check documentation
 @Tag(name = "Authentication", description = "API operations with Authentication")
 @RestController
 @RequestMapping("/api/v1/users/auth")
@@ -49,8 +47,9 @@ public class AuthenticationController {
         return ResponseEntity.ok().body(tokenOptions);
     }
 
-    @Hidden
-    @PostMapping(value = "/admin/register", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Register new admin account (admin authentication required)")
+    @ApiResponse(responseCode = "201", description = "Account created")
+    @PostMapping(value = "/admin/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> registerAdmin(@RequestBody @Valid UserDto userDto) {
         log.info("REST request to register Admin");
         authenticationService.registerAdmin(userDto);
@@ -89,7 +88,7 @@ public class AuthenticationController {
         return ResponseEntity.ok().headers(response.getHeaders()).body(response);
     }
 
-    @Operation(summary = "Email confirmation")
+    @Operation(summary = "After registration user must confirm his email")
     @ApiResponse(responseCode = "200", description = "Account created",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AuthenticationResponse.class)))
     @PostMapping(value = "/email-confirmation", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)

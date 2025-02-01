@@ -80,6 +80,8 @@ public class AuthenticationService {
         boolean admin = role.equals(Role.ADMIN);
         if (admin) {
             validatePassword(userDto.getPassword());
+        } else {
+            checkForInvalidCharacters(userDto.getPassword());
         }
 
         validateEmail(userDto.getEmail());
@@ -115,7 +117,7 @@ public class AuthenticationService {
                 deletePendingUser(user);
                 throw new AppException("Invalid Username or Password!", HttpStatus.UNAUTHORIZED);
             } else {
-                throw new AppException("Check " + user.getEmail() + " for an email to complete your account setup", HttpStatus.BAD_REQUEST);
+                throw new AppException("Check " + user.getEmail() + " for an email to complete your account setup", HttpStatus.UNAUTHORIZED);
             }
         }
 
@@ -237,7 +239,7 @@ public class AuthenticationService {
     @Transactional
     public void deletePendingUser(EmailTokenOptionsDto emailTokenOptions) {
         User user = userRepository.findByEmail(emailTokenOptions.getEmail())
-                .orElseThrow(() -> new AppException(null, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new AppException(null, HttpStatus.FORBIDDEN));
 
         Token token = tokenService.findByUserAndType(user, TokenType.EMAIL_CONFIRMATION).orElseThrow(
                 () -> new AppException(null, HttpStatus.FORBIDDEN));
@@ -311,10 +313,7 @@ public class AuthenticationService {
             throw new AppException("Min password length is 12 symbols", HttpStatus.BAD_REQUEST);
         }
 
-        String invalidChars = getInvalidCharacters(password);
-        if (!invalidChars.isEmpty()) {
-            throw new AppException("Password cannot contain: " + invalidChars, HttpStatus.BAD_REQUEST);
-        }
+        checkForInvalidCharacters(password);
 
         if (!passwordContainsSpecialSymbol(password)) {
             throw new AppException("Password must contain at least 1 special symbol", HttpStatus.BAD_REQUEST);
@@ -326,6 +325,13 @@ public class AuthenticationService {
 
         if (!passwordContainsNumber(password)) {
             throw new AppException("Password must contain at least 1 number", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    private void checkForInvalidCharacters(String password) {
+        String invalidChars = getInvalidCharacters(password);
+        if (!invalidChars.isEmpty()) {
+            throw new AppException("Password cannot contain: " + invalidChars, HttpStatus.BAD_REQUEST);
         }
     }
 

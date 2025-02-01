@@ -265,6 +265,20 @@ public class AuthenticationServiceTests {
     }
 
     @Test
+    @DisplayName("Register user bad password")
+    void registerUserBadPassword() {
+        UserDto toSave = getUserDtoMock();
+        String invalidSymbols = "лñ打";
+
+        String password = "test1234";
+        for (Character symbol : invalidSymbols.toCharArray()) {
+            toSave.setPassword(password + symbol);
+            AppException exception = assertThrows(AppException.class, () -> authenticationService.registerUser(toSave));
+            assertTrue(exception.getMessage().contains("Password"));
+        }
+    }
+
+    @Test
     @DisplayName("Register admin bad password")
     void registerAdminBadPassword() {
         UserDto toSave = getUserDtoMock();

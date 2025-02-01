@@ -15,6 +15,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
@@ -26,6 +29,7 @@ public class SecurityConfiguration {
     private final AuthenticationProvider authenticationProvider;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
+    private final ApplicationConfig config;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -48,13 +52,17 @@ public class SecurityConfiguration {
     }
 
     private String[] permittedEndpoints() {
-        return new String[]{
-                "/api/*/users/auth/*",
-                "/oauth2/**",
-                "/swagger-ui/**",
-                "/v3/api-docs",
-                "/v3/api-docs/swagger-config"
-        };
+        List<String> endpoints = new ArrayList<>(
+                List.of("/api/*/users/auth/*", "/oauth2/**")
+        );
+
+        if (!config.getProduction()) {
+            endpoints.addAll(
+                    List.of("/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/swagger-config")
+            );
+        }
+
+        return endpoints.toArray(new String[0]);
     }
 
     private String[] adminEndpoints() {

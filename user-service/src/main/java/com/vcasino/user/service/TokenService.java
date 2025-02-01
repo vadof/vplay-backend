@@ -39,6 +39,7 @@ public class TokenService {
 
         if (tokenOptional.isPresent()) {
             token = tokenOptional.get();
+            token.setOptions(null);
         } else {
             token = new Token();
             token.setUser(user);
