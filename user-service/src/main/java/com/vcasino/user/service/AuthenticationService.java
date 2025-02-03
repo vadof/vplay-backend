@@ -264,9 +264,18 @@ public class AuthenticationService {
     @Transactional
     public TokenRefreshResponse refreshToken(TokenRefreshRequest request) {
         Token refreshToken = tokenService.findByTokenAndType(request.getRefreshToken(), TokenType.REFRESH);
-        tokenService.verifyExpiration(refreshToken, null);
+
+        Long secondsBeforeExpiration = tokenService.getSecondsBeforeTokenExpiration(refreshToken, null);
+
+        int twoHours = 7200;
+        boolean generateNewRefreshToken = secondsBeforeExpiration <= twoHours;
+        if (generateNewRefreshToken) {
+            refreshToken = tokenService.renewToken(refreshToken);
+        }
+
         String token = jwtService.generateJwtToken(refreshToken.getUser());
-        return new TokenRefreshResponse(token);
+
+        return new TokenRefreshResponse(token, refreshToken.getToken());
     }
 
     private void validateUsername(String username) {

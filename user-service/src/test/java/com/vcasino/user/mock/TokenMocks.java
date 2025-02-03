@@ -36,7 +36,7 @@ public class TokenMocks {
                 .id(1L)
                 .user(getUserMock(type == TokenType.REFRESH))
                 .token(token)
-                .expiryDate(Instant.now().minusSeconds(60 * 60))
+                .expiryDate(Instant.now().plusSeconds(60 * 60))
                 .type(type)
                 .build();
     }

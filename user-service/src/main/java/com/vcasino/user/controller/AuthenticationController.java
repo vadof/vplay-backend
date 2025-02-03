@@ -67,7 +67,7 @@ public class AuthenticationController {
     }
 
     @Operation(summary = "Refresh token")
-    @ApiResponse(responseCode = "200", description = "Token refreshed",
+    @ApiResponse(responseCode = "200", description = "Token refreshed (if there are less than 2 hours left before the token expires, a new refreshToken will also be returned in the request)",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = TokenRefreshResponse.class)))
     @PostMapping(value = "/refreshToken", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TokenRefreshResponse> refreshToken(@RequestBody @Valid TokenRefreshRequest request) {

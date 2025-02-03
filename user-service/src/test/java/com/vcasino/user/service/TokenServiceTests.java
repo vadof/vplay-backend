@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
 import java.lang.reflect.Field;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
 
@@ -48,7 +49,7 @@ public class TokenServiceTests {
     @Mock
     private ObjectMapper objectMapper;
 
-    private final long TOKEN_EXPIRATION_MS = 1000 * 60 * 60;
+    private final long TOKEN_EXPIRATION_MS = 3600000; // 1 Hour
 
     @BeforeEach
     void initConfig() throws Exception {
@@ -63,6 +64,7 @@ public class TokenServiceTests {
 
         var jwt = new ApplicationConfig.JwtProperties();
         jwt.setExpirationMs(TOKEN_EXPIRATION_MS);
+        jwt.setRefreshExpirationMs(TOKEN_EXPIRATION_MS);
 
         config.setConfirmation(confirmation);
         config.setJwt(jwt);
@@ -115,8 +117,9 @@ public class TokenServiceTests {
         assertEquals(tokenUser, token.getUser());
         assertNotEquals(tokenValue, token.getToken());
 
-        Instant less = Instant.now().minusMillis((long) (TOKEN_EXPIRATION_MS * 1.1));
-        Instant more = Instant.now().plusMillis((long) (TOKEN_EXPIRATION_MS * 0.1));
+        Instant less = Instant.now().plusMillis(TOKEN_EXPIRATION_MS).minusSeconds(5);
+        Instant more = Instant.now().plusMillis(TOKEN_EXPIRATION_MS).plusSeconds(5);
+
         assertTrue(token.getExpiryDate().isAfter(less) && token.getExpiryDate().isBefore(more));
     }
 
@@ -151,20 +154,33 @@ public class TokenServiceTests {
     }
 
     @Test
-    @DisplayName("Verify expiration")
-    void verifyExpiration() {
+    @DisplayName("Get seconds before token expiration")
+    void getSecondsBeforeTokenExpiration() {
         Token token = getRefreshTokenMock();
         token.setExpiryDate(Instant.now().minusSeconds(60));
 
-        AppException exception = assertThrows(AppException.class, () -> tokenService.verifyExpiration(token, null));
+        AppException exception = assertThrows(AppException.class, () -> tokenService.getSecondsBeforeTokenExpiration(token, null));
 
         verify(tokenRepository, times(1)).delete(token);
         assertTrue(exception.getMessage().contains("expired"));
         assertEquals(HttpStatus.FORBIDDEN, exception.getHttpStatus());
 
         token.setExpiryDate(Instant.now().plusSeconds(60));
-        Token res = tokenService.verifyExpiration(token, null);
-        assertEquals(res, token);
+        Long res = tokenService.getSecondsBeforeTokenExpiration(token, null);
+        assertTrue(res <= 60 && res >= 59);
+    }
+
+    @Test
+    @DisplayName("Renew token")
+    void renewToken() {
+        Token token = getRefreshTokenMock();
+        token.setExpiryDate(Instant.now().plusSeconds(60));
+
+        when(tokenRepository.save(token)).thenReturn(token);
+
+        Token res = tokenService.renewToken(token);
+
+        assertTrue(Duration.between(Instant.now(), res.getExpiryDate()).getSeconds() >= TOKEN_EXPIRATION_MS / 3600 - 5);
     }
 
     @Test
@@ -182,8 +198,9 @@ public class TokenServiceTests {
         assertEquals(TokenType.EMAIL_CONFIRMATION, res.getType());
         assertEquals("{\"resendToken\":\"emailResendToken\",\"emailsSent\":1,\"sentAt\":\"2025-01-01T00:00:00.0Z\"}", res.getOptions());
 
-        Instant less = Instant.now().minusMillis((long) (TOKEN_EXPIRATION_MS * 1.1));
-        Instant more = Instant.now().plusMillis((long) (TOKEN_EXPIRATION_MS * 0.1));
+        Instant less = Instant.now().plusMillis(TOKEN_EXPIRATION_MS).minusSeconds(5);
+        Instant more = Instant.now().plusMillis(TOKEN_EXPIRATION_MS).plusSeconds(5);
+
         assertTrue(token.getExpiryDate().isAfter(less) && token.getExpiryDate().isBefore(more));
     }
 

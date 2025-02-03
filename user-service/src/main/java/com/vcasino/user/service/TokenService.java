@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
@@ -51,6 +52,21 @@ public class TokenService {
         if (tokenType.equals(TokenType.REFRESH)) {
             token.setExpiryDate(Instant.now().plusMillis(config.getJwt().getRefreshExpirationMs()));
         } else if (tokenType.equals(TokenType.USERNAME_CONFIRMATION)) {
+            token.setExpiryDate(Instant.now().plusMillis(config.getConfirmation().getToken().getExpirationMs()));
+        } else {
+            log.error("{} TokenType is not supported in this method", tokenType);
+            throw new AppException(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return tokenRepository.save(token);
+    }
+
+    public Token renewToken(Token token) {
+        token.setToken(UUID.randomUUID().toString());
+
+        if (token.getType().equals(TokenType.REFRESH)) {
+            token.setExpiryDate(Instant.now().plusMillis(config.getJwt().getRefreshExpirationMs()));
+        } else {
             token.setExpiryDate(Instant.now().plusMillis(config.getConfirmation().getToken().getExpirationMs()));
         }
 
@@ -121,8 +137,11 @@ public class TokenService {
         return token.getExpiryDate().compareTo(Instant.now()) < 0;
     }
 
-    public Token verifyExpiration(Token token, @Nullable String errorMessage) {
-        if (token.getExpiryDate().compareTo(Instant.now()) < 0) {
+    public Long getSecondsBeforeTokenExpiration(Token token, @Nullable String errorMessage) {
+        Instant now = Instant.now();
+        Instant expiry = token.getExpiryDate();
+
+        if (expiry.isBefore(now)) {
             deleteToken(token);
             if (errorMessage == null) {
                 errorMessage = "Token expired. Please make a new request";
@@ -130,6 +149,6 @@ public class TokenService {
             throw new AppException(errorMessage, HttpStatus.FORBIDDEN);
         }
 
-        return token;
+        return Duration.between(now, expiry).getSeconds();
     }
 }

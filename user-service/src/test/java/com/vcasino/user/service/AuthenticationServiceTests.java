@@ -48,6 +48,7 @@ import static com.vcasino.user.mock.UserMocks.getUserDtoMock;
 import static com.vcasino.user.mock.UserMocks.getUserMock;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -299,11 +300,36 @@ public class AuthenticationServiceTests {
         refreshToken.setExpiryDate(Instant.now().plusSeconds(60));
 
         when(tokenService.findByTokenAndType(refreshToken.getToken(), TokenType.REFRESH)).thenReturn(refreshToken);
+        long twentyHours = 60 * 60 * 20;
+        when(tokenService.getSecondsBeforeTokenExpiration(refreshToken, null)).thenReturn(twentyHours);
         when(jwtService.generateJwtToken(any())).thenReturn("token");
 
         TokenRefreshResponse response = authenticationService.refreshToken(new TokenRefreshRequest(refreshToken.getToken()));
 
         assertEquals("token", response.getToken());
+        assertEquals(refreshToken.getToken(), response.getRefreshToken());
+    }
+
+    @Test
+    @DisplayName("Refresh token renews, if expiration is less than 2 hours")
+    void refreshTokenRenews() {
+        Token refreshToken = getRefreshTokenMock();
+        refreshToken.setExpiryDate(Instant.now().plusSeconds(60));
+
+        when(tokenService.findByTokenAndType(refreshToken.getToken(), TokenType.REFRESH)).thenReturn(refreshToken);
+        long oneHour = 60 * 60;
+        when(tokenService.getSecondsBeforeTokenExpiration(refreshToken, null)).thenReturn(oneHour);
+
+        Token newRefreshToken = getRefreshTokenMock();
+        newRefreshToken.setToken(refreshToken.getToken() + "1");
+
+        when(tokenService.renewToken(refreshToken)).thenReturn(newRefreshToken);
+        when(jwtService.generateJwtToken(any())).thenReturn("token");
+
+        TokenRefreshResponse response = authenticationService.refreshToken(new TokenRefreshRequest(refreshToken.getToken()));
+
+        assertEquals("token", response.getToken());
+        assertNotEquals(refreshToken.getToken(), response.getRefreshToken());
     }
 
     @Test
@@ -312,7 +338,7 @@ public class AuthenticationServiceTests {
         Token refreshToken = getRefreshTokenMock();
 
         when(tokenService.findByTokenAndType(refreshToken.getToken(), TokenType.REFRESH)).thenReturn(refreshToken);
-        when(tokenService.verifyExpiration(refreshToken, null)).thenThrow(
+        when(tokenService.getSecondsBeforeTokenExpiration(refreshToken, null)).thenThrow(
                 new AppException("Token expired. Please make a new request", HttpStatus.UNAUTHORIZED));
 
         AppException exception = assertThrows(AppException.class,
