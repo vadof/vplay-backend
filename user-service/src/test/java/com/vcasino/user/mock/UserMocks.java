@@ -4,7 +4,7 @@ import com.vcasino.user.dto.UserDto;
 import com.vcasino.user.entity.Role;
 import com.vcasino.user.entity.User;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class UserMocks {
     public static UserDto getUserDtoMock() {
@@ -25,7 +25,7 @@ public class UserMocks {
                 .username("test")
                 .active(active)
                 .role(Role.USER)
-                .registerDate(LocalDateTime.now())
+                .registerDate(Instant.now())
                 .frozen(false)
                 .build();
     }

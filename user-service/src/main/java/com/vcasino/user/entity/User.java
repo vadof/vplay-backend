@@ -20,7 +20,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -63,10 +63,10 @@ public class User implements UserDetails {
     String oauthProviderId;
 
     @Column(name = "register_date", nullable = false)
-    LocalDateTime registerDate;
+    Instant registerDate;
 
     @Column(name = "modified_at", nullable = false)
-    LocalDateTime modifiedAt;
+    Instant modifiedAt;
 
     @Column(name = "active", nullable = false)
     Boolean active;

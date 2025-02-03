@@ -3,8 +3,8 @@ package com.vcasino.user.oauth2;
 import com.vcasino.user.config.ApplicationConfig;
 import com.vcasino.user.config.securiy.JwtService;
 import com.vcasino.user.entity.OAuthProvider;
-import com.vcasino.user.entity.Token;
 import com.vcasino.user.entity.Role;
+import com.vcasino.user.entity.Token;
 import com.vcasino.user.entity.TokenType;
 import com.vcasino.user.entity.User;
 import com.vcasino.user.repository.TokenRepository;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -134,7 +134,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
                     if (user.getOauthProvider() == null) {
                         user.setOauthProvider(provider);
                         user.setOauthProviderId(providerId);
-                        user.setModifiedAt(LocalDateTime.now());
+                        user.setModifiedAt(Instant.now());
                         userRepository.save(user);
                     }
                     authenticateUser(response, user);
@@ -160,7 +160,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
                 .username(username)
                 .oauthProvider(provider)
                 .oauthProviderId(providerId)
-                .registerDate(LocalDateTime.now())
+                .registerDate(Instant.now())
                 .role(Role.USER)
                 .active(false)
                 .frozen(false)

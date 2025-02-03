@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -82,7 +83,13 @@ public class TokenService {
         token.setExpiryDate(Instant.now().plusMillis(config.getConfirmation().getToken().getExpirationMs()));
 
         try {
-            Token.EmailTokenOptions options = new Token.EmailTokenOptions(UUID.randomUUID().toString(), 1, Instant.now());
+            Token.EmailTokenOptions options = Token.EmailTokenOptions
+                    .builder()
+                    .resendToken(UUID.randomUUID().toString())
+                    .emailsSent(1)
+                    .sentAt(Instant.now().truncatedTo(ChronoUnit.SECONDS))
+                    .build();
+
             token.setOptions(objectMapper.writeValueAsString(options));
         } catch (JsonProcessingException e) {
             log.error("Error during converting email token options to string", e);

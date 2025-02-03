@@ -28,7 +28,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
@@ -88,7 +87,7 @@ public class AuthenticationService {
         validateUsername(userDto.getUsername());
 
         User user = userMapper.toEntity(userDto);
-        user.setRegisterDate(LocalDateTime.now());
+        user.setRegisterDate(Instant.now());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(role);
         user.setFrozen(false);
@@ -173,7 +172,7 @@ public class AuthenticationService {
 
         userUpdater.accept(user);
 
-        user.setModifiedAt(LocalDateTime.now());
+        user.setModifiedAt(Instant.now());
         user.setActive(true);
         userRepository.save(user);
 
@@ -304,7 +303,7 @@ public class AuthenticationService {
 
     private boolean deleteUserIfNotActive(User user) {
         long tokenExpirationInSeconds = applicationConfig.getConfirmation().getToken().getExpirationMs() / 1000;
-        if (LocalDateTime.now().minusSeconds(tokenExpirationInSeconds).isAfter(user.getRegisterDate())) {
+        if (Instant.now().minusSeconds(tokenExpirationInSeconds).isAfter(user.getRegisterDate())) {
             deletePendingUser(user);
             return true;
         }

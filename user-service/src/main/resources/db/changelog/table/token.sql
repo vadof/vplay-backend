@@ -3,7 +3,7 @@ CREATE TABLE token
     id          BIGINT GENERATED ALWAYS AS IDENTITY,
     user_id     BIGINT       NOT NULL,
     token       VARCHAR(255) NOT NULL,
-    expiry_date TIMESTAMP    NOT NULL,
+    expiry_date TIMESTAMP(0) NOT NULL,
     type        VARCHAR(30)  NOT NULL,
     options     VARCHAR(255) NULL,
 

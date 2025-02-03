@@ -35,7 +35,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.lang.reflect.Field;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -168,7 +167,7 @@ public class AuthenticationServiceTests {
     @Test
     @DisplayName("Register user email already in use by inactive user")
     void registerEmailInUseByInactiveUser() {
-        LocalDateTime now = LocalDateTime.now();
+        Instant now = Instant.now();
 
         long tokenExpirationInMinutes = 10;
         ApplicationConfig.ConfirmationProperties confirmation = new ApplicationConfig.ConfirmationProperties();
@@ -179,7 +178,7 @@ public class AuthenticationServiceTests {
 
         UserDto toSave = getUserDtoMock();
         User existingUser = getUserMock(false);
-        existingUser.setRegisterDate(now.minusMinutes(1));
+        existingUser.setRegisterDate(now.minusSeconds(60));
 
         mockFindByEmail(toSave, existingUser);
 
@@ -188,7 +187,7 @@ public class AuthenticationServiceTests {
         assertTrue(exception.getMessage().contains("Email"));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
 
-        existingUser.setRegisterDate(now.minusMinutes(tokenExpirationInMinutes * 2));
+        existingUser.setRegisterDate(now.minusSeconds((tokenExpirationInMinutes * 2) * 60));
 
         User userMock = getUserMock(false);
         when(userRepository.save(any())).thenReturn(userMock);
@@ -217,7 +216,7 @@ public class AuthenticationServiceTests {
     @Test
     @DisplayName("Register user username already in use by inactive user")
     void registerUsernameInUseByInactiveUser() {
-        LocalDateTime now = LocalDateTime.now();
+        Instant now = Instant.now();
 
         long tokenExpirationInMinutes = 10;
         ApplicationConfig.ConfirmationProperties confirmation = new ApplicationConfig.ConfirmationProperties();
@@ -228,7 +227,7 @@ public class AuthenticationServiceTests {
 
         UserDto toSave = getUserDtoMock();
         User existingUser = getUserMock(false);
-        existingUser.setRegisterDate(now.minusMinutes(1));
+        existingUser.setRegisterDate(now.minusSeconds(60));
 
         mockFindByUsername(toSave, existingUser);
 
@@ -237,7 +236,7 @@ public class AuthenticationServiceTests {
         assertTrue(exception.getMessage().contains("Username"));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
 
-        existingUser.setRegisterDate(now.minusMinutes(tokenExpirationInMinutes * 2));
+        existingUser.setRegisterDate(now.minusSeconds((tokenExpirationInMinutes * 2) * 60));
 
         User userMock = getUserMock(false);
         when(userRepository.save(any())).thenReturn(userMock);
