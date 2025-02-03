@@ -18,9 +18,10 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDto {
 
-    @NotEmpty(message = "Field cannot be empty")
+    @Size(max = 100, message = "Name must be no more than 100 characters long")
     String name;
 
+    @Size(min = 2, max = 16, message = "Username must be between 2 and 16 characters")
     @NotEmpty(message = "Field cannot be empty")
     String username;
 
