@@ -7,6 +7,7 @@ CREATE TABLE my_user
     password          VARCHAR(255),
     oauth_provider    VARCHAR(50),
     oauth_provider_id VARCHAR(255),
+    invited_by        BIGINT NULL,
     register_date     TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     modified_at       TIMESTAMP(0),
     role              VARCHAR(20)  NOT NULL,
@@ -14,6 +15,7 @@ CREATE TABLE my_user
     frozen            BOOLEAN      NOT NULL DEFAULT FALSE,
 
     CONSTRAINT pk_my_user PRIMARY KEY (id),
+    CONSTRAINT fk_invited_by FOREIGN KEY (invited_by) REFERENCES my_user(id) ON DELETE SET NULL,
     CONSTRAINT unq_my_user_username UNIQUE (username),
     CONSTRAINT unq_my_user_oauth_provider_id UNIQUE (oauth_provider, oauth_provider_id)
 );

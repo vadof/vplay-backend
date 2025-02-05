@@ -49,6 +49,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -119,7 +120,7 @@ public class AuthenticationServiceTests {
         when(userRepository.save(any(User.class))).thenReturn(getUserMock(false));
         mockEmailTokens();
 
-        EmailTokenOptionsDto response = authenticationService.registerUser(toSave);
+        EmailTokenOptionsDto response = authenticationService.registerUser(toSave, null);
 
         verify(userRepository, times(1)).save(userArgumentCaptor.capture());
 
@@ -158,7 +159,7 @@ public class AuthenticationServiceTests {
         existingUser.setActive(true);
         mockFindByEmail(toSave, existingUser);
 
-        AppException exception = assertThrows(AppException.class, () -> authenticationService.registerUser(toSave));
+        AppException exception = assertThrows(AppException.class, () -> authenticationService.registerUser(toSave, null));
 
         assertTrue(exception.getMessage().contains("Email"));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
@@ -182,7 +183,7 @@ public class AuthenticationServiceTests {
 
         mockFindByEmail(toSave, existingUser);
 
-        AppException exception = assertThrows(AppException.class, () -> authenticationService.registerUser(toSave));
+        AppException exception = assertThrows(AppException.class, () -> authenticationService.registerUser(toSave, null));
 
         assertTrue(exception.getMessage().contains("Email"));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
@@ -193,7 +194,7 @@ public class AuthenticationServiceTests {
         when(userRepository.save(any())).thenReturn(userMock);
         mockEmailTokens();
 
-        EmailTokenOptionsDto response = authenticationService.registerUser(toSave);
+        EmailTokenOptionsDto response = authenticationService.registerUser(toSave, null);
         verify(tokenService, times(1)).deleteTokenByUser(existingUser);
         verify(userRepository, times(1)).delete(existingUser);
 
@@ -207,7 +208,7 @@ public class AuthenticationServiceTests {
         User existingUser = getUserMock(true);
         mockFindByUsername(toSave, existingUser);
 
-        AppException exception = assertThrows(AppException.class, () -> authenticationService.registerUser(toSave));
+        AppException exception = assertThrows(AppException.class, () -> authenticationService.registerUser(toSave, null));
 
         assertTrue(exception.getMessage().contains("Username"));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
@@ -231,7 +232,7 @@ public class AuthenticationServiceTests {
 
         mockFindByUsername(toSave, existingUser);
 
-        AppException exception = assertThrows(AppException.class, () -> authenticationService.registerUser(toSave));
+        AppException exception = assertThrows(AppException.class, () -> authenticationService.registerUser(toSave, null));
 
         assertTrue(exception.getMessage().contains("Username"));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
@@ -242,7 +243,7 @@ public class AuthenticationServiceTests {
         when(userRepository.save(any())).thenReturn(userMock);
         mockEmailTokens();
 
-        EmailTokenOptionsDto response = authenticationService.registerUser(toSave);
+        EmailTokenOptionsDto response = authenticationService.registerUser(toSave, null);
         verify(tokenService, times(1)).deleteTokenByUser(existingUser);
         verify(userRepository, times(1)).delete(existingUser);
 
@@ -259,7 +260,7 @@ public class AuthenticationServiceTests {
         String username = "username";
         for (Character symbol : invalidSymbols.toCharArray()) {
             toSave.setUsername(symbol + username);
-            AppException exception = assertThrows(AppException.class, () -> authenticationService.registerUser(toSave));
+            AppException exception = assertThrows(AppException.class, () -> authenticationService.registerUser(toSave, null));
             assertTrue(exception.getMessage().contains("Username"));
         }
     }
@@ -273,7 +274,7 @@ public class AuthenticationServiceTests {
         String password = "test1234";
         for (Character symbol : invalidSymbols.toCharArray()) {
             toSave.setPassword(password + symbol);
-            AppException exception = assertThrows(AppException.class, () -> authenticationService.registerUser(toSave));
+            AppException exception = assertThrows(AppException.class, () -> authenticationService.registerUser(toSave, null));
             assertTrue(exception.getMessage().contains("Password"));
         }
     }
@@ -290,6 +291,76 @@ public class AuthenticationServiceTests {
             AppException exception = assertThrows(AppException.class, () -> authenticationService.registerAdmin(toSave));
             assertTrue(exception.getMessage().contains("Password") || exception.getMessage().contains("password"));
         }
+    }
+
+    @Test
+    @DisplayName("Register user with referral")
+    void registerUserWithRef() {
+        User invitedBy = getUserMock(true);
+        invitedBy.setUsername("inviter");
+        UserDto toSave = getUserDtoMock();
+
+        mockFindByEmail(toSave, null);
+        mockFindByUsername(toSave, null);
+        mockFindByUsername(invitedBy.getUsername(), invitedBy);
+
+        when(userRepository.save(any(User.class))).thenReturn(getUserMock(false));
+        mockEmailTokens();
+
+        EmailTokenOptionsDto response = authenticationService.registerUser(toSave, invitedBy.getUsername());
+
+        verify(userRepository, times(1)).save(userArgumentCaptor.capture());
+
+        User saved = userArgumentCaptor.getValue();
+
+        checkSavedUser(toSave, saved, Role.USER, false, response);
+        assertEquals(invitedBy, saved.getInvitedBy());
+    }
+
+    @Test
+    @DisplayName("Register user with not existing username referral")
+    void registerUserWithNotExistingUsernameRef() {
+        UserDto toSave = getUserDtoMock();
+
+        mockFindByEmail(toSave, null);
+        mockFindByUsername(toSave, null);
+        mockFindByUsername("inviter", null);
+
+        when(userRepository.save(any(User.class))).thenReturn(getUserMock(false));
+        mockEmailTokens();
+
+        EmailTokenOptionsDto response = authenticationService.registerUser(toSave, "inviter");
+
+        verify(userRepository, times(1)).save(userArgumentCaptor.capture());
+
+        User saved = userArgumentCaptor.getValue();
+
+        checkSavedUser(toSave, saved, Role.USER, false, response);
+        assertNull(saved.getInvitedBy());
+    }
+
+    @Test
+    @DisplayName("Register user with inactive user's referral")
+    void registerUserWithInactiveUserRef() {
+        User invitedBy = getUserMock(false);
+        invitedBy.setUsername("inviter");
+        UserDto toSave = getUserDtoMock();
+
+        mockFindByEmail(toSave, null);
+        mockFindByUsername(toSave, null);
+        mockFindByUsername(invitedBy.getUsername(), invitedBy);
+
+        when(userRepository.save(any(User.class))).thenReturn(getUserMock(false));
+        mockEmailTokens();
+
+        EmailTokenOptionsDto response = authenticationService.registerUser(toSave, invitedBy.getUsername());
+
+        verify(userRepository, times(1)).save(userArgumentCaptor.capture());
+
+        User saved = userArgumentCaptor.getValue();
+
+        checkSavedUser(toSave, saved, Role.USER, false, response);
+        assertNull(saved.getInvitedBy());
     }
 
     @Test
@@ -442,14 +513,14 @@ public class AuthenticationServiceTests {
         ResponseCookie cookie = ResponseCookie.from("usernameConfirmationToken").value(null).build();
         when(cookieService.resetConfirmationCookie()).thenReturn(cookie);
 
-        AuthenticationResponse res = authenticationService.confirmUsername(username, confirmationToken.getToken());
+        AuthenticationResponse res = authenticationService.confirmUsername(username, confirmationToken.getToken(), null);
         UserDto savedUser = res.getUser();
 
         verify(userMapper, times(1)).toDto(user);
         verify(userRepository, times(1)).save(user);
         verify(jwtService, times(1)).generateJwtToken(user);
         verify(tokenService, times(1)).createToken(user, TokenType.REFRESH);
-        verify(userProducer, times(1)).sendUserCreated(user.getId());
+        verify(userProducer, times(1)).sendUserCreated(user.getUsername(), null);
 
         assertEquals(savedUser.getName(), user.getName());
         assertTrue(user.getActive());
@@ -461,6 +532,34 @@ public class AuthenticationServiceTests {
         assertNotNull(res.getToken());
         assertTrue(res.getHeaders().containsKey(HttpHeaders.SET_COOKIE));
         assertTrue(res.getHeaders().containsValue(List.of(cookie.toString())));
+    }
+
+    @Test
+    @DisplayName("Username confirmation with referral")
+    void usernameConfirmationWithRef() {
+        User invitedBy = getUserMock(true);
+        invitedBy.setUsername("inviter");
+        mockFindByUsername(invitedBy.getUsername(), invitedBy);
+
+        Token confirmationToken = getUsernameConfirmationTokenMock();
+        when(tokenService.findByTokenAndType(confirmationToken.getToken(), TokenType.USERNAME_CONFIRMATION)).thenReturn(confirmationToken);
+        when(tokenService.isTokenExpired(confirmationToken)).thenReturn(false);
+
+        User user = confirmationToken.getUser();
+        String username = user.getUsername();
+        Token refreshToken = getRefreshTokenMock();
+        when(jwtService.generateJwtToken(user)).thenReturn("token");
+        when(tokenService.createToken(user, TokenType.REFRESH)).thenReturn(refreshToken);
+
+        ResponseCookie cookie = ResponseCookie.from("usernameConfirmationToken").value(null).build();
+        when(cookieService.resetConfirmationCookie()).thenReturn(cookie);
+
+        authenticationService.confirmUsername(username, confirmationToken.getToken(), invitedBy.getUsername());
+
+        verify(userRepository, times(1)).save(userArgumentCaptor.capture());
+        User saved = userArgumentCaptor.getValue();
+
+        assertEquals(invitedBy, saved.getInvitedBy());
     }
 
     @Test
@@ -483,7 +582,7 @@ public class AuthenticationServiceTests {
         ResponseCookie cookie = ResponseCookie.from("usernameConfirmationToken").value(null).build();
         when(cookieService.resetConfirmationCookie()).thenReturn(cookie);
 
-        AuthenticationResponse res = authenticationService.confirmUsername(newUsername, confirmationToken.getToken());
+        AuthenticationResponse res = authenticationService.confirmUsername(newUsername, confirmationToken.getToken(), null);
         UserDto savedUser = res.getUser();
 
         verify(userRepository, times(1)).save(user);
@@ -503,7 +602,7 @@ public class AuthenticationServiceTests {
         when(userRepository.findByUsername(newUsername)).thenReturn(Optional.of(existingUser));
 
         AppException exception = assertThrows(AppException.class,
-                () -> authenticationService.confirmUsername(newUsername, confirmationToken.getToken()));
+                () -> authenticationService.confirmUsername(newUsername, confirmationToken.getToken(), null));
 
         assertTrue(exception.getMessage().contains("Username"));
     }
@@ -521,7 +620,7 @@ public class AuthenticationServiceTests {
         for (Character symbol : invalidSymbols.toCharArray()) {
             String invalidUsername = symbol + username;
             AppException exception = assertThrows(AppException.class,
-                    () -> authenticationService.confirmUsername(invalidUsername, confirmationToken.getToken()));
+                    () -> authenticationService.confirmUsername(invalidUsername, confirmationToken.getToken(), null));
             assertTrue(exception.getMessage().contains("Username"));
         }
     }
@@ -557,7 +656,7 @@ public class AuthenticationServiceTests {
         verify(userRepository, times(1)).save(user);
         verify(jwtService, times(1)).generateJwtToken(user);
         verify(tokenService, times(1)).createToken(user, TokenType.REFRESH);
-        verify(userProducer, times(1)).sendUserCreated(user.getId());
+        verify(userProducer, times(1)).sendUserCreated(user.getUsername(), null);
 
         assertEquals(savedUser.getName(), user.getName());
         assertTrue(user.getActive());
@@ -769,7 +868,7 @@ public class AuthenticationServiceTests {
         if (confirmationToken.getType().equals(TokenType.USERNAME_CONFIRMATION)) {
             exception = assertThrows(AppException.class,
                     () -> authenticationService.confirmUsername(
-                            confirmationToken.getUser().getUsername(), confirmationToken.getToken())
+                            confirmationToken.getUser().getUsername(), confirmationToken.getToken(), null)
             );
         } else if (confirmationToken.getType().equals(TokenType.EMAIL_CONFIRMATION)) {
             exception = assertThrows(AppException.class,
@@ -793,7 +892,7 @@ public class AuthenticationServiceTests {
 
         if (confirmationToken.getType().equals(TokenType.USERNAME_CONFIRMATION)) {
             assertThrows(AppException.class,
-                    () -> authenticationService.confirmUsername(user.getUsername(), confirmationToken.getToken()));
+                    () -> authenticationService.confirmUsername(user.getUsername(), confirmationToken.getToken(), null));
         } else if (confirmationToken.getType().equals(TokenType.EMAIL_CONFIRMATION)) {
             assertThrows(AppException.class, () -> authenticationService.confirmEmail(confirmationToken.getToken()));
         }
@@ -808,10 +907,14 @@ public class AuthenticationServiceTests {
     }
 
     private void mockFindByUsername(UserDto toSave, User found) {
+        mockFindByUsername(toSave.getUsername(), found);
+    }
+
+    private void mockFindByUsername(String username, User found) {
         if (found != null) {
-            when(userRepository.findByUsername(toSave.getUsername())).thenReturn(Optional.of(found));
+            when(userRepository.findByUsername(username)).thenReturn(Optional.of(found));
         } else {
-            when(userRepository.findByUsername(toSave.getUsername())).thenReturn(Optional.empty());
+            when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
         }
     }
 

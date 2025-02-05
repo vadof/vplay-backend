@@ -19,6 +19,7 @@ import com.vcasino.user.repository.UserRepository;
 import com.vcasino.user.utils.RegexUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -54,8 +55,11 @@ public class AuthenticationService {
     private final ApplicationConfig applicationConfig;
 
     @Transactional
-    public EmailTokenOptionsDto registerUser(UserDto userDto) {
+    public EmailTokenOptionsDto registerUser(UserDto userDto, String ref) {
         User user = validateUserFields(userDto, Role.USER);
+        setInvitedBy(user, ref);
+        userRepository.save(user);
+
         Token confirmationToken = tokenService.createEmailConfirmationToken(user);
 
         log.info("Pending User#{} saved to database", user.getId());
@@ -71,8 +75,9 @@ public class AuthenticationService {
 
     public void registerAdmin(UserDto userDto) {
         User user = validateUserFields(userDto, Role.ADMIN);
+        userRepository.save(user);
         log.info("Admin#{} saved to database", user.getId());
-        userProducer.sendUserCreated(user.getId());
+        userProducer.sendUserCreated(user.getUsername(), null);
     }
 
     private User validateUserFields(UserDto userDto, Role role) {
@@ -93,7 +98,7 @@ public class AuthenticationService {
         user.setFrozen(false);
         user.setActive(admin);
 
-        return userRepository.save(user);
+        return user;
     }
 
     @Transactional(noRollbackFor = AppException.class)
@@ -127,7 +132,7 @@ public class AuthenticationService {
     }
 
     @Transactional(noRollbackFor = AppException.class)
-    public AuthenticationResponse confirmUsername(String username, String confirmationToken) {
+    public AuthenticationResponse confirmUsername(String username, String confirmationToken, String ref) {
         return processConfirmation(
                 confirmationToken,
                 TokenType.USERNAME_CONFIRMATION,
@@ -137,6 +142,7 @@ public class AuthenticationService {
                         validateUsername(username);
                         user.setUsername(username);
                     }
+                    setInvitedBy(user, ref);
                 }
         );
     }
@@ -180,7 +186,9 @@ public class AuthenticationService {
         Token refreshToken = tokenService.createToken(user, TokenType.REFRESH);
 
         log.info("User#{} has activated the account", user.getId());
-        userProducer.sendUserCreated(user.getId());
+
+        User invitedBy = user.getInvitedBy();
+        userProducer.sendUserCreated(user.getUsername(), invitedBy == null ? null : invitedBy.getUsername());
 
         HttpHeaders headers = null;
         if (includeHeaders) {
@@ -275,6 +283,20 @@ public class AuthenticationService {
         String token = jwtService.generateJwtToken(refreshToken.getUser());
 
         return new TokenRefreshResponse(token, refreshToken.getToken());
+    }
+
+    private void setInvitedBy(User user, String ref) {
+        if (Strings.isNotEmpty(ref) && !ref.equals(user.getUsername())) {
+            Optional<User> optionalUser = userRepository.findByUsername(ref);
+            if (optionalUser.isEmpty()) {
+                log.warn("Referral User with {} username not found", ref);
+            } else {
+                User invitedByUser = optionalUser.get();
+                if (invitedByUser.getActive() && !invitedByUser.getFrozen()) {
+                    user.setInvitedBy(invitedByUser);
+                }
+            }
+        }
     }
 
     private void validateUsername(String username) {

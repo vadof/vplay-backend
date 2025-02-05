@@ -5,9 +5,12 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -62,6 +65,10 @@ public class User implements UserDetails {
     @Column(name = "oauth_provider_id")
     String oauthProviderId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "invited_by", referencedColumnName = "id")
+    User invitedBy;
+
     @Column(name = "register_date", nullable = false)
     Instant registerDate;
 
@@ -79,7 +86,6 @@ public class User implements UserDetails {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
-    // TODO
     @Override
     public boolean isAccountNonExpired() {
         return true;
