@@ -520,7 +520,7 @@ public class AuthenticationServiceTests {
         verify(userRepository, times(1)).save(user);
         verify(jwtService, times(1)).generateJwtToken(user);
         verify(tokenService, times(1)).createToken(user, TokenType.REFRESH);
-        verify(userProducer, times(1)).sendUserCreated(user.getUsername(), null);
+        verify(userProducer, times(1)).sendUserCreated(user.getId(), user.getUsername(), null);
 
         assertEquals(savedUser.getName(), user.getName());
         assertTrue(user.getActive());
@@ -656,7 +656,7 @@ public class AuthenticationServiceTests {
         verify(userRepository, times(1)).save(user);
         verify(jwtService, times(1)).generateJwtToken(user);
         verify(tokenService, times(1)).createToken(user, TokenType.REFRESH);
-        verify(userProducer, times(1)).sendUserCreated(user.getUsername(), null);
+        verify(userProducer, times(1)).sendUserCreated(user.getId(), user.getUsername(), null);
 
         assertEquals(savedUser.getName(), user.getName());
         assertTrue(user.getActive());

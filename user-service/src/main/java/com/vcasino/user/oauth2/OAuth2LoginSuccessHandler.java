@@ -113,6 +113,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         processRegistration(response, providerId, OAuthProvider.DISCORD, null, email, possibleUsername);
     }
 
+    // TODO limit possible username to 16 chars
     private void processRegistration(HttpServletResponse response, String providerId, OAuthProvider provider, String name, String email, String possibleUsername) throws IOException {
         List<User> users = userRepository.findByUsernameOrEmail(possibleUsername, email);
 

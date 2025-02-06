@@ -32,19 +32,21 @@ public class AccountService {
     private final LevelService levelService;
     private final UpgradeService upgradeService;
 
-    public AccountDto createAccount(Long userId) {
-        Account account = buildAccount(userId);
+    public AccountDto createAccount(Long id, String username, String invitedBy) {
+        Account account = buildAccount(id, username);
+        setInvitedBy(account, invitedBy);
         account = save(account);
         log.info("Account#{} saved to database", account.getId());
         return toDto(account);
     }
 
-    private Account buildAccount(Long id) {
+    private Account buildAccount(Long id, String username) {
         List<Upgrade> upgrades = upgradeService.getInitialUpgrades();
         Level level = levelService.getLevelAccordingNetWorth(AccountConstants.BALANCE_COINS);
 
         return Account.builder()
                 .id(id)
+                .username(username)
                 .level(level)
                 .balanceCoins(AccountConstants.BALANCE_COINS)
                 .netWorth(AccountConstants.BALANCE_COINS)
@@ -55,6 +57,11 @@ public class AccountService {
                 .suspiciousActionsNumber(0)
                 .frozen(false)
                 .build();
+    }
+
+    // TODO
+    public void setInvitedBy(Account account, String inivitedBy) {
+
     }
 
     public Account getById(Long id) {

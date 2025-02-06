@@ -23,7 +23,7 @@ public class UserListener extends AbstractListener {
     @KafkaListener(topics = "user-create", groupId = "clicker-service-group")
     public void handle(String data) {
         log.info("Received user-create event - {}", data);
-        Long userId = fromJson(data, UserCreate.class).userId();
-        accountService.createAccount(userId);
+        UserCreate userData = fromJson(data, UserCreate.class);
+        accountService.createAccount(userData.id(), userData.username(), userData.invitedBy());
     }
 }

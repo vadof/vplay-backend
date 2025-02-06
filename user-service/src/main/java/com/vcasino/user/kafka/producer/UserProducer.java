@@ -13,9 +13,9 @@ public class UserProducer extends AbstractProducer {
         super(kafkaTemplate);
     }
 
-    public void sendUserCreated(String username, @Nullable String invitedBy) {
+    public void sendUserCreated(Long id, String username, @Nullable String invitedBy) {
         log.info("Send user-create event for \"{}\"", username);
-        send(Topic.USER_CREATE.getName(), new UserCreate(username, invitedBy));
+        send(Topic.USER_CREATE.getName(), new UserCreate(id, username, invitedBy));
     }
 
 }

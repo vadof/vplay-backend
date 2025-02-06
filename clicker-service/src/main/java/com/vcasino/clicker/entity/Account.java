@@ -35,6 +35,9 @@ public class Account {
     @Column(name = "id")
     Long id;
 
+    @Column(name = "username", nullable = false)
+    String username;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "level", referencedColumnName = "value", nullable = false)
     Level level;

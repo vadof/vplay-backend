@@ -77,7 +77,7 @@ public class AuthenticationService {
         User user = validateUserFields(userDto, Role.ADMIN);
         userRepository.save(user);
         log.info("Admin#{} saved to database", user.getId());
-        userProducer.sendUserCreated(user.getUsername(), null);
+        userProducer.sendUserCreated(user.getId(), user.getUsername(), null);
     }
 
     private User validateUserFields(UserDto userDto, Role role) {
@@ -188,7 +188,7 @@ public class AuthenticationService {
         log.info("User#{} has activated the account", user.getId());
 
         User invitedBy = user.getInvitedBy();
-        userProducer.sendUserCreated(user.getUsername(), invitedBy == null ? null : invitedBy.getUsername());
+        userProducer.sendUserCreated(user.getId(), user.getUsername(), invitedBy == null ? null : invitedBy.getUsername());
 
         HttpHeaders headers = null;
         if (includeHeaders) {

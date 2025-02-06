@@ -3,7 +3,7 @@ CREATE TABLE my_user
     id                BIGINT GENERATED ALWAYS AS IDENTITY,
     name              VARCHAR(100),
     email             VARCHAR(255),
-    username          VARCHAR(255),
+    username          VARCHAR(16),
     password          VARCHAR(255),
     oauth_provider    VARCHAR(50),
     oauth_provider_id VARCHAR(255),
