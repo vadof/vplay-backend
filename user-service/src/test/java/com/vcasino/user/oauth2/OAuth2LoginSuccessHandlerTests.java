@@ -7,6 +7,7 @@ import com.vcasino.user.entity.Role;
 import com.vcasino.user.entity.Token;
 import com.vcasino.user.entity.TokenType;
 import com.vcasino.user.entity.User;
+import com.vcasino.user.mock.UserMocks;
 import com.vcasino.user.repository.TokenRepository;
 import com.vcasino.user.repository.UserRepository;
 import com.vcasino.user.service.CookieService;
@@ -29,6 +30,7 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.lang.reflect.Field;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -78,6 +80,13 @@ public class OAuth2LoginSuccessHandlerTests {
         config = new ApplicationConfig();
         config.setClientUrl("https://domain.com");
 
+        long tokenExpirationInMinutes = 10;
+        var confirmationProperties = new ApplicationConfig.ConfirmationProperties();
+        confirmationProperties.setToken(new ApplicationConfig.ConfirmationProperties.TokenProperties());
+        confirmationProperties.getToken().setExpirationMs(tokenExpirationInMinutes * 60 * 1000);
+
+        config.setConfirmation(confirmationProperties);
+
         Field field = OAuth2LoginSuccessHandler.class.getDeclaredField("config");
         field.setAccessible(true);
         field.set(oAuthHandler, config);
@@ -94,6 +103,7 @@ public class OAuth2LoginSuccessHandlerTests {
                 .oauthProviderId(ID)
                 .active(active)
                 .frozen(false)
+                .registerDate(Instant.now())
                 .build();
     }
 
@@ -238,8 +248,88 @@ public class OAuth2LoginSuccessHandlerTests {
 
     @Test
     @DisplayName("Create pending user, username already in use")
-    void createPendingUserUsernameAlreadyInUse() {
+    void createPendingUserUsernameAlreadyInUse() throws Exception {
+        OAuth2AuthenticationToken oAuthToken = mockDiscordAuthentication().getFirst();
+        OAuthProvider provider = OAuthProvider.DISCORD;
 
+        User existingUserByUsername = UserMocks.getUserMock(true);
+        existingUserByUsername.setUsername(USERNAME);
+
+        when(userRepository.findByOauthProviderAndOauthProviderId(provider, ID)).thenReturn(Optional.empty());
+        when(userRepository.findByUsernameOrEmail(USERNAME, EMAIL)).thenReturn(List.of(existingUserByUsername));
+
+        Token token = getUsernameConfirmationTokenMock();
+        when(tokenService.createToken(any(), any())).thenReturn(token);
+        Cookie cookie = new Cookie("confirmationToken", token.getToken());
+        when(cookieService.generateConfirmationCookie(token)).thenReturn(cookie);
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        oAuthHandler.onAuthenticationSuccess(new MockHttpServletRequest(), response, oAuthToken);
+
+        verify(userRepository, times(1)).save(userArgumentCaptor.capture());
+
+        User savedPendingUser = userArgumentCaptor.getValue();
+        checkCreatedUser(savedPendingUser, null, EMAIL, null, provider, response, getConfirmationUrl(null), List.of(cookie));
+    }
+
+    @Test
+    @DisplayName("Create pending user, username already in use by inactive user")
+    void createPendingUserUsernameAlreadyInUseByInactiveUser() throws Exception {
+        OAuth2AuthenticationToken oAuthToken = mockDiscordAuthentication().getFirst();
+        OAuthProvider provider = OAuthProvider.DISCORD;
+
+        User existingUserByUsername = UserMocks.getUserMock(false);
+        existingUserByUsername.setUsername(USERNAME);
+        existingUserByUsername.setRegisterDate(Instant.now().minusSeconds(60 * 11));
+
+        when(userRepository.findByOauthProviderAndOauthProviderId(provider, ID)).thenReturn(Optional.empty());
+        when(userRepository.findByUsernameOrEmail(USERNAME, EMAIL)).thenReturn(List.of(existingUserByUsername));
+
+        Token token = getUsernameConfirmationTokenMock();
+        when(tokenService.createToken(any(), any())).thenReturn(token);
+        Cookie cookie = new Cookie("confirmationToken", token.getToken());
+        when(cookieService.generateConfirmationCookie(token)).thenReturn(cookie);
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        oAuthHandler.onAuthenticationSuccess(new MockHttpServletRequest(), response, oAuthToken);
+
+        verify(userRepository, times(1)).save(userArgumentCaptor.capture());
+
+        verify(tokenRepository, times(1)).deleteByUser(existingUserByUsername);
+        verify(userRepository, times(1)).delete(existingUserByUsername);
+
+        User savedPendingUser = userArgumentCaptor.getValue();
+        checkCreatedUser(savedPendingUser, null, EMAIL, USERNAME, provider, response, getConfirmationUrl(USERNAME), List.of(cookie));
+    }
+
+    @Test
+    @DisplayName("Create pending user, username is too long")
+    void createPendingUserUsernameIsTooLong() throws Exception {
+        String name = "My Name Is Very Long";
+        String expectedUsername = "My_Name_Is_Very_";
+
+        var entry = mockAuthentication("facebook", ID, null);
+        when(entry.getSecond().getAttribute("name")).thenReturn(name);
+        OAuth2AuthenticationToken oAuthToken = entry.getFirst();
+
+        OAuthProvider provider = OAuthProvider.FACEBOOK;
+
+        Token token = getUsernameConfirmationTokenMock();
+
+        when(userRepository.findByOauthProviderAndOauthProviderId(provider, ID)).thenReturn(Optional.empty());
+        when(userRepository.findByUsernameOrEmail(expectedUsername, null)).thenReturn(new ArrayList<>());
+        when(tokenService.createToken(any(), any())).thenReturn(token);
+        Cookie cookie = new Cookie("confirmationToken", token.getToken());
+        when(cookieService.generateConfirmationCookie(token)).thenReturn(cookie);
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        oAuthHandler.onAuthenticationSuccess(new MockHttpServletRequest(), response, oAuthToken);
+
+        verify(userRepository, times(1)).save(userArgumentCaptor.capture());
+
+        User savedPendingUser = userArgumentCaptor.getValue();
+        checkCreatedUser(savedPendingUser, name, null, expectedUsername, provider, response, getConfirmationUrl(expectedUsername), List.of(cookie));
     }
 
     @Test

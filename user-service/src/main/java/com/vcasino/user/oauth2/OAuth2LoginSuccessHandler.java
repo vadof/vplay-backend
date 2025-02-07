@@ -11,6 +11,7 @@ import com.vcasino.user.repository.TokenRepository;
 import com.vcasino.user.repository.UserRepository;
 import com.vcasino.user.service.CookieService;
 import com.vcasino.user.service.TokenService;
+import com.vcasino.user.utils.RegexUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -79,7 +80,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         OAuth2User principal = oauthToken.getPrincipal();
         String name = principal.getAttribute("name");
         String email = principal.getAttribute("email");
-        String possibleUsername = email.substring(0, email.indexOf("@"));
+        String possibleUsername = shortenUsernameIfRequired(email.substring(0, email.indexOf("@")));
 
         processRegistration(response, providerId, OAuthProvider.GOOGLE, name, email, possibleUsername);
     }
@@ -88,7 +89,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         String providerId = oauthToken.getName();
         OAuth2User principal = oauthToken.getPrincipal();
         String name = principal.getAttribute("name");
-        String possibleUsername = principal.getAttribute("login");
+        String possibleUsername = shortenUsernameIfRequired(principal.getAttribute("login"));
         String email = principal.getAttribute("email");
 
         processRegistration(response, providerId, OAuthProvider.GITHUB, name, email, possibleUsername);
@@ -99,7 +100,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         OAuth2User principal = oauthToken.getPrincipal();
         String name = principal.getAttribute("name");
         String email = principal.getAttribute("email");
-        String possibleUsername = name.replaceAll(" ", "_");
+        String possibleUsername = shortenUsernameIfRequired(name.replaceAll(" ", "_"));
 
         processRegistration(response, providerId, OAuthProvider.FACEBOOK, name, email, possibleUsername);
     }
@@ -107,19 +108,36 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     private void handleDiscordRegistration(HttpServletResponse response, OAuth2AuthenticationToken oauthToken) throws IOException {
         String providerId = oauthToken.getName();
         OAuth2User principal = oauthToken.getPrincipal();
-        String possibleUsername = principal.getAttribute("username");
+        String possibleUsername = shortenUsernameIfRequired(principal.getAttribute("username"));
         String email = principal.getAttribute("email");
 
         processRegistration(response, providerId, OAuthProvider.DISCORD, null, email, possibleUsername);
     }
 
-    // TODO limit possible username to 16 chars
+    private String shortenUsernameIfRequired(String username) {
+        if (username != null && username.length() > 16) {
+            return username.substring(0, 16);
+        }
+        return username;
+    }
+
     private void processRegistration(HttpServletResponse response, String providerId, OAuthProvider provider, String name, String email, String possibleUsername) throws IOException {
         List<User> users = userRepository.findByUsernameOrEmail(possibleUsername, email);
 
         String username = null;
-        if (users.stream().noneMatch(user -> user.getUsername().equals(possibleUsername))) {
-            username = possibleUsername;
+        if (possibleUsername.matches(RegexUtil.USERNAME_REGEX)) {
+            Optional<User> optionalUser = users.stream().filter(user -> user.getUsername().equals(possibleUsername)).findFirst();
+            if (optionalUser.isEmpty()) {
+                username = possibleUsername;
+            } else {
+                User existingUser = optionalUser.get();
+                long tokenExpirationInSeconds = config.getConfirmation().getToken().getExpirationMs() / 1000;
+                if (!existingUser.getActive() &&
+                        Instant.now().minusSeconds(tokenExpirationInSeconds).isAfter(existingUser.getRegisterDate())) {
+                    username = possibleUsername;
+                    deletePendingUser(existingUser);
+                }
+            }
         }
 
         if (email == null) {
@@ -140,10 +158,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
                     }
                     authenticateUser(response, user);
                 } else {
-                    log.info("Deleting inactive User#{} with email {}", user.getId(), email);
-                    tokenRepository.deleteByUser(user);
-                    userRepository.delete(user);
-
+                    deletePendingUser(user);
                     if (possibleUsername.equals(user.getUsername())) {
                         username = possibleUsername;
                     }
@@ -152,6 +167,12 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
                 }
             }
         }
+    }
+
+    private void deletePendingUser(User user) {
+        log.info("Deleting inactive User#{}", user.getId());
+        tokenRepository.deleteByUser(user);
+        userRepository.delete(user);
     }
 
     private void createPendingUserAndRedirect(HttpServletResponse response, String providerId, OAuthProvider provider, String name, String email, String username) throws IOException {
