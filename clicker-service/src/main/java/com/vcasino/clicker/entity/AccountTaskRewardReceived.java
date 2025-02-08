@@ -1,6 +1,6 @@
 package com.vcasino.clicker.entity;
 
-import com.vcasino.clicker.entity.id.key.AccountRewardKey;
+import com.vcasino.clicker.entity.id.key.AccountTaskKey;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -17,22 +17,22 @@ import lombok.experimental.FieldDefaults;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "account_rewards_received")
+@Table(name = "account_task_reward_received")
 @Getter
 @Setter
-@IdClass(AccountRewardKey.class)
+@IdClass(AccountTaskKey.class)
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AccountRewardsReceived {
+public class AccountTaskRewardReceived {
     @Id
     @Column(name = "account_id")
     private Long accountId;
 
     @Id
-    @Column(name = "reward_id")
-    private Integer rewardId;
+    @Column(name = "task_id")
+    private Integer taskId;
 
     @Column(name = "received_at", nullable = false)
     private LocalDateTime receivedAt;

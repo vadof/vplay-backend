@@ -1,6 +1,6 @@
 package com.vcasino.clicker.service;
 
-import com.vcasino.clicker.dto.streak.DayReward;
+import com.vcasino.clicker.dto.streak.DailyReward;
 import com.vcasino.clicker.dto.streak.StreakInfo;
 import com.vcasino.clicker.dto.streak.StreakState;
 import com.vcasino.clicker.entity.Account;
@@ -50,17 +50,17 @@ public class StreakServiceTest {
     private StreakService streakService;
 
     private Map<Integer, Integer> rewardsByDay;
-    private List<DayReward> dayRewards;
+    private List<DailyReward> dailyRewards;
 
     @BeforeEach
     void setUp() throws IllegalAccessException, NoSuchFieldException {
-        dayRewards = StreakMocks.getDayRewards();
+        dailyRewards = StreakMocks.getDailyRewards();
         rewardsByDay = new HashMap<>();
-        dayRewards.forEach(r -> rewardsByDay.put(r.getDay(), r.getReward()));
+        dailyRewards.forEach(r -> rewardsByDay.put(r.getDay(), r.getReward()));
 
-        Field dayRewardsField = StreakService.class.getDeclaredField("dayRewards");
-        dayRewardsField.setAccessible(true);
-        dayRewardsField.set(streakService, dayRewards);
+        Field dailyRewardsField = StreakService.class.getDeclaredField("dailyRewards");
+        dailyRewardsField.setAccessible(true);
+        dailyRewardsField.set(streakService, dailyRewards);
 
         Field rewardsByDayField = StreakService.class.getDeclaredField("rewardsByDay");
         rewardsByDayField.setAccessible(true);
@@ -80,10 +80,10 @@ public class StreakServiceTest {
         assertEquals(1, state.getDay());
         assertTrue(state.getAvailable());
 
-        assertEquals(dayRewards.size(), streakInfo.getRewardsByDays().size());
-        for (int i = 0; i < dayRewards.size(); i++) {
-            DayReward expectedReward = dayRewards.get(i);
-            DayReward actualReward = streakInfo.getRewardsByDays().get(i);
+        assertEquals(dailyRewards.size(), streakInfo.getRewardsByDays().size());
+        for (int i = 0; i < dailyRewards.size(); i++) {
+            DailyReward expectedReward = dailyRewards.get(i);
+            DailyReward actualReward = streakInfo.getRewardsByDays().get(i);
             assertEquals(expectedReward.getDay(), actualReward.getDay());
             assertEquals(expectedReward.getReward(), actualReward.getReward());
         }

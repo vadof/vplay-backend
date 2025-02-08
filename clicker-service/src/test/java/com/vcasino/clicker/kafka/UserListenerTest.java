@@ -35,19 +35,19 @@ public class UserListenerTest {
 
     @Test
     void handleValidJson() throws JsonProcessingException {
-        String validJsonData = "{\"userId\": 123}";
+        String validJsonData = "{\"userId\": 123, \"username\": \"test\", \"invitedBy\": null}";
         Long expectedUserId = 123L;
-        when(objectMapper.readValue(validJsonData, UserCreate.class)).thenReturn(new UserCreate(123L));
+        when(objectMapper.readValue(validJsonData, UserCreate.class)).thenReturn(new UserCreate(123L, "test", null));
         userListener.handle(validJsonData);
-        verify(accountService, times(1)).createAccount(expectedUserId);
+        verify(accountService, times(1)).createAccount(expectedUserId, "test", null);
     }
 
     @Test
     void handleInvalidJson() throws JsonProcessingException {
-        String invalidJsonData = "{\"userId\": \"wrong\"}";
+        String invalidJsonData = "{\"userId\": 123, \"wrong\": \"test\", \"invitedBy\": null}";
         when(objectMapper.readValue(invalidJsonData, UserCreate.class)).thenThrow(new JsonProcessingException("Invalid JSON") {});
         assertThrows(RuntimeException.class, () -> userListener.handle(invalidJsonData));
-        verify(accountService, never()).createAccount(any());
+        verify(accountService, never()).createAccount(any(), any(), any());
     }
 
 }

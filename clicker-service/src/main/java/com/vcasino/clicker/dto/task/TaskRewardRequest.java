@@ -1,4 +1,4 @@
-package com.vcasino.clicker.dto.reward;
+package com.vcasino.clicker.dto.task;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -15,9 +15,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ReceiveRewardRequest {
+public class TaskRewardRequest {
     @NotNull(message = "Field cannot be null")
-    Integer rewardId;
+    Integer taskId;
     @NotNull(message = "Field cannot be null")
     LocalDateTime clickTime;
 }

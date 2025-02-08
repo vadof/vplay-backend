@@ -1,8 +1,8 @@
-package com.vcasino.clicker.dto.reward;
+package com.vcasino.clicker.dto.task;
 
 import com.vcasino.clicker.config.IntegratedService;
 import com.vcasino.clicker.dto.DateRange;
-import com.vcasino.clicker.entity.enums.RewardType;
+import com.vcasino.clicker.entity.enums.TaskType;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -21,12 +21,12 @@ import org.springframework.validation.annotation.Validated;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AddRewardRequest {
+public class AddTaskRequest {
     @NotEmpty(message = "field cannot be empty")
     String id;
 
     @NotNull(message = "field cannot be null")
-    RewardType rewardType;
+    TaskType taskType;
 
     @NotNull(message = "field cannot be null")
     IntegratedService service;
@@ -36,7 +36,7 @@ public class AddRewardRequest {
     Integer rewardCoins;
 
     @NotEmpty(message = "field cannot be empty")
-    String rewardName;
+    String taskName;
 
     @Valid
     DateRange dateRange;

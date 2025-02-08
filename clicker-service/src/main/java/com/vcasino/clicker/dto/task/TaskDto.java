@@ -1,7 +1,7 @@
-package com.vcasino.clicker.dto.reward;
+package com.vcasino.clicker.dto.task;
 
 import com.vcasino.clicker.config.IntegratedService;
-import com.vcasino.clicker.entity.enums.RewardType;
+import com.vcasino.clicker.entity.enums.TaskType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,9 +16,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RewardDto {
+public class TaskDto {
     Integer id;
-    RewardType type;
+    TaskType type;
     String name;
     String link;
     Integer durationInSeconds;

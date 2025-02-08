@@ -2,15 +2,16 @@ package com.vcasino.clicker.controller;
 
 import com.vcasino.clicker.controller.common.GenericController;
 import com.vcasino.clicker.dto.AccountDto;
-import com.vcasino.clicker.dto.reward.ReceiveRewardRequest;
-import com.vcasino.clicker.dto.reward.RewardDto;
+import com.vcasino.clicker.dto.task.TaskRewardRequest;
+import com.vcasino.clicker.dto.task.TaskDto;
 import com.vcasino.clicker.dto.streak.StreakInfo;
-import com.vcasino.clicker.service.RewardService;
+import com.vcasino.clicker.service.TaskService;
 import com.vcasino.clicker.service.StreakService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -25,40 +26,41 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Tag(name = "Tasks", description = "API operations with Tasks")
 @RestController
-@RequestMapping("/api/v1/clicker/rewards")
+@RequestMapping("/api/v1/clicker/tasks")
 @Validated
 @Slf4j
-public class RewardController extends GenericController {
+public class TaskController extends GenericController {
 
     private final StreakService streakService;
-    private final RewardService rewardService;
+    private final TaskService taskService;
 
-    public RewardController(HttpServletRequest request, StreakService streakService, RewardService rewardService) {
+    public TaskController(HttpServletRequest request, StreakService streakService, TaskService taskService) {
         super(request);
         this.streakService = streakService;
-        this.rewardService = rewardService;
+        this.taskService = taskService;
     }
 
-    @Operation(summary = "Get rewards info")
-    @ApiResponse(responseCode = "200", description = "Return rewards info",
+    @Operation(summary = "Get tasks info")
+    @ApiResponse(responseCode = "200", description = "Return tasks info",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema =
-            @Schema(implementation = RewardDto[].class)))
+            @Schema(implementation = TaskDto[].class)))
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<RewardDto>> getRewardsInfo() {
-        log.info("Rest request to get rewards info");
-        List<RewardDto> rewards = rewardService.getRewards(getAccountId());
-        return ResponseEntity.ok().body(rewards);
+    public ResponseEntity<List<TaskDto>> getTasksInfo() {
+        log.info("REST request to get tasks info");
+        List<TaskDto> tasks = taskService.getTasks(getAccountId());
+        return ResponseEntity.ok().body(tasks);
     }
 
-    @Operation(summary = "Receive reward")
+    @Operation(summary = "Receive reward for completed task")
     @ApiResponse(responseCode = "200", description = "Reward received",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema =
             @Schema(implementation = AccountDto.class)))
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccountDto> receiveReward(@RequestBody @Valid ReceiveRewardRequest rewardRequest) {
-        log.info("Rest request to receive reward");
-        AccountDto accountDto = rewardService.receiveReward(getAccountId(), rewardRequest);
+    public ResponseEntity<AccountDto> receiveTaskReward(@RequestBody @Valid TaskRewardRequest taskRequest) {
+        log.info("REST request to complete task");
+        AccountDto accountDto = taskService.receiveTaskReward(getAccountId(), taskRequest);
         return ResponseEntity.ok().body(accountDto);
     }
 
@@ -68,18 +70,18 @@ public class RewardController extends GenericController {
             @Schema(implementation = StreakInfo.class)))
     @GetMapping(value = "/streaks", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<StreakInfo> getStreakInfo() {
-        log.info("Rest request to get StreakInfo");
+        log.info("REST request to get StreakInfo");
         StreakInfo streakInfo = streakService.getStreakInfo(getAccountId());
         return ResponseEntity.ok().body(streakInfo);
     }
 
-    @Operation(summary = "Receive streak reward")
+    @Operation(summary = "Receive reward for completed streak")
     @ApiResponse(responseCode = "200", description = "Reward received",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema =
             @Schema(implementation = AccountDto.class)))
     @PostMapping(value = "/streaks", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccountDto> receiveStreakReward() {
-        log.info("Rest request to receive streak reward");
+        log.info("REST request to receive streak reward");
         AccountDto accountDto = streakService.receiveReward(getAccountId());
         return ResponseEntity.ok().body(accountDto);
     }

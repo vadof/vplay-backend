@@ -15,6 +15,6 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StreakInfo {
-    List<DayReward> rewardsByDays;
+    List<DailyReward> rewardsByDays;
     StreakState state;
 }

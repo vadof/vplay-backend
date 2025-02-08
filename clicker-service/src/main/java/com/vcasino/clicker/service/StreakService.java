@@ -1,7 +1,7 @@
 package com.vcasino.clicker.service;
 
 import com.vcasino.clicker.dto.AccountDto;
-import com.vcasino.clicker.dto.streak.DayReward;
+import com.vcasino.clicker.dto.streak.DailyReward;
 import com.vcasino.clicker.dto.streak.StreakInfo;
 import com.vcasino.clicker.dto.streak.StreakState;
 import com.vcasino.clicker.entity.Account;
@@ -27,7 +27,7 @@ import java.util.Map;
 @Slf4j
 public class StreakService {
 
-    private List<DayReward> dayRewards;
+    private List<DailyReward> dailyRewards;
     private final Map<Integer, Integer> rewardsByDay = new HashMap<>();
     private final StreakRepository repository;
     private final AccountService accountService;
@@ -35,7 +35,7 @@ public class StreakService {
     public StreakInfo getStreakInfo(Long accountId) {
         Streak streak = getStreak(accountId);
         StreakState streakState = getStreakState(streak);
-        return new StreakInfo(dayRewards, streakState);
+        return new StreakInfo(dailyRewards, streakState);
     }
 
     public AccountDto receiveReward(Long accountId) {
@@ -81,18 +81,18 @@ public class StreakService {
     }
 
     @PostConstruct
-    private void initRewards() {
-        dayRewards = new ArrayList<>();
-        dayRewards.add(new DayReward(1, 500));
-        dayRewards.add(new DayReward(2, 1000));
-        dayRewards.add(new DayReward(3, 2500));
-        dayRewards.add(new DayReward(4, 5000));
-        dayRewards.add(new DayReward(5, 15000));
-        dayRewards.add(new DayReward(6, 25000));
-        dayRewards.add(new DayReward(7, 100000));
-        dayRewards.add(new DayReward(8, 250000));
-        dayRewards.add(new DayReward(9, 500000));
-        dayRewards.add(new DayReward(10, 1000000));
-        dayRewards.forEach(r -> rewardsByDay.put(r.getDay(), r.getReward()));
+    private void initDailyRewards() {
+        dailyRewards = new ArrayList<>();
+        dailyRewards.add(new DailyReward(1, 500));
+        dailyRewards.add(new DailyReward(2, 1000));
+        dailyRewards.add(new DailyReward(3, 2500));
+        dailyRewards.add(new DailyReward(4, 5000));
+        dailyRewards.add(new DailyReward(5, 15000));
+        dailyRewards.add(new DailyReward(6, 25000));
+        dailyRewards.add(new DailyReward(7, 100000));
+        dailyRewards.add(new DailyReward(8, 250000));
+        dailyRewards.add(new DailyReward(9, 500000));
+        dailyRewards.add(new DailyReward(10, 1000000));
+        dailyRewards.forEach(r -> rewardsByDay.put(r.getDay(), r.getReward()));
     }
 }

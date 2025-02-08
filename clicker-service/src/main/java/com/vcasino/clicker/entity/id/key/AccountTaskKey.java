@@ -16,7 +16,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AccountRewardKey implements Serializable {
+public class AccountTaskKey implements Serializable {
     Long accountId;
-    Integer rewardId;
+    Integer taskId;
 }

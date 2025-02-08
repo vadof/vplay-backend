@@ -2,10 +2,10 @@ package com.vcasino.clicker.controller.admin;
 
 import com.vcasino.clicker.config.IntegratedService;
 import com.vcasino.clicker.controller.common.GenericController;
-import com.vcasino.clicker.dto.reward.AddRewardRequest;
+import com.vcasino.clicker.dto.task.AddTaskRequest;
 import com.vcasino.clicker.dto.youtube.VideoInfo;
-import com.vcasino.clicker.entity.enums.RewardType;
-import com.vcasino.clicker.service.RewardService;
+import com.vcasino.clicker.entity.enums.TaskType;
+import com.vcasino.clicker.service.TaskService;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -25,38 +25,38 @@ import java.util.Map;
 
 @Hidden
 @RestController
-@RequestMapping("/api/v1/clicker/admin/rewards")
+@RequestMapping("/api/v1/clicker/admin/tasks")
 @Validated
 @Slf4j
-public class AdminRewardController extends GenericController {
+public class AdminTaskController extends GenericController {
 
-    private final RewardService rewardService;
+    private final TaskService taskService;
 
-    public AdminRewardController(HttpServletRequest request, RewardService rewardService) {
+    public AdminTaskController(HttpServletRequest request, TaskService taskService) {
         super(request);
-        this.rewardService = rewardService;
+        this.taskService = taskService;
     }
 
     @GetMapping(value = "/properties", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<RewardType, List<IntegratedService>>> getSupportedServicesByRewardType() {
-        log.info("REST request to get supported services by reward type");
+    public ResponseEntity<Map<TaskType, List<IntegratedService>>> getSupportedServicesByTaskType() {
+        log.info("REST request to get supported services by task type");
         validateAdminRole();
-        return ResponseEntity.ok().body(rewardService.getSupportedServicesByRewardType());
+        return ResponseEntity.ok().body(taskService.getSupportedServicesByTaskType());
     }
 
     @GetMapping(value = "/video-info", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<VideoInfo> getVideoInfo(@RequestParam String videoId, @RequestParam IntegratedService service) {
         log.info("REST request to get info about a video");
         validateAdminRole();
-        VideoInfo videoInfo = rewardService.getVideoInfo(videoId, service);
+        VideoInfo videoInfo = taskService.getVideoInfo(videoId, service);
         return ResponseEntity.ok().body(videoInfo);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> addReward(@RequestBody @Valid AddRewardRequest rewardRequest) {
-        log.info("REST request to add video reward {}", rewardRequest);
+    public ResponseEntity<Void> addTask(@RequestBody @Valid AddTaskRequest taskRequest) {
+        log.info("REST request to add video task {}", taskRequest);
         validateAdminRole();
-        rewardService.addReward(rewardRequest);
+        taskService.addTask(taskRequest);
         return ResponseEntity.ok().body(null);
     }
 

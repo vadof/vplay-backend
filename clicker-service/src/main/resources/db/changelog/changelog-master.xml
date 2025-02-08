@@ -191,11 +191,11 @@
     <changeSet author="vadim" id="table/streak.sql">
         <sqlFile path="table/streak.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
-    <changeSet author="vadim" id="table/reward.sql">
-        <sqlFile path="table/reward.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+    <changeSet author="vadim" id="table/task.sql">
+        <sqlFile path="table/task.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
-    <changeSet author="vadim" id="table/account_rewards_received.sql">
-        <sqlFile path="table/account_rewards_received.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+    <changeSet author="vadim" id="table/account-task-reward-received.sql">
+        <sqlFile path="table/account-task-reward-received.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
 
 </databaseChangeLog>

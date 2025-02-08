@@ -6,13 +6,13 @@ import com.vcasino.clicker.config.IntegratedService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public enum RewardType {
+public enum TaskType {
     WATCH("Watch"),
     SUBSCRIBE("Subscribe");
 
     private final String value;
 
-    RewardType(String value) {
+    TaskType(String value) {
         this.value = value;
     }
 
@@ -26,8 +26,8 @@ public enum RewardType {
     }
 
     @JsonCreator
-    public static RewardType fromValue(String value) {
-        return RewardType.valueOf(value.toUpperCase());
+    public static TaskType fromValue(String value) {
+        return TaskType.valueOf(value.toUpperCase());
     }
 
     public boolean serviceIsSupported(IntegratedService integratedService) {

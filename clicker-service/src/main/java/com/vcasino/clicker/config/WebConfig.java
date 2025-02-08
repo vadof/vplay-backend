@@ -1,6 +1,6 @@
 package com.vcasino.clicker.config;
 
-import com.vcasino.clicker.entity.enums.RewardType;
+import com.vcasino.clicker.entity.enums.TaskType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -13,7 +13,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(integratedServiceConverter());
-        registry.addConverter(rewardTypeConverter());
+        registry.addConverter(taskTypeConverter());
     }
 
     @Bean
@@ -27,11 +27,11 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public Converter<String, RewardType> rewardTypeConverter() {
-        return new Converter<String, RewardType>() {
+    public Converter<String, TaskType> taskTypeConverter() {
+        return new Converter<String, TaskType>() {
             @Override
-            public RewardType convert(String source) {
-                return RewardType.fromValue(source);
+            public TaskType convert(String source) {
+                return TaskType.fromValue(source);
             }
         };
     }

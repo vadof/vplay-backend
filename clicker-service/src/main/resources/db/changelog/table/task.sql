@@ -1,4 +1,4 @@
-CREATE TABLE reward
+CREATE TABLE task
 (
     id               INTEGER GENERATED ALWAYS AS IDENTITY,
     type             VARCHAR(50)  NOT NULL,

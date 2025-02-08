@@ -103,7 +103,7 @@ public class AccountServiceTest {
 
         when(accountRepository.save(any(Account.class))).thenReturn(mockedAccount);
 
-        AccountDto response = accountService.createAccount(1L);
+        AccountDto response = accountService.createAccount(1L, mockedAccount.getUsername(), null);
 
         verify(accountMapper, times(1)).toDto(any(Account.class));
 
@@ -151,7 +151,7 @@ public class AccountServiceTest {
 
         when(accountRepository.save(any(Account.class))).thenReturn(mockedAccount);
 
-        AccountDto response = accountService.createAccount(1L);
+        AccountDto response = accountService.createAccount(1L, mockedAccount.getUsername(), null);
 
         verify(accountMapper, times(1)).toDto(any(Account.class));
 

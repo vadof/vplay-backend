@@ -1,7 +1,7 @@
 package com.vcasino.clicker.entity;
 
 import com.vcasino.clicker.config.IntegratedService;
-import com.vcasino.clicker.entity.enums.RewardType;
+import com.vcasino.clicker.entity.enums.TaskType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -23,14 +23,14 @@ import lombok.experimental.FieldDefaults;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "reward")
+@Table(name = "task")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Reward {
+public class Task {
 
     @Id
     @Column(name = "id")
@@ -39,7 +39,7 @@ public class Reward {
 
     @Column(name = "type", nullable = false)
     @Enumerated(EnumType.STRING)
-    RewardType type;
+    TaskType type;
 
     @Column(name = "name", nullable = false)
     String name;
@@ -66,11 +66,11 @@ public class Reward {
     @PrePersist
     @PreUpdate
     private void validateLink() {
-        if ((type == RewardType.WATCH || type == RewardType.SUBSCRIBE) && link == null) {
+        if ((type == TaskType.WATCH || type == TaskType.SUBSCRIBE) && link == null) {
             throw new IllegalArgumentException("Link must not be null when type is WATCH or SUBSCRIBE");
         }
 
-        if (type == RewardType.WATCH && (durationInSeconds == null || durationInSeconds <= 0)) {
+        if (type == TaskType.WATCH && (durationInSeconds == null || durationInSeconds <= 0)) {
             throw new IllegalArgumentException("Duration must be not null and greater than zero when type is WATCH");
         }
     }
