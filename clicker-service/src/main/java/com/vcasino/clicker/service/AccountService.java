@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -188,7 +189,7 @@ public class AccountService {
 
     public BigDecimal calculatePassiveEarn(Integer passiveEarnPerHour, Long differenceInSeconds) {
         double earned = getPassiveEarnPerSecond(passiveEarnPerHour) * differenceInSeconds;
-        return new BigDecimal(earned);
+        return new BigDecimal(earned).setScale(3, RoundingMode.HALF_UP);
     }
 
     public Double getPassiveEarnPerSecond(Integer passiveEarnPerHour) {

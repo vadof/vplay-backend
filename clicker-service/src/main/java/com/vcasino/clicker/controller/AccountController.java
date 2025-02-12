@@ -49,7 +49,7 @@ public class AccountController extends GenericController {
 
     @Operation(summary = "Get levels")
     @ApiResponse(responseCode = "200", description = "Return levels",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = LevelDto[].class)))
+            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = LevelDto.class)))
     @GetMapping(value = "/levels", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<LevelDto>> getLevels() {
         log.info("REST request to get Levels");

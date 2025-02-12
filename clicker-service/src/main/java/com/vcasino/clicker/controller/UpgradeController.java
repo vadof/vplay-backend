@@ -2,8 +2,8 @@ package com.vcasino.clicker.controller;
 
 import com.vcasino.clicker.controller.common.GenericController;
 import com.vcasino.clicker.dto.AccountDto;
-import com.vcasino.clicker.dto.SectionUpgradesDto;
 import com.vcasino.clicker.dto.BuyUpgradeRequest;
+import com.vcasino.clicker.dto.SectionUpgradesDto;
 import com.vcasino.clicker.service.AccountService;
 import com.vcasino.clicker.service.UpgradeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,7 +46,7 @@ public class UpgradeController extends GenericController {
             "Get all sections and theirs upgrades. Order field - the order in which the sections should be displayed")
     @ApiResponse(responseCode = "200", description = "Return upgrade list",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema =
-            @Schema(implementation = SectionUpgradesDto[].class)))
+            @Schema(implementation = SectionUpgradesDto.class)))
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<SectionUpgradesDto>> getUpgrades() {
         log.info("REST request to get Upgrades");

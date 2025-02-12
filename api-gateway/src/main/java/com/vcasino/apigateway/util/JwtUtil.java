@@ -1,10 +1,11 @@
 package com.vcasino.apigateway.util;
 
+import com.vcasino.apigateway.config.ApplicationConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Files;
@@ -17,12 +18,11 @@ import java.util.Date;
 import java.util.function.Function;
 
 @Component
+@RequiredArgsConstructor
 @Slf4j
 public class JwtUtil {
 
-    @Value("${jwt.public.key.path}")
-    private String publicKeyPath;
-
+    private final ApplicationConfig applicationConfig;
     private PublicKey publicKey;
 
     public boolean isTokenExpired(String token) {
@@ -31,10 +31,6 @@ public class JwtUtil {
 
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
-    }
-
-    public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
     }
 
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -52,7 +48,7 @@ public class JwtUtil {
 
     @PostConstruct
     private void getRsaKeys() throws Exception {
-        Path pbPath = Paths.get(publicKeyPath);
+        Path pbPath = Paths.get(applicationConfig.getJwt().getPublicKeyPath());
 
         if (Files.exists(pbPath)) {
             log.info("Public key found");

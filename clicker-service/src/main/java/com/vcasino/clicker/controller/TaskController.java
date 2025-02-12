@@ -2,11 +2,11 @@ package com.vcasino.clicker.controller;
 
 import com.vcasino.clicker.controller.common.GenericController;
 import com.vcasino.clicker.dto.AccountDto;
-import com.vcasino.clicker.dto.task.TaskRewardRequest;
-import com.vcasino.clicker.dto.task.TaskDto;
 import com.vcasino.clicker.dto.streak.StreakInfo;
-import com.vcasino.clicker.service.TaskService;
+import com.vcasino.clicker.dto.task.TaskDto;
+import com.vcasino.clicker.dto.task.TaskRewardRequest;
 import com.vcasino.clicker.service.StreakService;
+import com.vcasino.clicker.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -45,7 +45,7 @@ public class TaskController extends GenericController {
     @Operation(summary = "Get tasks info")
     @ApiResponse(responseCode = "200", description = "Return tasks info",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema =
-            @Schema(implementation = TaskDto[].class)))
+            @Schema(implementation = TaskDto.class)))
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<TaskDto>> getTasksInfo() {
         log.info("REST request to get tasks info");

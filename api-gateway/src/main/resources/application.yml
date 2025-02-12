@@ -16,7 +16,8 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka
 
-jwt:
-  public:
-    key:
-      path: ${PUBLIC_KEY_PATH}
+config:
+  production: ${PRODUCTION}
+  client-url: ${CLIENT_URL}
+  jwt:
+    public-key-path: ${PUBLIC_KEY_PATH}
