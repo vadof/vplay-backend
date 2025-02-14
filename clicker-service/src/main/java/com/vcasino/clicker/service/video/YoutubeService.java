@@ -6,6 +6,7 @@ import com.vcasino.clicker.config.ApiKeys;
 import com.vcasino.clicker.config.IntegratedService;
 import com.vcasino.clicker.dto.youtube.VideoInfo;
 import com.vcasino.clicker.exception.AppException;
+import com.vcasino.clicker.service.RedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -20,11 +21,18 @@ import java.time.LocalTime;
 @Slf4j
 public class YoutubeService extends VideoService {
 
-    public YoutubeService(RestTemplate restTemplate, ApiKeys apiKeys, ObjectMapper objectMapper) {
+    private final RedisService redisService;
+    private final static String VIDEO_INFO_CACHE_KEY = "youtube_video:";
+
+    public YoutubeService(RestTemplate restTemplate, ApiKeys apiKeys, ObjectMapper objectMapper, RedisService redisService) {
         super(restTemplate, apiKeys, objectMapper);
+        this.redisService = redisService;
     }
 
     public VideoInfo getVideoInfo(String videoId) {
+        VideoInfo cachedVideoInfo = redisService.get(VIDEO_INFO_CACHE_KEY + videoId, VideoInfo.class);
+        if (cachedVideoInfo != null) return cachedVideoInfo;
+
         String url = "https://www.googleapis.com/youtube/v3/videos?id=%s&part=contentDetails&key=%s"
                 .formatted(videoId, apiKeys.getYoutubeApiKey());
 
@@ -49,7 +57,9 @@ public class YoutubeService extends VideoService {
             long seconds = Duration.parse(durationString).getSeconds();
             LocalTime duration = LocalTime.ofSecondOfDay(seconds);
 
-            return new VideoInfo(id, duration);
+            VideoInfo videoInfo = new VideoInfo(id, duration);
+            redisService.save(VIDEO_INFO_CACHE_KEY + id, videoInfo, 15);
+            return videoInfo;
         } catch (IOException e) {
             throw new AppException("An error occurred while processing the video response.",
                     HttpStatus.INTERNAL_SERVER_ERROR);

@@ -21,6 +21,24 @@ services:
       timeout: 5s
       retries: 5
       start_period: 5s
+
+  redis:
+    container_name: redis
+    image: redis:7.4
+    networks:
+      - vcasino
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "my_password"]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "-h", "localhost", "-p", "6379", "PING" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+      disable: false
       
   zookeeper:
     container_name: ${ZOOKEEPER_CONTAINER_NAME}
@@ -109,6 +127,8 @@ services:
       eureka-server:
         condition: service_healthy
       kafka:
+        condition: service_healthy
+      redis:
         condition: service_healthy
 
   clicker-service:

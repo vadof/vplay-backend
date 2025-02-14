@@ -1,5 +1,6 @@
 package com.vcasino.clicker.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.vcasino.clicker.config.IntegratedService;
 import com.vcasino.clicker.dto.DateRange;
 import com.vcasino.clicker.dto.task.AddTaskRequest;
@@ -34,6 +35,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -45,6 +47,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -58,6 +62,9 @@ public class TaskServiceTest {
 
     @Mock
     YoutubeService youtubeService;
+
+    @Mock
+    RedisService redisService;
 
     @Mock
     TaskRepository taskRepository;
@@ -86,8 +93,8 @@ public class TaskServiceTest {
         Account account = AccountMocks.getAccountMock(1L);
 
         List<Task> taskMocks = TaskMocks.getTaskMocks(5);
-        when(taskRepository.findAllInInterval(any())).thenReturn(taskMocks);
 
+        mockAvailableTasks(taskMocks, false);
         when(accountTaskRewardsRepository.findTaskIdsByAccountId(account.getId())).thenReturn(Set.of());
 
         List<TaskDto> tasks = taskService.getTasks(account.getId());
@@ -98,7 +105,7 @@ public class TaskServiceTest {
             assertFalse(task.getReceived());
         }
 
-        when(taskRepository.findAllInInterval(any())).thenReturn(taskMocks);
+        mockAvailableTasks(taskMocks, true);
         when(accountTaskRewardsRepository.findTaskIdsByAccountId(account.getId())).thenReturn(Set.of(2));
 
         tasks = taskService.getTasks(account.getId());
@@ -112,6 +119,8 @@ public class TaskServiceTest {
                 assertFalse(task.getReceived());
             }
         }
+
+        verify(taskRepository, times(1)).findAllInInterval(any());
     }
 
     @Test
@@ -185,6 +194,36 @@ public class TaskServiceTest {
         Task savedTask = taskArgumentCaptor.getValue();
 
         assertTaskCorrect(addTaskRequest, savedTask, null, "https://t.me/");
+    }
+
+    @Test
+    @DisplayName(value = "Add task updating availableTasks cache")
+    void addTaskUpdatingAvailableTasksCache() {
+        LocalDateTime now = LocalDateTime.now();
+
+        LocalDateTime dayStart = now.truncatedTo(ChronoUnit.DAYS);
+        LocalDateTime dayEnd = dayStart.plusDays(1);
+
+        LocalDateTime nowMinus1Minute = now.minusMinutes(1);
+        LocalDateTime nowPlus1Minute = now.plusMinutes(1);
+
+        List<DateRange> dateRanges = List.of(
+                new DateRange(dayStart, dayEnd), // Caches
+                new DateRange(nowMinus1Minute, null), // Caches
+                new DateRange(nowPlus1Minute, dayEnd), // Doesn't cache
+                new DateRange(nowPlus1Minute, null)  // Doesn't cache
+        );
+
+        for (int i = 0; i < dateRanges.size(); i++) {
+            AddTaskRequest addTaskRequest = TaskMocks.getAddTaskRequest(TaskType.SUBSCRIBE, IntegratedService.TELEGRAM);
+            addTaskRequest.setTaskName("" + i);
+            addTaskRequest.setDateRange(dateRanges.get(i));
+            taskService.addTask(addTaskRequest);
+        }
+
+        verify(taskRepository, times(4)).save(any(Task.class));
+        verify(redisService, times(1)).save(eq("available_tasks"), anyList(), any(Long.class));
+        verify(redisService, times(1)).save(eq("available_tasks"), anyList());
     }
 
     @Test
@@ -360,6 +399,15 @@ public class TaskServiceTest {
         try (MockedStatic<TimeUtil> ignored = mockStatic(TimeUtil.class)) {
             mockTime(now, clickTime);
             assertThrows(AppException.class, () -> taskService.receiveTaskReward(account.getId(), request));
+        }
+    }
+
+    private void mockAvailableTasks(List<Task> tasks, boolean redisCache) {
+        if (redisCache) {
+            when(redisService.get(eq("available_tasks"), any(TypeReference.class))).thenReturn(tasks);
+        } else {
+            when(redisService.get(eq("available_tasks"), any(TypeReference.class))).thenReturn(null);
+            when(taskRepository.findAllInInterval(any())).thenReturn(tasks);
         }
     }
 

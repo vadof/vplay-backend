@@ -47,6 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -64,6 +65,8 @@ public class AccountServiceTest {
     private LevelService levelService;
     @Mock
     private UpgradeService upgradeService;
+    @Mock
+    private RedisService redisService;
 
     @Spy
     private AccountMapper accountMapper = new AccountMapperImpl();
@@ -106,6 +109,7 @@ public class AccountServiceTest {
         AccountDto response = accountService.createAccount(1L, mockedAccount.getUsername(), null);
 
         verify(accountMapper, times(1)).toDto(any(Account.class));
+        verify(redisService, times(1)).save(eq("account:1"), any(Account.class), any(Long.class));
 
         assertEquals(mockedAccount.getLevel().getValue(), response.getLevel());
         assertEquals(mockedAccount.getBalanceCoins(), response.getBalanceCoins());
@@ -177,10 +181,21 @@ public class AccountServiceTest {
         Account account = AccountMocks.getAccountMock(1L);
         account.setId(1L);
 
-        when(accountRepository.findById(account.getId())).thenReturn(Optional.of(account));
-
+        mockGetById(account.getId(), account, false);
         Account foundAccount = accountService.getById(account.getId());
+        assertEquals(account.getId(), foundAccount.getId());
 
+        assertThrows(AppException.class, () -> accountService.getById(account.getId() + 1));
+    }
+
+    @Test
+    @DisplayName("Get account by id from redis cache")
+    void getAccountByIdFromRedisCache() {
+        Account account = AccountMocks.getAccountMock(1L);
+        account.setId(1L);
+
+        mockGetById(account.getId(), account, true);
+        Account foundAccount = accountService.getById(account.getId());
         assertEquals(account.getId(), foundAccount.getId());
 
         assertThrows(AppException.class, () -> accountService.getById(account.getId() + 1));
@@ -265,11 +280,12 @@ public class AccountServiceTest {
             skipTime(lastSync, 10);
 
             when(levelService.getLevelAccordingNetWorth(100L)).thenReturn(LevelMocks.getLevelMock(2));
+            mockAccountSave(account);
 
             accountService.getAccount(account.getId());
 
-            assertEquals(new BigDecimal(100), account.getBalanceCoins());
-            assertEquals(new BigDecimal(100), account.getNetWorth());
+            assertEquals(new BigDecimal("100.000"), account.getBalanceCoins());
+            assertEquals(new BigDecimal("100.000"), account.getNetWorth());
             assertEquals(2, account.getLevel().getValue());
             assertEquals(account.getLastSyncDate(), Timestamp.from(Instant.ofEpochMilli(lastSync.getNanos() + 10 * 1000)));
         }
@@ -291,6 +307,7 @@ public class AccountServiceTest {
             skipTime(lastSync, 10);
 
             when(levelService.getLevelAccordingNetWorth(any(Long.class))).thenReturn(LevelMocks.getLevelMock(1));
+            mockAccountSave(account);
 
             accountService.getAccount(account.getId());
 
@@ -316,6 +333,7 @@ public class AccountServiceTest {
 
             when(levelService.getLevelAccordingNetWorth(any(Long.class))).thenReturn(LevelMocks.getLevelMock(1));
 
+            mockAccountSave(account);
             accountService.updateAccount(account);
 
             assertEquals(5, account.getAvailableTaps());
@@ -331,7 +349,7 @@ public class AccountServiceTest {
 
         account.setFrozen(true);
 
-        when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
+        mockGetById(account.getId(), account, false);
 
         assertThrows(AppException.class, () -> accountService.getById(1L));
     }
@@ -340,7 +358,8 @@ public class AccountServiceTest {
     @DisplayName("Buy upgrade")
     void buyUpgrade() {
         Account account = AccountMocks.getAccountMock(1L);
-        when(accountRepository.findById(account.getId())).thenReturn(Optional.of(account));
+        mockGetById(account.getId(), account, false);
+        mockAccountSave(account);
 
         Upgrade toBuy = UpgradeMocks.getUpgradeMock("1", 0);
         List<Upgrade> upgrades = new ArrayList<>();
@@ -373,7 +392,7 @@ public class AccountServiceTest {
     @DisplayName("Upgrade is already max level")
     void upgradeNotInAccount() {
         Account account = AccountMocks.getAccountMock(1L);
-        when(accountRepository.findById(account.getId())).thenReturn(Optional.of(account));
+        mockGetById(account.getId(), account, false);
 
         Upgrade toBuy = UpgradeMocks.getUpgradeMock("1", 10);
         toBuy.setMaxLevel(true);
@@ -392,7 +411,7 @@ public class AccountServiceTest {
     @DisplayName("Buy upgrade not enough money")
     void buyUpgradeNotEnoughMoney() {
         Account account = AccountMocks.getAccountMock(1L);
-        when(accountRepository.findById(account.getId())).thenReturn(Optional.of(account));
+        mockGetById(account.getId(), account, false);
 
         Upgrade toUpdate = UpgradeMocks.getUpgradeMock("1", 0);
         toUpdate.setPrice(10000);
@@ -439,5 +458,18 @@ public class AccountServiceTest {
 
     private Timestamp getTimestamp(Long value) {
         return Timestamp.from(Instant.ofEpochMilli(value));
+    }
+
+    private void mockGetById(Long id, Account account, boolean redisCache) {
+        if (redisCache) {
+            when(redisService.get("account:" + id, Account.class)).thenReturn(account);
+        } else {
+            when(redisService.get("account:" + id, Account.class)).thenReturn(null);
+            when(accountRepository.findById(id)).thenReturn(Optional.of(account));
+        }
+    }
+
+    private void mockAccountSave(Account account) {
+        when(accountRepository.save(account)).thenReturn(account);
     }
 }

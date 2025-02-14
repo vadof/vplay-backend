@@ -28,6 +28,7 @@
         <junit.version>4.13.2</junit.version>
         <springdoc.version>2.3.0</springdoc.version>
         <kafka.version>3.2.2</kafka.version>
+        <jedis.version>5.1.2</jedis.version>
     </properties>
     <dependencies>
         <dependency>
@@ -77,6 +78,18 @@
             <version>${postgresql.version}</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>${jedis.version}</version>
+            <type>jar</type>
+        </dependency>
+
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>

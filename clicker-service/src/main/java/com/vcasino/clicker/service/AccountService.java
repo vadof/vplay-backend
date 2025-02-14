@@ -27,6 +27,9 @@ import java.util.List;
 @Slf4j
 public class AccountService {
 
+    private final RedisService redisService;
+    private static final String ACCOUNT_KEY_PREFIX = "account:";
+
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
 
@@ -66,9 +69,20 @@ public class AccountService {
     }
 
     public Account getById(Long id) {
-        Account account = accountRepository.findById(id).orElseThrow(()
-                -> new AppException("Account#" + id + " not found", HttpStatus.NOT_FOUND));
+        String key = ACCOUNT_KEY_PREFIX + id;
+
+        Account account = redisService.get(key, Account.class);
+
+        if (account != null) {
+            return account;
+        } else {
+            // TODO connect with user service and check for user
+            account = accountRepository.findById(id).orElseThrow(() ->
+                    new AppException("Account#" + id + " not found", HttpStatus.NOT_FOUND));
+        }
+
         handleFrozenAccount(account);
+
         return account;
     }
 
@@ -120,6 +134,7 @@ public class AccountService {
 
     public Account save(Account account) {
         account = accountRepository.save(account);
+        redisService.save(ACCOUNT_KEY_PREFIX + account.getId(), account, 5);
         return account;
     }
 
@@ -158,12 +173,14 @@ public class AccountService {
         Timestamp lastSync = account.getLastSyncDate();
         Timestamp now = TimeUtil.getCurrentTimestamp();
         Long secondsDiff = TimeUtil.getDifferenceInSeconds(lastSync, now);
-        if (secondsDiff == 0) return;
 
-        BigDecimal passiveEarn = calculatePassiveEarn(account.getPassiveEarnPerHour(), secondsDiff);
-        updateAccountBalance(account, passiveEarn);
-        updateAccountTaps(account, secondsDiff);
-        account.setLastSyncDate(now);
+        if (secondsDiff != 0) {
+            BigDecimal passiveEarn = calculatePassiveEarn(account.getPassiveEarnPerHour(), secondsDiff);
+            updateAccountBalance(account, passiveEarn);
+            updateAccountTaps(account, secondsDiff);
+            account.setLastSyncDate(now);
+        }
+
         if (save) {
             save(account);
         }

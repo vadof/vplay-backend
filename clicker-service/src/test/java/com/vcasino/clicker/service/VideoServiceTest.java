@@ -22,8 +22,11 @@ import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -34,6 +37,9 @@ public class VideoServiceTest {
 
     @Mock
     RestTemplate restTemplate;
+
+    @Mock
+    RedisService redisService;
 
     @Mock
     ApiKeys apiKeys;
@@ -60,6 +66,7 @@ public class VideoServiceTest {
         VideoInfo videoInfo = mockVideoResponse(id, duration, 1);
         assertEquals(id, videoInfo.getId());
         assertEquals(LocalTime.ofSecondOfDay(seconds), videoInfo.getDuration());
+        verify(redisService, times(1)).save(eq("youtube_video:" + videoInfo.getId()), eq(videoInfo), anyLong());
     }
 
     @Test

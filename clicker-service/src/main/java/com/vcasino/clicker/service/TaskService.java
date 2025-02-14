@@ -1,5 +1,6 @@
 package com.vcasino.clicker.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.vcasino.clicker.config.IntegratedService;
 import com.vcasino.clicker.dto.AccountDto;
 import com.vcasino.clicker.dto.task.AddTaskRequest;
@@ -23,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +36,10 @@ import java.util.Set;
 @AllArgsConstructor
 @Slf4j
 public class TaskService {
+
+    private final RedisService redisService;
+    private static final String TASK_CACHE_KEY = "available_tasks";
+    private static final TypeReference<List<Task>> TASK_LIST_TYPE = new TypeReference<>() {};
 
     private final YoutubeService youtubeService;
     private final TaskRepository taskRepository;
@@ -51,7 +57,35 @@ public class TaskService {
     }
 
     private List<Task> getAvailableTasks() {
-        return taskRepository.findAllInInterval(TimeUtil.getCurrentDateTime());
+        List<Task> tasks = redisService.get(TASK_CACHE_KEY, TASK_LIST_TYPE);
+        if (tasks != null) {
+            return tasks;
+        }
+
+        tasks = taskRepository.findAllInInterval(TimeUtil.getCurrentDateTime());
+        return cacheAvailableTasks(tasks);
+    }
+
+    private List<Task> cacheAvailableTasks(List<Task> tasks) {
+        if (tasks.isEmpty()) {
+            return tasks;
+        }
+
+        LocalDateTime now = TimeUtil.getCurrentDateTime();
+        LocalDateTime closestEndsIn = tasks.stream()
+                .filter(task -> task.getEndsIn() != null && task.getEndsIn().isAfter(now))
+                .map(Task::getEndsIn)
+                .min(LocalDateTime::compareTo)
+                .orElse(null);
+
+        if (closestEndsIn != null) {
+            long ttlSeconds = Duration.between(now, closestEndsIn).getSeconds();
+            redisService.save(TASK_CACHE_KEY, tasks, ttlSeconds);
+        } else {
+            redisService.save(TASK_CACHE_KEY, tasks);
+        }
+
+        return tasks;
     }
 
     public Map<TaskType, List<IntegratedService>> getSupportedServicesByTaskType() {
@@ -82,6 +116,18 @@ public class TaskService {
         taskRepository.save(task);
 
         log.info("Task#{} saved in the database", task.getId());
+
+        LocalDateTime now = TimeUtil.getCurrentDateTime();
+        if ((task.getValidFrom().isBefore(now) || task.getValidFrom().isEqual(now))
+                && (task.getEndsIn() == null || task.getEndsIn().isAfter(now))
+        ) {
+            List<Task> tasks = redisService.get(TASK_CACHE_KEY, TASK_LIST_TYPE);
+            if (tasks == null) {
+                tasks = new ArrayList<>();
+            }
+            tasks.add(task);
+            cacheAvailableTasks(tasks);
+        }
     }
 
     private Task addWatchTask(AddTaskRequest request) {

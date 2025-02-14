@@ -16,6 +16,7 @@ public class EmailService {
 
     private final JavaMailSender mailSender;
 
+    // TODO configure to send emails faster
     @Async
     public void send(String to, String content) {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
@@ -26,9 +27,10 @@ public class EmailService {
             helper.setSubject("Activate Your VCasino Account Now");
             helper.setFrom("no-reply@vcasino.com");
             mailSender.send(mimeMessage);
-            log.info("Email sent to {}", to);
+            log.debug("Email sent to {}", to);
         } catch (MessagingException e) {
             // TODO exception?
+            log.error("Failed to send email to {}", to, e);
             throw new RuntimeException(e);
         }
     }
