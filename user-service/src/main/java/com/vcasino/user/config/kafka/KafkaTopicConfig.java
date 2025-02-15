@@ -14,11 +14,10 @@ public class KafkaTopicConfig {
         return TopicBuilder
                 .name(Topic.USER_CREATE.getName())
                 .replicas(1)
-                .partitions(1)
+                .partitions(3)
                 .config(TopicConfig.RETENTION_MS_CONFIG, "604800000")
                 .config(TopicConfig.CLEANUP_POLICY_CONFIG, TopicConfig.CLEANUP_POLICY_DELETE)
                 .build();
     }
-
 
 }

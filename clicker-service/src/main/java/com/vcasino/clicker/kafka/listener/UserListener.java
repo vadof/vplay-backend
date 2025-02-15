@@ -6,6 +6,9 @@ import com.vcasino.clicker.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.annotation.RetryableTopic;
+import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,10 +23,12 @@ public class UserListener extends AbstractListener {
         this.accountService = accountService;
     }
 
-    @KafkaListener(topics = "user-create", groupId = "clicker-service-group")
-    public void handle(String data) {
+    @RetryableTopic(backoff = @Backoff(value = 2000))
+    @KafkaListener(id = "clicker-service-group", topics = "user-create")
+    public void handle(String data, Acknowledgment ack) {
         log.info("Received user-create event - {}", data);
         UserCreate userData = fromJson(data, UserCreate.class);
         accountService.createAccount(userData.id(), userData.username(), userData.invitedBy());
+        ack.acknowledge();
     }
 }
