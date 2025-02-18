@@ -13,13 +13,20 @@ Environment variables
 YOUTUBE_API_KEY (key to interact with youtube videos)
 GOOGLE_OAUTH_CLIENT_ID (Google OAuth2)
 GOOGLE_OAUTH_CLIENT_SECRET (Google OAuth2)
-JWT_EXPIRATION (number in ms)
-JWT_REFRESH_EXPIRATION (number in ms)
-KEYS_PATH (public.key/private.key path for jwt auth)
-PUBLIC_KEY_PATH (public.key path for jwt auth)
+GITHUB_OAUTH_CLIENT_ID (GitHub OAuth2)
+GITHUB_OAUTH_CLIENT_SECRET (GitHub OAuth2)
+FACEBOOK_OAUTH_CLIENT_ID (Facebook OAuth2)
+FACEBOOK_OAUTH_CLIENT_SECRET (Facebook OAuth2)
+DISCORD_OAUTH_CLIENT_ID (Discord OAuth2)
+DISCORD_OAUTH_CLIENT_SECRET (Discord OAuth2)
+CLIENT_URL=http://localhost:4200
+JWT_EXPIRATION=900000
+JWT_REFRESH_EXPIRATION=86400000
+CONFIRMATION_TOKEN_EXPIRATION_MS=3600000
+KEYS_PATH (absolute path to folder with public.key/private.key for jwt auth)
+PUBLIC_KEY_PATH (absolute path to public.key)
+PRODUCTION=false
 ```
-
-To do actions with YouTube you need to set YOUTUBE_API_KEY env variable
 
 # Services:
 
