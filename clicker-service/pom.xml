@@ -29,6 +29,7 @@
         <springdoc.version>2.3.0</springdoc.version>
         <kafka.version>3.2.2</kafka.version>
         <jedis.version>5.1.2</jedis.version>
+        <prometheus.version>1.13.1</prometheus.version>
     </properties>
     <dependencies>
         <dependency>
@@ -70,6 +71,18 @@
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
             <version>${kafka.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+            <version>${prometheus.version}</version>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>

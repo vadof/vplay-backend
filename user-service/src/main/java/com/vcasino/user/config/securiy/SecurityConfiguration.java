@@ -53,7 +53,7 @@ public class SecurityConfiguration {
 
     private String[] permittedEndpoints() {
         List<String> endpoints = new ArrayList<>(
-                List.of("/api/*/users/auth/*", "/oauth2/**")
+                List.of("/api/*/users/auth/*", "/oauth2/**", "/actuator/**")
         );
 
         if (!config.getProduction()) {
