@@ -12,3 +12,5 @@
 /finance/mvnw.cmd
 /user/mvnw.cmd
 /db/target/**
+/observability/grafana/grafana.db
+/observability/grafana/plugins
