@@ -195,7 +195,6 @@ public class AuthenticationServiceTests {
         mockEmailTokens();
 
         EmailTokenOptionsDto response = authenticationService.registerUser(toSave, null);
-        verify(tokenService, times(1)).deleteTokenByUser(existingUser);
         verify(userRepository, times(1)).delete(existingUser);
 
         checkSavedUser(toSave, userMock, Role.USER, false, response);
@@ -244,7 +243,6 @@ public class AuthenticationServiceTests {
         mockEmailTokens();
 
         EmailTokenOptionsDto response = authenticationService.registerUser(toSave, null);
-        verify(tokenService, times(1)).deleteTokenByUser(existingUser);
         verify(userRepository, times(1)).delete(existingUser);
 
         checkSavedUser(toSave, userMock, Role.USER, false, response);
@@ -493,7 +491,6 @@ public class AuthenticationServiceTests {
         AppException exception = assertThrows(AppException.class, () -> authenticationService.authenticate(request));
 
         assertEquals("Invalid Username or Password!", exception.getMessage());
-        verify(tokenService, times(1)).deleteTokenByUser(user);
         verify(userRepository, times(1)).delete(user);
     }
 
@@ -771,7 +768,6 @@ public class AuthenticationServiceTests {
         assertTrue(exception.getMessage().contains("expired"));
 
         verify(userRepository, times(1)).delete(user);
-        verify(tokenService, times(1)).deleteTokenByUser(user);
     }
 
     @Test
@@ -826,7 +822,6 @@ public class AuthenticationServiceTests {
         authenticationService.deletePendingUser(optionsDto);
 
         verify(userRepository, times(1)).delete(user);
-        verify(tokenService, times(1)).deleteTokenByUser(user);
     }
 
     @Test
@@ -881,7 +876,6 @@ public class AuthenticationServiceTests {
         assertEquals(HttpStatus.FORBIDDEN, exception.getHttpStatus());
 
         verify(userRepository, times(1)).delete(confirmationToken.getUser());
-        verify(tokenService, times(1)).deleteTokenByUser(confirmationToken.getUser());
     }
 
     private void confirmationUserAlreadyActive(Token confirmationToken) {

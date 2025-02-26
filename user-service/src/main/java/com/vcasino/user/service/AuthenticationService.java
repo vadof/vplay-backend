@@ -118,7 +118,7 @@ public class AuthenticationService {
                     });
 
             if (tokenService.isTokenExpired(token)) {
-                deletePendingUser(user);
+                userRepository.delete(user);
                 throw new AppException("Invalid Username or Password!", HttpStatus.UNAUTHORIZED);
             } else {
                 throw new AppException("Check " + user.getEmail() + " for an email to complete your account setup", HttpStatus.UNAUTHORIZED);
@@ -147,6 +147,7 @@ public class AuthenticationService {
         );
     }
 
+    @Transactional(noRollbackFor = AppException.class)
     public AuthenticationResponse confirmEmail(String confirmationToken) {
         return processConfirmation(
                 confirmationToken,
@@ -167,7 +168,7 @@ public class AuthenticationService {
         User user = token.getUser();
 
         if (tokenService.isTokenExpired(token)) {
-            deletePendingUser(user);
+            userRepository.delete(user);
             throw new AppException("Registration time has expired, please complete it again", HttpStatus.FORBIDDEN);
         }
 
@@ -208,7 +209,7 @@ public class AuthenticationService {
                 () -> new AppException(null, HttpStatus.FORBIDDEN));
 
         if (tokenService.isTokenExpired(token)) {
-            deletePendingUser(user);
+            userRepository.delete(user);
             throw new AppException("Registration time has expired, please complete it again.", HttpStatus.FORBIDDEN);
         }
 
@@ -258,7 +259,7 @@ public class AuthenticationService {
             throw new AppException(null, HttpStatus.FORBIDDEN);
         }
 
-        deletePendingUser(user);
+        userRepository.delete(user);
     }
 
     private void sendEmailConfirmation(String email, String confirmationToken) {
@@ -326,16 +327,10 @@ public class AuthenticationService {
     private boolean deleteUserIfNotActive(User user) {
         long tokenExpirationInSeconds = applicationConfig.getConfirmation().getToken().getExpirationMs() / 1000;
         if (Instant.now().minusSeconds(tokenExpirationInSeconds).isAfter(user.getRegisterDate())) {
-            deletePendingUser(user);
+            userRepository.delete(user);
             return true;
         }
         return false;
-    }
-
-    private void deletePendingUser(User user) {
-        log.info("Pending User#{} deleted from database", user.getId());
-        tokenService.deleteTokenByUser(user);
-        userRepository.delete(user);
     }
 
     private void validatePassword(String password) {

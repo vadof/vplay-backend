@@ -27,9 +27,8 @@ public class EmailService {
             helper.setSubject("Activate Your VCasino Account Now");
             helper.setFrom("no-reply@vcasino.com");
             mailSender.send(mimeMessage);
-            log.debug("Email sent to {}", to);
+            log.info("Email sent to {}", to);
         } catch (MessagingException e) {
-            // TODO exception?
             log.error("Failed to send email to {}", to, e);
             throw new RuntimeException(e);
         }

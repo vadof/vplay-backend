@@ -8,7 +8,6 @@ import com.vcasino.user.entity.Token;
 import com.vcasino.user.entity.TokenType;
 import com.vcasino.user.entity.User;
 import com.vcasino.user.mock.UserMocks;
-import com.vcasino.user.repository.TokenRepository;
 import com.vcasino.user.repository.UserRepository;
 import com.vcasino.user.service.CookieService;
 import com.vcasino.user.service.TokenService;
@@ -60,8 +59,6 @@ public class OAuth2LoginSuccessHandlerTests {
     private TokenService tokenService;
     @Mock
     private CookieService cookieService;
-    @Mock
-    private TokenRepository tokenRepository;
     @Captor
     private ArgumentCaptor<User> userArgumentCaptor;
 
@@ -295,7 +292,6 @@ public class OAuth2LoginSuccessHandlerTests {
 
         verify(userRepository, times(1)).save(userArgumentCaptor.capture());
 
-        verify(tokenRepository, times(1)).deleteByUser(existingUserByUsername);
         verify(userRepository, times(1)).delete(existingUserByUsername);
 
         User savedPendingUser = userArgumentCaptor.getValue();
@@ -351,7 +347,6 @@ public class OAuth2LoginSuccessHandlerTests {
         MockHttpServletResponse response = new MockHttpServletResponse();
         oAuthHandler.onAuthenticationSuccess(new MockHttpServletRequest(), response, oAuthToken);
 
-        verify(tokenRepository, times(1)).deleteByUser(existingUserByEmail);
         verify(userRepository, times(1)).delete(existingUserByEmail);
         verify(userRepository, times(1)).save(userArgumentCaptor.capture());
 

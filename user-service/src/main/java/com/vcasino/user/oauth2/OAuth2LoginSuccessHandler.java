@@ -7,7 +7,6 @@ import com.vcasino.user.entity.Role;
 import com.vcasino.user.entity.Token;
 import com.vcasino.user.entity.TokenType;
 import com.vcasino.user.entity.User;
-import com.vcasino.user.repository.TokenRepository;
 import com.vcasino.user.repository.UserRepository;
 import com.vcasino.user.service.CookieService;
 import com.vcasino.user.service.TokenService;
@@ -39,7 +38,6 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     private final CookieService cookieService;
 
     private final ApplicationConfig config;
-    private final TokenRepository tokenRepository;
 
     @Override
     @Transactional
@@ -135,7 +133,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
                 if (!existingUser.getActive() &&
                         Instant.now().minusSeconds(tokenExpirationInSeconds).isAfter(existingUser.getRegisterDate())) {
                     username = possibleUsername;
-                    deletePendingUser(existingUser);
+                    userRepository.delete(existingUser);
                 }
             }
         }
@@ -158,7 +156,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
                     }
                     authenticateUser(response, user);
                 } else {
-                    deletePendingUser(user);
+                    userRepository.delete(user);
                     if (possibleUsername.equals(user.getUsername())) {
                         username = possibleUsername;
                     }
@@ -167,12 +165,6 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
                 }
             }
         }
-    }
-
-    private void deletePendingUser(User user) {
-        log.info("Deleting inactive User#{}", user.getId());
-        tokenRepository.deleteByUser(user);
-        userRepository.delete(user);
     }
 
     private void createPendingUserAndRedirect(HttpServletResponse response, String providerId, OAuthProvider provider, String name, String email, String username) throws IOException {

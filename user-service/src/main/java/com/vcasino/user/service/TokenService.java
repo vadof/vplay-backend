@@ -136,10 +136,6 @@ public class TokenService {
         tokenRepository.delete(token);
     }
 
-    public void deleteTokenByUser(User user) {
-        tokenRepository.deleteByUser(user);
-    }
-
     public boolean isTokenExpired(Token token) {
         return token.getExpiryDate().compareTo(Instant.now()) < 0;
     }
