@@ -9,6 +9,7 @@ import com.vcasino.clicker.utils.TimeUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -19,9 +20,10 @@ public class ClickerService {
 
     private final AccountService accountService;
 
+    // TODO do not return AccountDto with upgrades to reduce data amount
+    @Transactional
     public AccountDto tap(Tap tap, Long accountId) {
         Account account = accountService.getById(accountId);
-        log.info("Account#{} tapped {} times", account.getId(), tap.getAmount());
 
         if (tap.getAvailableTaps() > account.getLevel().getMaxTaps()) {
             String message = "Available taps is more than max taps";

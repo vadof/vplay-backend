@@ -27,8 +27,6 @@ import java.util.List;
 @Slf4j
 public class AccountService {
 
-    private final RedisService redisService;
-    private static final String ACCOUNT_KEY_PREFIX = "account:";
 
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
@@ -69,17 +67,8 @@ public class AccountService {
     }
 
     public Account getById(Long id) {
-        String key = ACCOUNT_KEY_PREFIX + id;
-
-        Account account = redisService.get(key, Account.class);
-
-        if (account != null) {
-            return account;
-        } else {
-            // TODO connect with user service and check for user
-            account = accountRepository.findById(id).orElseThrow(() ->
-                    new AppException("Account#" + id + " not found", HttpStatus.NOT_FOUND));
-        }
+        Account account = accountRepository.findById(id).orElseThrow(() ->
+                new AppException("Account#" + id + " not found", HttpStatus.NOT_FOUND));
 
         handleFrozenAccount(account);
 
@@ -102,6 +91,8 @@ public class AccountService {
         account.getUpgrades().remove(upgrade);
         account.getUpgrades().add(updatedUpgrade);
         account.setBalanceCoins(account.getBalanceCoins().subtract(new BigDecimal(upgrade.getPrice())));
+
+        // TODO calculate simply by - previous upgrade + new upgrade
         account.setPassiveEarnPerHour(upgradeService.calculatePassiveEarnPerHour(account.getUpgrades()));
 
         return toDto(save(account));
@@ -132,9 +123,9 @@ public class AccountService {
         }
     }
 
+    // TODO use save for saving and custom update queries for updating
     public Account save(Account account) {
         account = accountRepository.save(account);
-        redisService.save(ACCOUNT_KEY_PREFIX + account.getId(), account, 5);
         return account;
     }
 
@@ -151,7 +142,6 @@ public class AccountService {
     }
 
     public void addCoins(Account account, BigDecimal amount) {
-        log.info("Add {} coins to Account#{}", amount, account.getId());
         if (amount.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("Amount cannot be negative");
         }
