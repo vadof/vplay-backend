@@ -1,7 +1,7 @@
 package com.vcasino.clicker.controller;
 
 import com.vcasino.clicker.controller.common.GenericController;
-import com.vcasino.clicker.dto.AccountDto;
+import com.vcasino.clicker.dto.AccountResponse;
 import com.vcasino.clicker.dto.LevelDto;
 import com.vcasino.clicker.service.AccountService;
 import com.vcasino.clicker.service.LevelService;
@@ -38,13 +38,13 @@ public class AccountController extends GenericController {
     }
 
     @Operation(summary = "Get account")
-    @ApiResponse(responseCode = "200", description = "Return account",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AccountDto.class)))
+    @ApiResponse(responseCode = "200", description = "Return account with upgrades",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AccountResponse.class)))
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccountDto> getAccount() {
+    public ResponseEntity<AccountResponse> getAccount() {
         log.info("REST request to get Account");
-        AccountDto account = accountService.getAccount(getAccountId());
-        return ResponseEntity.ok().body(account);
+        AccountResponse response = accountService.getAccount(getAccountId());
+        return ResponseEntity.ok().body(response);
     }
 
     @Operation(summary = "Get levels")

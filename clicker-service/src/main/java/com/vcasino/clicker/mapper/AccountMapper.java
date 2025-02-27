@@ -1,6 +1,7 @@
 package com.vcasino.clicker.mapper;
 
 import com.vcasino.clicker.dto.AccountDto;
+import com.vcasino.clicker.dto.AccountResponse;
 import com.vcasino.clicker.dto.ConditionDto;
 import com.vcasino.clicker.dto.SectionUpgradesDto;
 import com.vcasino.clicker.dto.UpgradeDto;
@@ -19,7 +20,6 @@ import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -55,29 +55,40 @@ public abstract class AccountMapper implements EntityMapper<Account, AccountDto>
         return levelService.getLevel(level);
     }
 
-    @AfterMapping
-    protected void setSectionUpgrades(@MappingTarget AccountDto dto, Account entity) {
+    public AccountResponse toResponse(Account account) {
+        AccountDto accountDto = toDto(account);
+        List<SectionUpgradesDto> sectionUpgrades = getSectionUpgrades(account);
+        return AccountResponse.builder()
+                .account(accountDto)
+                .sectionUpgrades(sectionUpgrades)
+                .build();
+    }
+
+    /**
+     * Sorts account upgrades by sections
+     * If account is missing some upgrades (level 0 upgrades), they are added to the response
+     */
+    protected List<SectionUpgradesDto> getSectionUpgrades(Account entity) {
         List<SectionUpgradesDto> sectionUpgradesList = new ArrayList<>(upgradeService.getSectionUpgradesList());
 
-        Map<String, Upgrade> userUpgrades = new HashMap<>();
-        entity.getUpgrades().forEach(u -> userUpgrades.put(u.getName(), u));
+        Map<String, Upgrade> userUpgrades = upgradeService.getAllUpgradesIncludingMissing(entity);
 
         for (SectionUpgradesDto sectionUpgrades : sectionUpgradesList) {
             List<UpgradeDto> updatedUpgrades = new ArrayList<>(10);
-
             for (UpgradeDto upgrade : sectionUpgrades.getUpgrades()) {
-                UpgradeDto userUpgrade =  upgradeMapper.toDto(userUpgrades.get(upgrade.getName()));
+                UpgradeDto userUpgrade = upgradeMapper.toDto(userUpgrades.get(upgrade.getName()));
                 setAvailable(userUpgrade, userUpgrades);
                 updatedUpgrades.add(userUpgrade);
             }
-
             sectionUpgrades.setUpgrades(updatedUpgrades);
         }
 
-        dto.setSectionUpgrades(sectionUpgradesList);
+        return sectionUpgradesList;
     }
 
     protected void setAvailable(UpgradeDto userUpgrade, Map<String, Upgrade> userUpgrades) {
+        if (userUpgrade == null) return;
+
         ConditionDto condition = userUpgrade.getCondition();
         if (userUpgrade.getMaxLevel()) {
             userUpgrade.setAvailable(false);
@@ -94,13 +105,14 @@ public abstract class AccountMapper implements EntityMapper<Account, AccountDto>
         }
     }
 
+    protected boolean isAvailableByUpgrade(ConditionDto condition, Map<String, Upgrade> currentUpgradeLevels) {
+        return currentUpgradeLevels.containsKey(condition.getUpgradeName()) &&
+                currentUpgradeLevels.get(condition.getUpgradeName()).getLevel() >= condition.getLevel();
+    }
+
     @AfterMapping
     protected void calculatePassiveEarnPerSec(@MappingTarget AccountDto dto) {
-        dto.setPassiveEarnPerSec(dto.getPassiveEarnPerHour() / 3600d);
+        double passiveEarnPerSec = Math.round((dto.getPassiveEarnPerHour() / 3600d) * 1000.0) / 1000.0;
+        dto.setPassiveEarnPerSec(passiveEarnPerSec);
     }
-
-    protected boolean isAvailableByUpgrade(ConditionDto condition, Map<String, Upgrade> currentUpgradeLevels) {
-        return currentUpgradeLevels.get(condition.getUpgradeName()).getLevel() >= condition.getLevel();
-    }
-
 }

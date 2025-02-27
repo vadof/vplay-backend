@@ -20,6 +20,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -41,21 +42,35 @@ public class UpgradeService {
                 .sum();
     }
 
-    public Upgrade findUpgradeInAccount(Account account, String upgradeName, Integer upgradeLevel) {
+    public Optional<Upgrade> findUpgradeInAccount(Account account, String upgradeName) {
         return account.getUpgrades().stream()
-                .filter(u ->
-                        u.getName().equals(upgradeName) &&
-                                u.getLevel().equals(upgradeLevel))
-                .findFirst()
-                .orElseThrow(() -> {
-                    log.warn("Upgrade not found {} lvl {}", upgradeName, upgradeLevel);
-                    return new AppException("Upgrade not found", HttpStatus.NOT_FOUND);
-                });
+                .filter(u -> u.getName().equals(upgradeName))
+                .findFirst();
     }
 
     public Upgrade findUpgrade(String name, Integer level) {
         return upgradeRepository.findById(new UpgradeKey(name, level)).orElseThrow(
-                () -> new AppException(String.format("Upgrade %s with level %s not found", name, level), HttpStatus.NOT_FOUND));
+                () -> new AppException(String.format("Upgrade %s not found", name), HttpStatus.NOT_FOUND));
+    }
+
+    /**
+     * Example:
+     * Database upgrades: X#0-10, Snapchat#0-10, Facebook#0-10
+     * User upgrades: X#1
+     * Return X#1, Snapchat#0, Facebook#0
+     */
+    public Map<String, Upgrade> getAllUpgradesIncludingMissing(Account account) {
+        Map<String, Upgrade> upgradeMap = new HashMap<>(initialUpgrades.size());
+
+        for (Upgrade u : initialUpgrades) {
+            upgradeMap.put(u.getName(), u);
+        }
+
+        for (Upgrade u : account.getUpgrades()) {
+            upgradeMap.put(u.getName(), u);
+        }
+
+        return upgradeMap;
     }
 
     @PostConstruct

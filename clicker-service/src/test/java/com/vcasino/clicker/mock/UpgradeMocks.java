@@ -34,7 +34,7 @@ public class UpgradeMocks {
     public static UpgradeDto getUpgradeDtoMock(String name, Integer level) {
         return UpgradeDto.builder()
                 .name(name)
-                .section(SectionMocks.getSectionDtoMock().getName())
+                .section("Social")
                 .level(level)
                 .profitPerHour(0)
                 .profitPerHourDelta(200)

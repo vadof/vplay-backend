@@ -3,7 +3,6 @@ package com.vcasino.clicker.controller;
 import com.vcasino.clicker.controller.common.GenericController;
 import com.vcasino.clicker.dto.AccountDto;
 import com.vcasino.clicker.dto.Tap;
-import com.vcasino.clicker.entity.Account;
 import com.vcasino.clicker.service.ClickerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -37,7 +36,7 @@ public class ClickerController extends GenericController {
 
     @Operation(summary = "Send info about taps")
     @ApiResponse(responseCode = "200", description = "Return updated account",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Account.class)))
+            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AccountDto.class)))
     @PostMapping(value = "/tap", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccountDto> tap(@Valid @RequestBody Tap tap) {
         Long accountId = getAccountId();

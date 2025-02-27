@@ -2,6 +2,7 @@ package com.vcasino.clicker.service;
 
 import com.vcasino.clicker.config.constants.AccountConstants;
 import com.vcasino.clicker.dto.AccountDto;
+import com.vcasino.clicker.dto.AccountResponse;
 import com.vcasino.clicker.dto.BuyUpgradeRequest;
 import com.vcasino.clicker.entity.Account;
 import com.vcasino.clicker.entity.Condition;
@@ -11,15 +12,18 @@ import com.vcasino.clicker.exception.AppException;
 import com.vcasino.clicker.mapper.AccountMapper;
 import com.vcasino.clicker.repository.AccountRepository;
 import com.vcasino.clicker.utils.TimeUtil;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
-import java.util.List;
+import java.util.Collections;
 
 
 @Service
@@ -27,6 +31,8 @@ import java.util.List;
 @Slf4j
 public class AccountService {
 
+    @PersistenceContext
+    private EntityManager entityManager;
 
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
@@ -34,16 +40,14 @@ public class AccountService {
     private final LevelService levelService;
     private final UpgradeService upgradeService;
 
-    public AccountDto createAccount(Long id, String username, String invitedBy) {
+    public void createAccount(Long id, String username, String invitedBy) {
         Account account = buildAccount(id, username);
         setInvitedBy(account, invitedBy);
         account = save(account);
         log.info("Account#{} saved to database", account.getId());
-        return toDto(account);
     }
 
     private Account buildAccount(Long id, String username) {
-        List<Upgrade> upgrades = upgradeService.getInitialUpgrades();
         Level level = levelService.getLevelAccordingNetWorth(AccountConstants.BALANCE_COINS);
 
         return Account.builder()
@@ -52,8 +56,8 @@ public class AccountService {
                 .level(level)
                 .balanceCoins(AccountConstants.BALANCE_COINS)
                 .netWorth(AccountConstants.BALANCE_COINS)
-                .upgrades(upgrades)
-                .passiveEarnPerHour(upgradeService.calculatePassiveEarnPerHour(upgrades))
+                .upgrades(Collections.emptyList())
+                .passiveEarnPerHour(0)
                 .availableTaps(level.getMaxTaps())
                 .lastSyncDate(TimeUtil.getCurrentTimestamp())
                 .suspiciousActionsNumber(0)
@@ -75,27 +79,54 @@ public class AccountService {
         return account;
     }
 
-    public AccountDto buyUpgrade(BuyUpgradeRequest request, Long accountId) {
+    @Transactional
+    public AccountResponse buyUpgrade(BuyUpgradeRequest request, Long accountId) {
         Account account = getById(accountId);
         updateAccount(account, false);
 
-        Upgrade upgrade = upgradeService.findUpgradeInAccount(account, request.getUpgradeName(), request.getUpgradeLevel());
+        Upgrade upgrade = upgradeService.findUpgradeInAccount(account, request.getUpgradeName())
+                .orElseGet(() -> upgradeService.findUpgrade(request.getUpgradeName(), 0));
 
         if (upgrade.getMaxLevel()) {
             throw new AppException("The maximum level has already been reached", HttpStatus.BAD_REQUEST);
         }
+
         validateMoney(account, upgrade);
         validateCondition(account, upgrade.getCondition());
 
         Upgrade updatedUpgrade = upgradeService.findUpgrade(upgrade.getName(), upgrade.getLevel() + 1);
-        account.getUpgrades().remove(upgrade);
-        account.getUpgrades().add(updatedUpgrade);
+
+        int success;
+        if (upgrade.getLevel() == 0) {
+            success = accountRepository.addUpgrade(account.getId(), upgrade.getName(), updatedUpgrade.getLevel());
+        } else {
+            success = accountRepository.updateUpgradeLevel(account.getId(), upgrade.getName(), updatedUpgrade.getLevel());
+        }
+
+        if (success != 1) {
+            log.error("Error add/update upgrade Account#{}, Upgrade: {}-{}",
+                    account.getId(), updatedUpgrade.getName(), updatedUpgrade.getLevel());
+            throw new AppException(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
         account.setBalanceCoins(account.getBalanceCoins().subtract(new BigDecimal(upgrade.getPrice())));
 
-        // TODO calculate simply by - previous upgrade + new upgrade
-        account.setPassiveEarnPerHour(upgradeService.calculatePassiveEarnPerHour(account.getUpgrades()));
+        int additionalProfit = updatedUpgrade.getProfitPerHour() - upgrade.getProfitPerHour();
+        account.setPassiveEarnPerHour(account.getPassiveEarnPerHour() + additionalProfit);
 
-        return toDto(save(account));
+        account = save(account);
+
+        // Avoid extra Account updates
+        entityManager.flush();
+        entityManager.clear();
+
+        // Required to display bought upgrade in response
+        if (upgrade.getLevel() > 0) {
+            account.getUpgrades().remove(upgrade);
+        }
+        account.getUpgrades().add(updatedUpgrade);
+
+        return toAccountResponse(account);
     }
 
     private void validateMoney(Account account, Upgrade upgrade) {
@@ -123,10 +154,13 @@ public class AccountService {
         }
     }
 
-    // TODO use save for saving and custom update queries for updating
     public Account save(Account account) {
         account = accountRepository.save(account);
         return account;
+    }
+
+    public AccountResponse toAccountResponse(Account account) {
+        return accountMapper.toResponse(account);
     }
 
     public AccountDto toDto(Account account) {
@@ -149,10 +183,10 @@ public class AccountService {
         updateAccountBalance(account, amount);
     }
 
-    public AccountDto getAccount(Long id) {
+    public AccountResponse getAccount(Long id) {
         Account account = getById(id);
         updateAccount(account);
-        return toDto(account);
+        return toAccountResponse(account);
     }
 
     public void updateAccount(Account account) {

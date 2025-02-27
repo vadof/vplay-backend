@@ -63,7 +63,7 @@ public class Account {
     @Column(name = "frozen", nullable = false)
     Boolean frozen;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "account_upgrade",
             joinColumns = @JoinColumn(name = "account_id"),

@@ -1,6 +1,5 @@
 package com.vcasino.clicker.service;
 
-
 import com.vcasino.clicker.entity.Account;
 import com.vcasino.clicker.entity.Upgrade;
 import com.vcasino.clicker.entity.id.key.UpgradeKey;
@@ -15,12 +14,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 /**
@@ -88,7 +90,12 @@ public class UpgradeServiceTest {
         account.getUpgrades().add(UpgradeMocks.getUpgradeMock("3", 2));
         account.getUpgrades().add(UpgradeMocks.getUpgradeMock("4", 3));
 
-        Upgrade upgrade = upgradeService.findUpgradeInAccount(account, toFind.getName(), toFind.getLevel());
+        Optional<Upgrade> optionalUpgrade = upgradeService.findUpgradeInAccount(account, toFind.getName());
+
+        assertTrue(optionalUpgrade.isPresent());
+
+        Upgrade upgrade = optionalUpgrade.get();
+
         assertEquals(toFind.getName(), upgrade.getName());
         assertEquals(toFind.getLevel(), upgrade.getLevel());
         assertEquals(toFind.getPrice(), upgrade.getPrice());
@@ -97,8 +104,30 @@ public class UpgradeServiceTest {
         assertEquals(toFind.getSection().getName(), upgrade.getSection().getName());
 
         Upgrade notInAcc = UpgradeMocks.getUpgradeMock("5", 0);
-        assertThrows(AppException.class, () ->
-                upgradeService.findUpgradeInAccount(account, notInAcc.getName(), notInAcc.getLevel()));
+        assertTrue(upgradeService.findUpgradeInAccount(account, notInAcc.getName()).isEmpty());
+    }
+
+    @Test
+    @DisplayName("Get all upgrades including missing")
+    void getAllUpgradesIncludingMissing() throws NoSuchFieldException, IllegalAccessException {
+        Account account = AccountMocks.getAccountMock(1L);
+
+        account.getUpgrades().add(UpgradeMocks.getUpgradeMock("1", 1));
+        account.getUpgrades().add(UpgradeMocks.getUpgradeMock("2", 1));
+
+        List<Upgrade> initialUpgrades = new ArrayList<>(2);
+        initialUpgrades.add(UpgradeMocks.getUpgradeMock("3", 0));
+        initialUpgrades.add(UpgradeMocks.getUpgradeMock("4", 0));
+
+        Field field = UpgradeService.class.getDeclaredField("initialUpgrades");
+        field.setAccessible(true);
+        field.set(upgradeService, initialUpgrades);
+
+        Map<String, Upgrade> res = upgradeService.getAllUpgradesIncludingMissing(account);
+
+        for (int i = 1; i <= 4; i++) {
+            assertTrue(res.containsKey(String.valueOf(i)));
+        }
     }
 
 }

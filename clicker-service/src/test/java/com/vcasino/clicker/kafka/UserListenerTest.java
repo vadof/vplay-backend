@@ -38,7 +38,7 @@ public class UserListenerTest {
         String validJsonData = "{\"userId\": 123, \"username\": \"test\", \"invitedBy\": null}";
         Long expectedUserId = 123L;
         when(objectMapper.readValue(validJsonData, UserCreate.class)).thenReturn(new UserCreate(123L, "test", null));
-        userListener.handle(validJsonData);
+        userListener.handle(validJsonData, null);
         verify(accountService, times(1)).createAccount(expectedUserId, "test", null);
     }
 
@@ -46,7 +46,7 @@ public class UserListenerTest {
     void handleInvalidJson() throws JsonProcessingException {
         String invalidJsonData = "{\"userId\": 123, \"wrong\": \"test\", \"invitedBy\": null}";
         when(objectMapper.readValue(invalidJsonData, UserCreate.class)).thenThrow(new JsonProcessingException("Invalid JSON") {});
-        assertThrows(RuntimeException.class, () -> userListener.handle(invalidJsonData));
+        assertThrows(RuntimeException.class, () -> userListener.handle(invalidJsonData, null));
         verify(accountService, never()).createAccount(any(), any(), any());
     }
 

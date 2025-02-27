@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Data
 @Builder
@@ -25,5 +24,4 @@ public class AccountDto {
     Integer tapsRecoverPerSec;
     Integer passiveEarnPerHour;
     Double passiveEarnPerSec;
-    List<SectionUpgradesDto> sectionUpgrades;
 }

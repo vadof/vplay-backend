@@ -1,9 +1,10 @@
 package com.vcasino.clicker.service;
 
 import com.vcasino.clicker.config.constants.AccountConstants;
-import com.vcasino.clicker.dto.AccountDto;
-import com.vcasino.clicker.dto.SectionUpgradesDto;
+import com.vcasino.clicker.dto.AccountResponse;
 import com.vcasino.clicker.dto.BuyUpgradeRequest;
+import com.vcasino.clicker.dto.SectionUpgradesDto;
+import com.vcasino.clicker.dto.UpgradeDto;
 import com.vcasino.clicker.entity.Account;
 import com.vcasino.clicker.entity.Level;
 import com.vcasino.clicker.entity.Upgrade;
@@ -12,8 +13,6 @@ import com.vcasino.clicker.mapper.AccountMapper;
 import com.vcasino.clicker.mapper.AccountMapperImpl;
 import com.vcasino.clicker.mapper.ConditionMapper;
 import com.vcasino.clicker.mapper.ConditionMapperImpl;
-import com.vcasino.clicker.mapper.SectionMapper;
-import com.vcasino.clicker.mapper.SectionMapperImpl;
 import com.vcasino.clicker.mapper.UpgradeMapper;
 import com.vcasino.clicker.mapper.UpgradeMapperImpl;
 import com.vcasino.clicker.mock.AccountMocks;
@@ -22,6 +21,7 @@ import com.vcasino.clicker.mock.LevelMocks;
 import com.vcasino.clicker.mock.UpgradeMocks;
 import com.vcasino.clicker.repository.AccountRepository;
 import com.vcasino.clicker.utils.TimeUtil;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,10 +44,10 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -66,7 +66,7 @@ public class AccountServiceTest {
     @Mock
     private UpgradeService upgradeService;
     @Mock
-    private RedisService redisService;
+    private EntityManager entityManager;
 
     @Spy
     private AccountMapper accountMapper = new AccountMapperImpl();
@@ -78,100 +78,80 @@ public class AccountServiceTest {
     void iniMapperDependencies() {
         UpgradeMapper upgradeMapper = new UpgradeMapperImpl();
         ConditionMapper conditionMapper = new ConditionMapperImpl();
-        SectionMapper sectionMapper = new SectionMapperImpl();
 
         ReflectionTestUtils.setField(accountMapper, "upgradeMapper", upgradeMapper);
         ReflectionTestUtils.setField(accountMapper, "upgradeService", upgradeService);
-        ReflectionTestUtils.setField(upgradeMapper, "sectionMapper", sectionMapper);
         ReflectionTestUtils.setField(upgradeMapper, "conditionMapper", conditionMapper);
     }
 
     @Test
     @DisplayName("Create Account")
     void createAccount() {
-        Upgrade mockedUpgrade = UpgradeMocks.getUpgradeMock("Facebook", 0);
-        when(upgradeService.getInitialUpgrades()).thenReturn(List.of(mockedUpgrade));
-        when(levelService.getLevelAccordingNetWorth(AccountConstants.BALANCE_COINS)).thenReturn(LevelMocks.getLevelMock(1));
-
-        SectionUpgradesDto sectionUpgrade = SectionUpgradesDto.builder()
-                .order(0)
-                .section("Social")
-                .upgrades(List.of(UpgradeMocks.getUpgradeDtoMock("Facebook", 0)))
-                .build();
-
-        when(upgradeService.getSectionUpgradesList()).thenReturn(List.of(sectionUpgrade));
-
         Account mockedAccount = AccountMocks.getAccountMock(1L);
-        mockedAccount.setUpgrades(List.of(mockedUpgrade));
 
+        when(levelService.getLevelAccordingNetWorth(AccountConstants.BALANCE_COINS)).thenReturn(LevelMocks.getLevelMock(1));
         when(accountRepository.save(any(Account.class))).thenReturn(mockedAccount);
 
-        AccountDto response = accountService.createAccount(1L, mockedAccount.getUsername(), null);
+        accountService.createAccount(1L, mockedAccount.getUsername(), null);
 
-        verify(accountMapper, times(1)).toDto(any(Account.class));
-        verify(redisService, times(1)).save(eq("account:1"), any(Account.class), any(Long.class));
-
-        assertEquals(mockedAccount.getLevel().getValue(), response.getLevel());
-        assertEquals(mockedAccount.getBalanceCoins(), response.getBalanceCoins());
-        assertEquals(mockedAccount.getNetWorth(), response.getNetWorth());
-        assertEquals(mockedAccount.getUpgrades().size(), response.getSectionUpgrades().size());
-        assertEquals(1, response.getSectionUpgrades().size());
-        assertEquals(mockedUpgrade.getName(), response.getSectionUpgrades().get(0).getUpgrades().get(0).getName());
-        assertEquals(mockedUpgrade.getLevel(), response.getSectionUpgrades().get(0).getUpgrades().get(0).getLevel());
-        assertTrue(response.getSectionUpgrades().get(0).getUpgrades().get(0).getAvailable());
-        assertEquals(mockedAccount.getPassiveEarnPerHour(), response.getPassiveEarnPerHour());
-        assertEquals(mockedAccount.getAvailableTaps(), response.getAvailableTaps());
-        assertEquals(mockedAccount.getLevel().getMaxTaps(), response.getMaxTaps());
-        assertEquals(mockedAccount.getLevel().getEarnPerTap(), response.getEarnPerTap());
-        assertEquals(mockedAccount.getLevel().getTapsRecoverPerSec(), response.getTapsRecoverPerSec());
-        assertFalse(mockedAccount.getFrozen());
+        verify(accountRepository, times(1)).save(any(Account.class));
     }
 
     @Test
     @DisplayName("Mapper sets the available field correctly")
     void accountMapperWorksCorrectly() {
-        Upgrade mockedUpgrade = UpgradeMocks.getUpgradeMock("X", 0);
-        Upgrade mockedUpgradeWithCondition = UpgradeMocks.getUpgradeMock("Facebook", 0);
-        mockedUpgradeWithCondition.setCondition(ConditionMocks.getConditionMock("X", 1));
+        Upgrade userUpgrade = UpgradeMocks.getUpgradeMock("X", 1);
+        Upgrade userUpgradeWithCondition = UpgradeMocks.getUpgradeMock("Facebook", 1);
+        userUpgradeWithCondition.setCondition(ConditionMocks.getConditionMock("X", 2));
 
-        List<Upgrade> upgrades = List.of(mockedUpgrade, mockedUpgradeWithCondition);
-
-        SectionUpgradesDto sectionUpgrade = SectionUpgradesDto.builder()
-                .order(0)
-                .section("Social")
-                .upgrades(List.of(
-                        UpgradeMocks.getUpgradeDtoMock("Facebook", 0),
-                        UpgradeMocks.getUpgradeDtoMock("X", 0))
-                )
-                .build();
-
-        when(upgradeService.getSectionUpgradesList()).thenReturn(List.of(sectionUpgrade));
-
-        when(upgradeService.getInitialUpgrades()).thenReturn(upgrades);
-        when(levelService.getLevelAccordingNetWorth(AccountConstants.BALANCE_COINS)).thenReturn(LevelMocks.getLevelMock(1));
+        List<Upgrade> userUpgrades = List.of(userUpgrade, userUpgradeWithCondition);
 
         Account mockedAccount = AccountMocks.getAccountMock(1L);
-        mockedAccount.setUpgrades(upgrades);
+        mockedAccount.setUpgrades(userUpgrades);
 
-        when(accountRepository.save(any(Account.class))).thenReturn(mockedAccount);
+        UpgradeDto x = UpgradeMocks.getUpgradeDtoMock("X", 0);
+        UpgradeDto facebook = UpgradeMocks.getUpgradeDtoMock("Facebook", 0);
+        UpgradeDto youtube = UpgradeMocks.getUpgradeDtoMock("YouTube", 0);
 
-        AccountDto response = accountService.createAccount(1L, mockedAccount.getUsername(), null);
+        SectionUpgradesDto sectionUpgrades = SectionUpgradesDto.builder()
+                .order(0)
+                .section("Social")
+                .upgrades(List.of(x, facebook, youtube))
+                .build();
 
-        verify(accountMapper, times(1)).toDto(any(Account.class));
+        when(upgradeService.getSectionUpgradesList()).thenReturn(List.of(sectionUpgrades));
+        when(upgradeService.getAllUpgradesIncludingMissing(mockedAccount)).thenReturn(
+                Map.of(
+                        userUpgrade.getName(), userUpgrade,
+                        userUpgradeWithCondition.getName(), userUpgradeWithCondition,
+                        youtube.getName(), UpgradeMocks.getUpgradeMock(youtube.getName(), youtube.getLevel())
+                )
+        );
+
+        mockGetById(mockedAccount.getId(), mockedAccount);
+        mockAccountSave(mockedAccount);
+
+        AccountResponse response = accountService.getAccount(1L);
+
+        verify(accountMapper, times(1)).toResponse(any(Account.class));
+        verify(accountMapper, times(1)).toDto(mockedAccount);
 
         assertEquals(1, response.getSectionUpgrades().size());
-        assertEquals(2, response.getSectionUpgrades().get(0).getUpgrades().size());
+        assertEquals(3, response.getSectionUpgrades().getFirst().getUpgrades().size());
 
-        assertEquals(upgrades.size(), response.getSectionUpgrades().get(0).getUpgrades().size());
+        assertNotEquals(userUpgrades.size(), response.getSectionUpgrades().getFirst().getUpgrades().size());
+
 
         Map<String, Boolean> responseUpgrades = new HashMap<>();
-        response.getSectionUpgrades().get(0).getUpgrades()
+        response.getSectionUpgrades().getFirst().getUpgrades()
                 .forEach(u -> responseUpgrades.put(u.getName(), u.getAvailable()));
 
         assertTrue(responseUpgrades.containsKey("X"));
         assertTrue(responseUpgrades.containsKey("Facebook"));
+        assertTrue(responseUpgrades.containsKey("YouTube"));
 
         assertTrue(responseUpgrades.get("X"), "X should be available, but it is not");
+        assertTrue(responseUpgrades.get("YouTube"), "YouTube should be available, but it is not");
         assertFalse(responseUpgrades.get("Facebook"), "Facebook shouldn't be available, but it is");
     }
 
@@ -181,20 +161,7 @@ public class AccountServiceTest {
         Account account = AccountMocks.getAccountMock(1L);
         account.setId(1L);
 
-        mockGetById(account.getId(), account, false);
-        Account foundAccount = accountService.getById(account.getId());
-        assertEquals(account.getId(), foundAccount.getId());
-
-        assertThrows(AppException.class, () -> accountService.getById(account.getId() + 1));
-    }
-
-    @Test
-    @DisplayName("Get account by id from redis cache")
-    void getAccountByIdFromRedisCache() {
-        Account account = AccountMocks.getAccountMock(1L);
-        account.setId(1L);
-
-        mockGetById(account.getId(), account, true);
+        mockGetById(account.getId(), account);
         Account foundAccount = accountService.getById(account.getId());
         assertEquals(account.getId(), foundAccount.getId());
 
@@ -349,50 +316,97 @@ public class AccountServiceTest {
 
         account.setFrozen(true);
 
-        mockGetById(account.getId(), account, false);
+        mockGetById(account.getId(), account);
 
         assertThrows(AppException.class, () -> accountService.getById(1L));
     }
 
     @Test
-    @DisplayName("Buy upgrade")
-    void buyUpgrade() {
+    @DisplayName("Buy first upgrade")
+    void buyFirstUpgrade() {
         Account account = AccountMocks.getAccountMock(1L);
-        mockGetById(account.getId(), account, false);
+        mockGetById(account.getId(), account);
         mockAccountSave(account);
 
-        Upgrade toBuy = UpgradeMocks.getUpgradeMock("1", 0);
-        List<Upgrade> upgrades = new ArrayList<>();
-        upgrades.add(toBuy);
-        upgrades.add(UpgradeMocks.getUpgradeMock("2", 0));
-        account.setUpgrades(upgrades);
+        Upgrade toBuy = UpgradeMocks.getUpgradeMock("X", 0);
 
         account.setBalanceCoins(new BigDecimal(1000));
 
-        Upgrade expectedNew = UpgradeMocks.getUpgradeMock("1", 1, 100);
+        Upgrade expectedNew = UpgradeMocks.getUpgradeMock("X", 1, 100);
 
-        when(upgradeService.findUpgradeInAccount(account, toBuy.getName(), toBuy.getLevel())).thenReturn(toBuy);
+        when(upgradeService.findUpgradeInAccount(account, toBuy.getName())).thenReturn(Optional.empty());
+        when(upgradeService.findUpgrade(toBuy.getName(), toBuy.getLevel())).thenReturn(toBuy);
         when(upgradeService.findUpgrade(toBuy.getName(), toBuy.getLevel() + 1)).thenReturn(expectedNew);
-        when(upgradeService.calculatePassiveEarnPerHour(any())).thenReturn(expectedNew.getProfitPerHour() + upgrades.get(1).getProfitPerHour());
+        when(accountRepository.addUpgrade(account.getId(), toBuy.getName(), expectedNew.getLevel())).thenReturn(1);
 
-        BuyUpgradeRequest upgradeUpdateRequest = new BuyUpgradeRequest(toBuy.getName(), toBuy.getLevel());
+        BuyUpgradeRequest upgradeUpdateRequest = new BuyUpgradeRequest(toBuy.getName());
         accountService.buyUpgrade(upgradeUpdateRequest, account.getId());
 
-        List<Upgrade> updatedUpgrades = account.getUpgrades();
-        assertEquals(2, updatedUpgrades.size());
-        assertEquals(100, account.getPassiveEarnPerHour());
+        List<Upgrade> accountUpgrades = account.getUpgrades();
+        assertEquals(1, accountUpgrades.size());
+        assertEquals(expectedNew.getProfitPerHour(), account.getPassiveEarnPerHour());
         assertEquals(new BigDecimal(0), account.getBalanceCoins());
-        assertTrue(updatedUpgrades.stream().anyMatch(u -> u.getName().equals(expectedNew.getName())
-                && u.getLevel().equals(expectedNew.getLevel())));
-        assertFalse(updatedUpgrades.stream().anyMatch(u -> u.getName().equals(toBuy.getName())
-                && u.getLevel().equals(toBuy.getLevel())));
+        assertEquals(expectedNew.getName(), accountUpgrades.getFirst().getName());
+        assertEquals(expectedNew.getLevel(), accountUpgrades.getFirst().getLevel());
+    }
+
+    @Test
+    @DisplayName("Level up upgrade")
+    void levelUpUpgrade() {
+        Account account = AccountMocks.getAccountMock(1L);
+
+        List<Upgrade> existingUpgrades = new ArrayList<>();
+        Upgrade x = UpgradeMocks.getUpgradeMock("X", 1);
+        Upgrade snapchat = UpgradeMocks.getUpgradeMock("Snapchat", 1);
+        Upgrade youtube = UpgradeMocks.getUpgradeMock("YouTube", 1);
+        existingUpgrades.add(x);
+        existingUpgrades.add(snapchat);
+        existingUpgrades.add(youtube);
+        account.setUpgrades(existingUpgrades);
+
+        mockGetById(account.getId(), account);
+        mockAccountSave(account);
+
+        int initialPassiveEarn = existingUpgrades.stream().mapToInt(Upgrade::getProfitPerHour).sum();
+        account.setPassiveEarnPerHour(initialPassiveEarn);
+
+        account.setBalanceCoins(new BigDecimal(1000));
+
+        Upgrade newUpgrade = UpgradeMocks.getUpgradeMock(x.getName(), 2, 200);
+
+        when(upgradeService.findUpgradeInAccount(account, x.getName())).thenReturn(Optional.of(x));
+        when(upgradeService.findUpgrade(x.getName(), x.getLevel() + 1)).thenReturn(newUpgrade);
+        when(accountRepository.updateUpgradeLevel(account.getId(), x.getName(), newUpgrade.getLevel())).thenReturn(1);
+
+        BuyUpgradeRequest upgradeUpdateRequest = new BuyUpgradeRequest(x.getName());
+        accountService.buyUpgrade(upgradeUpdateRequest, account.getId());
+
+        List<Upgrade> accountUpgrades = account.getUpgrades();
+        assertEquals(3, accountUpgrades.size());
+        assertEquals(initialPassiveEarn - x.getProfitPerHour() + newUpgrade.getProfitPerHour(), account.getPassiveEarnPerHour());
+        assertEquals(new BigDecimal(0), account.getBalanceCoins());
+
+        int lvl1Upgrades = 0;
+        int lvl2Upgrades = 0;
+        for (Upgrade upgrade : accountUpgrades) {
+            if (upgrade.getLevel() == 1) {
+                lvl1Upgrades++;
+            } else if (upgrade.getLevel() == 2) {
+                lvl2Upgrades++;
+            }
+        }
+
+        assertEquals(2, lvl1Upgrades);
+        assertEquals(1, lvl2Upgrades);
+
+        assertTrue(accountUpgrades.stream().anyMatch(u -> u.getName().equals(x.getName()) && u.getLevel().equals(2)));
     }
 
     @Test
     @DisplayName("Upgrade is already max level")
     void upgradeNotInAccount() {
         Account account = AccountMocks.getAccountMock(1L);
-        mockGetById(account.getId(), account, false);
+        mockGetById(account.getId(), account);
 
         Upgrade toBuy = UpgradeMocks.getUpgradeMock("1", 10);
         toBuy.setMaxLevel(true);
@@ -401,8 +415,8 @@ public class AccountServiceTest {
         upgrades.add(UpgradeMocks.getUpgradeMock("2", 0));
         account.setUpgrades(upgrades);
 
-        when(upgradeService.findUpgradeInAccount(account, toBuy.getName(), toBuy.getLevel())).thenReturn(toBuy);
-        BuyUpgradeRequest upgradeUpdateRequest = new BuyUpgradeRequest(toBuy.getName(), toBuy.getLevel());
+        when(upgradeService.findUpgradeInAccount(account, toBuy.getName())).thenReturn(Optional.of(toBuy));
+        BuyUpgradeRequest upgradeUpdateRequest = new BuyUpgradeRequest(toBuy.getName());
 
         assertThrows(AppException.class, () -> accountService.buyUpgrade(upgradeUpdateRequest, account.getId()));
     }
@@ -411,7 +425,7 @@ public class AccountServiceTest {
     @DisplayName("Buy upgrade not enough money")
     void buyUpgradeNotEnoughMoney() {
         Account account = AccountMocks.getAccountMock(1L);
-        mockGetById(account.getId(), account, false);
+        mockGetById(account.getId(), account);
 
         Upgrade toUpdate = UpgradeMocks.getUpgradeMock("1", 0);
         toUpdate.setPrice(10000);
@@ -422,9 +436,9 @@ public class AccountServiceTest {
 
         account.setBalanceCoins(new BigDecimal(toUpdate.getPrice() - 1));
 
-        when(upgradeService.findUpgradeInAccount(account, toUpdate.getName(), toUpdate.getLevel())).thenReturn(toUpdate);
+        when(upgradeService.findUpgradeInAccount(account, toUpdate.getName())).thenReturn(Optional.of(toUpdate));
 
-        BuyUpgradeRequest upgradeUpdateRequest = new BuyUpgradeRequest(toUpdate.getName(), toUpdate.getLevel());
+        BuyUpgradeRequest upgradeUpdateRequest = new BuyUpgradeRequest(toUpdate.getName());
         assertThrows(AppException.class, () -> accountService.buyUpgrade(upgradeUpdateRequest, account.getId()));
     }
 
@@ -443,9 +457,9 @@ public class AccountServiceTest {
 
         account.setBalanceCoins(new BigDecimal(1000));
 
-        when(upgradeService.findUpgradeInAccount(account, toUpdate.getName(), toUpdate.getLevel())).thenReturn(toUpdate);
+        when(upgradeService.findUpgradeInAccount(account, toUpdate.getName())).thenReturn(Optional.of(toUpdate));
 
-        BuyUpgradeRequest upgradeUpdateRequest = new BuyUpgradeRequest(toUpdate.getName(), toUpdate.getLevel());
+        BuyUpgradeRequest upgradeUpdateRequest = new BuyUpgradeRequest(toUpdate.getName());
         assertThrows(AppException.class, () -> accountService.buyUpgrade(upgradeUpdateRequest, account.getId()));
     }
 
@@ -460,13 +474,8 @@ public class AccountServiceTest {
         return Timestamp.from(Instant.ofEpochMilli(value));
     }
 
-    private void mockGetById(Long id, Account account, boolean redisCache) {
-        if (redisCache) {
-            when(redisService.get("account:" + id, Account.class)).thenReturn(account);
-        } else {
-            when(redisService.get("account:" + id, Account.class)).thenReturn(null);
-            when(accountRepository.findById(id)).thenReturn(Optional.of(account));
-        }
+    private void mockGetById(Long id, Account account) {
+        when(accountRepository.findById(id)).thenReturn(Optional.of(account));
     }
 
     private void mockAccountSave(Account account) {

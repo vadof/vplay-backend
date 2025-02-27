@@ -1,7 +1,6 @@
 package com.vcasino.clicker.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,6 +16,4 @@ import lombok.experimental.FieldDefaults;
 public class BuyUpgradeRequest {
     @NotBlank(message = "Field cannot be blank")
     String upgradeName;
-    @NotNull(message = "Field cannot be null")
-    Integer upgradeLevel;
 }

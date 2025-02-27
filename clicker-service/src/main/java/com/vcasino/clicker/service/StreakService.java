@@ -10,11 +10,11 @@ import com.vcasino.clicker.exception.AppException;
 import com.vcasino.clicker.repository.StreakRepository;
 import com.vcasino.clicker.utils.TimeUtil;
 import jakarta.annotation.PostConstruct;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;

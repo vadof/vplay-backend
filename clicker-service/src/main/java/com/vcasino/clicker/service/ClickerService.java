@@ -20,7 +20,6 @@ public class ClickerService {
 
     private final AccountService accountService;
 
-    // TODO do not return AccountDto with upgrades to reduce data amount
     @Transactional
     public AccountDto tap(Tap tap, Long accountId) {
         Account account = accountService.getById(accountId);
