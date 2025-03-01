@@ -24,6 +24,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,9 +77,22 @@ public class AuthenticationService {
 
     public void registerAdmin(UserDto userDto) {
         User user = validateUserFields(userDto, Role.ADMIN);
+
+        User createdBy = getCurrentUserAsEntity();
+        user.setInvitedBy(createdBy);
         userRepository.save(user);
+
         log.info("Admin#{} saved to database", user.getId());
-        userProducer.sendUserCreated(user.getId(), user.getUsername(), null);
+        userProducer.sendUserCreated(user.getId(), user.getUsername(), createdBy.getUsername());
+    }
+
+    private User getCurrentUserAsEntity() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            log.error("No user currently logged while executing this operation");
+            throw new AppException(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return (User) authentication.getPrincipal();
     }
 
     private User validateUserFields(UserDto userDto, Role role) {

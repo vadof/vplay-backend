@@ -31,5 +31,6 @@ eureka:
 config:
   production: ${PRODUCTION}
   client-url: ${CLIENT_URL}
+  admin-client-url: ${ADMIN_CLIENT_URL}
   jwt:
     public-key-path: ${PUBLIC_KEY_PATH}

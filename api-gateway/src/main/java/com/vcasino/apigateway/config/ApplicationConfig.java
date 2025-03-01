@@ -13,6 +13,7 @@ public class ApplicationConfig {
 
     private Boolean production;
     private String clientUrl;
+    private String adminClientUrl;
     private JwtProperties jwt;
 
     @Setter

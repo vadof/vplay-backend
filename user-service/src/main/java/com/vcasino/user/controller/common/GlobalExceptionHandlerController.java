@@ -1,4 +1,4 @@
-package com.vcasino.user.controller;
+package com.vcasino.user.controller.common;
 
 import com.vcasino.user.exception.AppException;
 import io.swagger.v3.oas.annotations.Operation;

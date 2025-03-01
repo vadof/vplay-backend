@@ -67,7 +67,8 @@ public class SecurityConfiguration {
 
     private String[] adminEndpoints() {
         return new String[]{
-                "/api/*/users/auth/admin/**"
+                "/api/*/users/auth/admin/**",
+                "/api/*/users/admin/**",
         };
     }
 

@@ -39,6 +39,7 @@ public class GatewayConfig {
         corsConfiguration.setAllowedHeaders(List.of(HttpHeaders.CONTENT_TYPE, HttpHeaders.AUTHORIZATION));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PATCH", "PUT", "DELETE"));
         corsConfiguration.addAllowedOrigin(applicationConfig.getClientUrl());
+        corsConfiguration.addAllowedOrigin(applicationConfig.getAdminClientUrl());
         corsConfiguration.addExposedHeader(HttpHeaders.SET_COOKIE);
         UrlBasedCorsConfigurationSource corsConfigurationSource = new UrlBasedCorsConfigurationSource();
         corsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
