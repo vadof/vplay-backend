@@ -17,6 +17,7 @@ import com.vcasino.user.kafka.producer.UserProducer;
 import com.vcasino.user.mapper.UserMapper;
 import com.vcasino.user.repository.UserRepository;
 import com.vcasino.user.utils.RegexUtil;
+import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
@@ -24,8 +25,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,24 +74,14 @@ public class AuthenticationService {
         return options;
     }
 
-    public void registerAdmin(UserDto userDto) {
+    public void registerAdmin(UserDto userDto, @Nullable User registeredBy) {
         User user = validateUserFields(userDto, Role.ADMIN);
 
-        User createdBy = getCurrentUserAsEntity();
-        user.setInvitedBy(createdBy);
+        user.setInvitedBy(registeredBy);
         userRepository.save(user);
 
         log.info("Admin#{} saved to database", user.getId());
-        userProducer.sendUserCreated(user.getId(), user.getUsername(), createdBy.getUsername());
-    }
-
-    private User getCurrentUserAsEntity() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            log.error("No user currently logged while executing this operation");
-            throw new AppException(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return (User) authentication.getPrincipal();
+        userProducer.sendUserCreated(user.getId(), user.getUsername(), registeredBy != null ? registeredBy.getUsername() : null);
     }
 
     private User validateUserFields(UserDto userDto, Role role) {

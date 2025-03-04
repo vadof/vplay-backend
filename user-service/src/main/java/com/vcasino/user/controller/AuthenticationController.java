@@ -9,6 +9,8 @@ import com.vcasino.user.dto.auth.TokenRefreshRequest;
 import com.vcasino.user.dto.auth.TokenRefreshResponse;
 import com.vcasino.user.dto.email.EmailConfirmation;
 import com.vcasino.user.dto.email.EmailTokenOptionsDto;
+import com.vcasino.user.entity.User;
+import com.vcasino.user.exception.AppException;
 import com.vcasino.user.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -21,6 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,7 +58,7 @@ public class AuthenticationController {
     @PostMapping(value = "/admin/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> registerAdmin(@RequestBody @Valid UserDto userDto) {
         log.info("REST request to register Admin");
-        authenticationService.registerAdmin(userDto);
+        authenticationService.registerAdmin(userDto, getCurrentUserAsEntity());
         return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 
@@ -118,6 +122,15 @@ public class AuthenticationController {
         log.info("REST request to delete pending user with email {}", tokenOptions.getEmail());
         authenticationService.deletePendingUser(tokenOptions);
         return ResponseEntity.ok().body(null);
+    }
+
+    private User getCurrentUserAsEntity() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            log.error("No user currently logged while executing this operation");
+            throw new AppException(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return (User) authentication.getPrincipal();
     }
 
 }

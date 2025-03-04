@@ -142,7 +142,7 @@ public class AuthenticationServiceTests {
         adminMock.setPassword(strongPassword);
         when(userRepository.save(any())).thenReturn(adminMock);
 
-        authenticationService.registerAdmin(toSave);
+        authenticationService.registerAdmin(toSave, null);
 
         verify(userRepository, times(1)).save(userArgumentCaptor.capture());
 
@@ -286,7 +286,7 @@ public class AuthenticationServiceTests {
 
         for (String password : badPasswords) {
             toSave.setPassword(password);
-            AppException exception = assertThrows(AppException.class, () -> authenticationService.registerAdmin(toSave));
+            AppException exception = assertThrows(AppException.class, () -> authenticationService.registerAdmin(toSave, null));
             assertTrue(exception.getMessage().contains("Password") || exception.getMessage().contains("password"));
         }
     }
