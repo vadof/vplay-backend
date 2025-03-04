@@ -2,7 +2,7 @@ package com.vcasino.clicker.service;
 
 import com.vcasino.clicker.entity.Account;
 import com.vcasino.clicker.entity.Upgrade;
-import com.vcasino.clicker.entity.id.key.UpgradeKey;
+import com.vcasino.clicker.entity.key.UpgradeKey;
 import com.vcasino.clicker.exception.AppException;
 import com.vcasino.clicker.mock.AccountMocks;
 import com.vcasino.clicker.mock.UpgradeMocks;

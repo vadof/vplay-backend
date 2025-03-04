@@ -15,6 +15,7 @@
         <module>api-gateway</module>
         <module>user-service</module>
         <module>clicker-service</module>
+        <module>clicker-data-service</module>
     </modules>
 
     <properties>

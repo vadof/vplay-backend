@@ -4,10 +4,12 @@ import com.vcasino.clicker.config.constants.ClickerConstants;
 import com.vcasino.clicker.dto.AccountDto;
 import com.vcasino.clicker.dto.Tap;
 import com.vcasino.clicker.entity.Account;
+import com.vcasino.clicker.kafka.message.ClickEvent;
 import com.vcasino.clicker.utils.SuspiciousTapAction;
 import com.vcasino.clicker.utils.TimeUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,8 @@ import java.math.BigDecimal;
 public class ClickerService {
 
     private final AccountService accountService;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final static String KAFKA_CLICK_TOPIC = "click-events";
 
     @Transactional
     public AccountDto tap(Tap tap, Long accountId) {
@@ -58,6 +62,8 @@ public class ClickerService {
         account.setLastSyncDate(TimeUtil.toTimestamp(tap.getTimestamp()));
 
         account = accountService.save(account);
+
+        kafkaTemplate.send(KAFKA_CLICK_TOPIC, new ClickEvent(accountId, tap.getAmount()));
 
         return accountService.toDto(account);
     }

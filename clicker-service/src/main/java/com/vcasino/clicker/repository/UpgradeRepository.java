@@ -1,7 +1,7 @@
 package com.vcasino.clicker.repository;
 
 import com.vcasino.clicker.entity.Upgrade;
-import com.vcasino.clicker.entity.id.key.UpgradeKey;
+import com.vcasino.clicker.entity.key.UpgradeKey;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

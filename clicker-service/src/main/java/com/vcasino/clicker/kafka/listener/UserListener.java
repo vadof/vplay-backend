@@ -24,7 +24,11 @@ public class UserListener extends AbstractListener {
     }
 
     @RetryableTopic(backoff = @Backoff(value = 2000))
-    @KafkaListener(id = "clicker-service-group", topics = "user-create")
+    @KafkaListener(
+            groupId = "clicker-service-group",
+            topics = "user-create",
+            containerFactory = "kafkaListenerContainerFactory"
+    )
     public void handle(String data, Acknowledgment ack) {
         log.info("Received user-create event - {}", data);
         UserCreate userData = fromJson(data, UserCreate.class);

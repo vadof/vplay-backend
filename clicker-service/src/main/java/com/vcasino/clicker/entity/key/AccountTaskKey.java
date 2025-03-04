@@ -1,4 +1,4 @@
-package com.vcasino.clicker.entity.id.key;
+package com.vcasino.clicker.entity.key;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

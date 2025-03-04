@@ -4,7 +4,7 @@ import com.vcasino.clicker.dto.SectionUpgradesDto;
 import com.vcasino.clicker.dto.UpgradeDto;
 import com.vcasino.clicker.entity.Account;
 import com.vcasino.clicker.entity.Upgrade;
-import com.vcasino.clicker.entity.id.key.UpgradeKey;
+import com.vcasino.clicker.entity.key.UpgradeKey;
 import com.vcasino.clicker.exception.AppException;
 import com.vcasino.clicker.mapper.UpgradeMapper;
 import com.vcasino.clicker.repository.UpgradeRepository;

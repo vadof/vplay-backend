@@ -11,7 +11,7 @@ import com.vcasino.clicker.entity.Account;
 import com.vcasino.clicker.entity.AccountTaskRewardReceived;
 import com.vcasino.clicker.entity.Task;
 import com.vcasino.clicker.entity.enums.TaskType;
-import com.vcasino.clicker.entity.id.key.AccountTaskKey;
+import com.vcasino.clicker.entity.key.AccountTaskKey;
 import com.vcasino.clicker.exception.AppException;
 import com.vcasino.clicker.mapper.TaskMapper;
 import com.vcasino.clicker.repository.AccountTaskRewardsReceivedRepository;

@@ -197,5 +197,11 @@
     <changeSet author="vadim" id="table/account-task-reward-received.sql">
         <sqlFile path="table/account-task-reward-received.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
+    <changeSet author="vadim" id="table/account-clicks.sql">
+        <sqlFile path="table/account-clicks.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+    </changeSet>
+    <changeSet author="vadim" id="table/total-clicks.sql">
+        <sqlFile path="table/total-clicks.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+    </changeSet>
 
 </databaseChangeLog>

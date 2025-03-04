@@ -1,6 +1,6 @@
 package com.vcasino.clicker.entity;
 
-import com.vcasino.clicker.entity.id.key.UpgradeKey;
+import com.vcasino.clicker.entity.key.UpgradeKey;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
