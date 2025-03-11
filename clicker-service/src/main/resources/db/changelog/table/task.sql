@@ -9,6 +9,7 @@ CREATE TABLE task
     reward_coins     INTEGER      NOT NULL,
     valid_from       TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     ends_in          TIMESTAMP(0) NULL,
+    created_at       TIMESTAMP(0) NOT NULL,
 
     CONSTRAINT pk_reward PRIMARY KEY (id),
     CONSTRAINT chk_reward_reward_coins_positive CHECK (reward_coins > 0),

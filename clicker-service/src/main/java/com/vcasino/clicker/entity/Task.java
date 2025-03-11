@@ -63,6 +63,9 @@ public class Task {
     @Column(name = "ends_in")
     LocalDateTime endsIn;
 
+    @Column(name = "created_at")
+    LocalDateTime createdAt;
+
     @PrePersist
     @PreUpdate
     private void validateLink() {

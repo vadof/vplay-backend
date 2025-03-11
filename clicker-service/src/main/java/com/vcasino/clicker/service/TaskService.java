@@ -3,9 +3,12 @@ package com.vcasino.clicker.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.vcasino.clicker.config.IntegratedService;
 import com.vcasino.clicker.dto.AccountDto;
+import com.vcasino.clicker.dto.DateRange;
 import com.vcasino.clicker.dto.task.AddTaskRequest;
+import com.vcasino.clicker.dto.task.SupportedTaskServices;
 import com.vcasino.clicker.dto.task.TaskDto;
 import com.vcasino.clicker.dto.task.TaskRewardRequest;
+import com.vcasino.clicker.dto.task.TaskUpdateRequest;
 import com.vcasino.clicker.dto.youtube.VideoInfo;
 import com.vcasino.clicker.entity.Account;
 import com.vcasino.clicker.entity.AccountTaskRewardReceived;
@@ -27,9 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -80,7 +81,8 @@ public class TaskService {
 
         if (closestEndsIn != null) {
             long ttlSeconds = Duration.between(now, closestEndsIn).getSeconds();
-            redisService.save(TASK_CACHE_KEY, tasks, ttlSeconds);
+            long oneWeekInSeconds = 604800;
+            redisService.save(TASK_CACHE_KEY, tasks, Math.min(ttlSeconds, oneWeekInSeconds));
         } else {
             redisService.save(TASK_CACHE_KEY, tasks);
         }
@@ -88,16 +90,22 @@ public class TaskService {
         return tasks;
     }
 
-    public Map<TaskType, List<IntegratedService>> getSupportedServicesByTaskType() {
-        Map<TaskType, List<IntegratedService>> map = new HashMap<>();
+    public List<SupportedTaskServices> getSupportedServicesByTaskType() {
+        List<SupportedTaskServices> supportedTaskServices = new ArrayList<>();
+
         for (TaskType taskType : TaskType.values()) {
+            List<IntegratedService> services = new ArrayList<>();
+
             for (IntegratedService service : IntegratedService.values()) {
                 if (taskType.serviceIsSupported(service)) {
-                    map.computeIfAbsent(taskType, r -> new ArrayList<>()).add(service);
+                    services.add(service);
                 }
             }
+
+            supportedTaskServices.add(new SupportedTaskServices(taskType, services));
         }
-        return map;
+
+        return supportedTaskServices;
     }
 
     public VideoInfo getVideoInfo(String videoId, IntegratedService integratedService) {
@@ -130,6 +138,38 @@ public class TaskService {
         }
     }
 
+    @Transactional
+    public void updateTask(Integer taskId, TaskUpdateRequest updateRequest) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new AppException("Task not found", HttpStatus.NOT_FOUND));
+
+        task.setName(updateRequest.getName());
+        task.setRewardCoins(updateRequest.getRewardCoins());
+
+        DateRange dateRange = updateRequest.getDateRange();
+        boolean startUpdated = !dateRange.getStart().equals(task.getValidFrom());
+        boolean endUpdated = (dateRange.getEnd() != null && task.getEndsIn() != null && !dateRange.getEnd().equals(task.getEndsIn()))
+                || (dateRange.getEnd() == null && task.getEndsIn() != null)
+                || (dateRange.getEnd() != null && task.getEndsIn() == null);
+
+        if (startUpdated || endUpdated) {
+            if (dateRange.getEnd() != null && dateRange.getEnd().isBefore(dateRange.getStart())) {
+                throw new AppException("The end date cannot be earlier than the start date", HttpStatus.BAD_REQUEST);
+            }
+
+            task.setValidFrom(dateRange.getStart());
+            task.setEndsIn(dateRange.getEnd());
+        }
+
+        task.setName(updateRequest.getName());
+        task.setRewardCoins(updateRequest.getRewardCoins());
+
+        taskRepository.save(task);
+        cacheAvailableTasks(taskRepository.findAllInInterval(LocalDateTime.now()));
+
+        log.info("Task#{} updated", task.getId());
+    }
+
     private Task addWatchTask(AddTaskRequest request) {
         Task task = new Task();
         setCommonFields(task, request);
@@ -160,6 +200,7 @@ public class TaskService {
         task.setRewardCoins(request.getRewardCoins());
         task.setValidFrom(request.getDateRange().getStart());
         task.setEndsIn(request.getDateRange().getEnd());
+        task.setCreatedAt(LocalDateTime.now());
     }
 
     private String getSubscribeLink(String id, IntegratedService integratedService) {

@@ -1,6 +1,7 @@
 package com.vcasino.apigateway.config;
 
 import com.google.common.net.HttpHeaders;
+import com.vcasino.apigateway.filter.AdminFilter;
 import com.vcasino.apigateway.filter.AuthFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.cloud.gateway.route.RouteLocator;
@@ -18,6 +19,7 @@ import java.util.List;
 public class GatewayConfig {
 
     private final AuthFilter authFilter;
+    private final AdminFilter adminFilter;
     private final ApplicationConfig applicationConfig;
 
     @Bean
@@ -29,6 +31,9 @@ public class GatewayConfig {
                 .route("clicker-service", r -> r.path("/api/*/clicker/**")
                         .filters(f -> f.filter(authFilter))
                         .uri("lb://clicker-service"))
+                .route("clicker-data", r -> r.path("/api/*/clicker-data/**")
+                        .filters(f -> f.filter(adminFilter))
+                        .uri("lb://clicker-data-service"))
                 .build();
     }
 

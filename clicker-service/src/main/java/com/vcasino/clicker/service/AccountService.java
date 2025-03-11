@@ -70,6 +70,11 @@ public class AccountService {
 
     }
 
+    public Account getByIdForce(Long id) {
+        return accountRepository.findById(id).orElseThrow(() ->
+                new AppException("Account#" + id + " not found", HttpStatus.NOT_FOUND));
+    }
+
     public Account getById(Long id) {
         Account account = accountRepository.findById(id).orElseThrow(() ->
                 new AppException("Account#" + id + " not found", HttpStatus.NOT_FOUND));
