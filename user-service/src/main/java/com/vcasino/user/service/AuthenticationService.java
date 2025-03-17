@@ -1,5 +1,7 @@
 package com.vcasino.user.service;
 
+import com.vcasino.common.kafka.Topic;
+import com.vcasino.common.kafka.event.UserCreateEvent;
 import com.vcasino.user.config.ApplicationConfig;
 import com.vcasino.user.config.securiy.JwtService;
 import com.vcasino.user.dto.UserDto;
@@ -13,7 +15,6 @@ import com.vcasino.user.entity.Token;
 import com.vcasino.user.entity.TokenType;
 import com.vcasino.user.entity.User;
 import com.vcasino.user.exception.AppException;
-import com.vcasino.user.kafka.producer.UserProducer;
 import com.vcasino.user.mapper.UserMapper;
 import com.vcasino.user.repository.UserRepository;
 import com.vcasino.user.utils.RegexUtil;
@@ -23,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -42,7 +44,6 @@ import static com.vcasino.user.utils.EmailTemplate.buildEmailConfirmationTemplat
 public class AuthenticationService {
 
     private final UserRepository userRepository;
-    private final UserProducer userProducer;
     private final UserMapper userMapper;
 
     private final PasswordEncoder passwordEncoder;
@@ -54,6 +55,8 @@ public class AuthenticationService {
     private final CookieService cookieService;
 
     private final ApplicationConfig applicationConfig;
+
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     @Transactional
     public EmailTokenOptionsDto registerUser(UserDto userDto, String ref) {
@@ -81,7 +84,7 @@ public class AuthenticationService {
         userRepository.save(user);
 
         log.info("Admin#{} saved to database", user.getId());
-        userProducer.sendUserCreated(user.getId(), user.getUsername(), registeredBy != null ? registeredBy.getUsername() : null);
+        sendUserCreated(user.getId(), user.getUsername(), registeredBy != null ? registeredBy.getUsername() : null);
     }
 
     private User validateUserFields(UserDto userDto, Role role) {
@@ -193,7 +196,7 @@ public class AuthenticationService {
         log.info("User#{} has activated the account", user.getId());
 
         User invitedBy = user.getInvitedBy();
-        userProducer.sendUserCreated(user.getId(), user.getUsername(), invitedBy == null ? null : invitedBy.getUsername());
+        sendUserCreated(user.getId(), user.getUsername(), invitedBy == null ? null : invitedBy.getUsername());
 
         HttpHeaders headers = null;
         if (includeHeaders) {
@@ -202,6 +205,11 @@ public class AuthenticationService {
         }
 
         return new AuthenticationResponse(jwtToken, refreshToken.getToken(), userMapper.toDto(user), headers);
+    }
+
+    public void sendUserCreated(Long id, String username, @Nullable String invitedBy) {
+        log.info("Send user-create event for \"{}\"", username);
+        kafkaTemplate.send(Topic.USER_CREATE.getName(), new UserCreateEvent(id, username, invitedBy));
     }
 
     @Transactional(noRollbackFor = AppException.class)

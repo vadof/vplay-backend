@@ -194,14 +194,17 @@
     <changeSet author="vadim" id="table/task.sql">
         <sqlFile path="table/task.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
-    <changeSet author="vadim" id="table/account-task-reward-received.sql">
-        <sqlFile path="table/account-task-reward-received.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+    <changeSet author="vadim" id="table/account-completed-tasks.sql">
+        <sqlFile path="table/account-completed-tasks.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
     <changeSet author="vadim" id="table/account-clicks.sql">
         <sqlFile path="table/account-clicks.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
     <changeSet author="vadim" id="table/total-clicks.sql">
         <sqlFile path="table/total-clicks.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+    </changeSet>
+    <changeSet author="vadim" id="table/outbox-events.sql">
+        <sqlFile path="table/outbox-events.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
 
 </databaseChangeLog>

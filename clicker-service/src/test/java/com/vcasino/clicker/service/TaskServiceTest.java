@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.vcasino.clicker.config.IntegratedService;
 import com.vcasino.clicker.dto.DateRange;
 import com.vcasino.clicker.dto.task.AddTaskRequest;
+import com.vcasino.clicker.dto.task.SupportedTaskServices;
 import com.vcasino.clicker.dto.task.TaskRewardRequest;
 import com.vcasino.clicker.dto.task.TaskDto;
 import com.vcasino.clicker.dto.youtube.VideoInfo;
@@ -37,7 +38,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -126,11 +126,11 @@ public class TaskServiceTest {
     @Test
     @DisplayName(value = "Get supported services by task type")
     void getSupportedServicesByRewardType() {
-        Map<TaskType, List<IntegratedService>> res = taskService.getSupportedServicesByTaskType();
+        List<SupportedTaskServices> supportedTaskServices = taskService.getSupportedServicesByTaskType();
 
-        for (var entry : res.entrySet()) {
-            assertNotNull(entry.getKey());
-            assertTrue(entry.getValue() != null && !entry.getValue().isEmpty());
+        for (SupportedTaskServices service : supportedTaskServices) {
+            assertNotNull(service.getServices());
+            assertNotNull(service.getTaskType());
         }
     }
 

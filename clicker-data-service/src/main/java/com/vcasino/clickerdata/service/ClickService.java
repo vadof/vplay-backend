@@ -1,9 +1,9 @@
 package com.vcasino.clickerdata.service;
 
-import com.vcasino.clickerdata.kafka.message.ClickEvent;
 import com.vcasino.clickerdata.repository.TotalClicksRepository;
 import com.vcasino.clickerdata.scheduler.ClickScheduler;
 import com.vcasino.clickerdata.utils.SchedulerExecutionDate;
+import com.vcasino.common.kafka.event.ClickEvent;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.HashOperations;

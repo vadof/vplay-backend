@@ -53,7 +53,7 @@ public class AccountStatisticsService {
                     (SELECT COUNT(*) FROM account_upgrade au WHERE au.account_id = a.id) AS purchasedUpgrades,
                     s.day AS streak,
                     s.last_received_date AS lastReceivedStreakDay,
-                    (SELECT COUNT(*) FROM account_task_reward_received attr WHERE attr.account_id = a.id) AS completedTasks,
+                    (SELECT COUNT(*) FROM account_completed_tasks act WHERE act.account_id = a.id) AS completedTasks,
                     (SELECT SUM(ac.amount) FROM account_clicks ac WHERE ac.account_id = a.id) AS totalClicks,
                     best_day.amount AS bestClickDayAmount,
                     best_day.date AS bestClickDayDate

@@ -16,6 +16,8 @@
         <module>user-service</module>
         <module>clicker-service</module>
         <module>clicker-data-service</module>
+        <module>wallet-service</module>
+        <module>common</module>
     </modules>
 
     <properties>

@@ -45,7 +45,7 @@ public class YoutubeService extends VideoService {
             if (totalResults == 0) {
                 throw new AppException("Video not found.", HttpStatus.BAD_REQUEST);
             } else if (totalResults > 1) {
-                throw new AppException("Found " + totalResults + " results. Please type correct id.", HttpStatus.BAD_REQUEST);
+                throw new AppException("Found " + totalResults + " results. Please type correct eventId.", HttpStatus.BAD_REQUEST);
             }
 
             JsonNode items = root.path("items");

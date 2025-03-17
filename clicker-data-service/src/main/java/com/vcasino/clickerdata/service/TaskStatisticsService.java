@@ -28,7 +28,7 @@ public class TaskStatisticsService {
                    t.valid_from,
                    t.ends_in,
                    t.created_at,
-                   (SELECT COUNT(*) FROM account_task_reward_received attr where attr.task_id = t.id) as completedTimes
+                   (SELECT COUNT(*) FROM account_completed_tasks act where act.task_id = t.id) as completedTimes
             FROM task t
             """;
 

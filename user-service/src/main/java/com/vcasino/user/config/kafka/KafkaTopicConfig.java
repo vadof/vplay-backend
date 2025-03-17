@@ -1,5 +1,6 @@
 package com.vcasino.user.config.kafka;
 
+import com.vcasino.common.kafka.Topic;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.config.TopicConfig;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +28,28 @@ public class KafkaTopicConfig {
                 .replicas(1)
                 .partitions(5)
                 .config(TopicConfig.RETENTION_MS_CONFIG, "86400000") // 1 Day
+                .config(TopicConfig.CLEANUP_POLICY_CONFIG, TopicConfig.CLEANUP_POLICY_DELETE)
+                .build();
+    }
+
+    @Bean
+    public NewTopic currencyConversionTopic() {
+        return TopicBuilder
+                .name(Topic.CURRENCY_CONVERSION.getName())
+                .replicas(1)
+                .partitions(3)
+                .config(TopicConfig.RETENTION_MS_CONFIG, "604800000") // 7 Days
+                .config(TopicConfig.CLEANUP_POLICY_CONFIG, TopicConfig.CLEANUP_POLICY_DELETE)
+                .build();
+    }
+
+    @Bean
+    public NewTopic processedEventsTopic() {
+        return TopicBuilder
+                .name(Topic.PROCESSED_EVENTS.getName())
+                .replicas(1)
+                .partitions(3)
+                .config(TopicConfig.RETENTION_MS_CONFIG, "604800000") // 7 Days
                 .config(TopicConfig.CLEANUP_POLICY_CONFIG, TopicConfig.CLEANUP_POLICY_DELETE)
                 .build();
     }

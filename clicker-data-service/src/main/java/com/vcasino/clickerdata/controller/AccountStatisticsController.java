@@ -32,7 +32,7 @@ public class AccountStatisticsController {
             @RequestParam(required = false) Long id,
             @RequestParam(required = false) String username) {
         if (id == null && Strings.isEmpty(username)) {
-            throw new AppException("Either 'id' or 'username' must be provided", HttpStatus.BAD_REQUEST);
+            throw new AppException("Either 'eventId' or 'username' must be provided", HttpStatus.BAD_REQUEST);
         }
 
         log.info("REST request to get User information");

@@ -17,7 +17,7 @@ import lombok.experimental.FieldDefaults;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "account_task_reward_received")
+@Table(name = "account_completed_tasks")
 @Getter
 @Setter
 @IdClass(AccountTaskKey.class)

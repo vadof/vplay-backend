@@ -25,12 +25,16 @@
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <junit.version>4.13.2</junit.version>
         <springdoc.version>2.3.0</springdoc.version>
-        <kafka.version>3.2.2</kafka.version>
         <jedis.version>5.1.2</jedis.version>
         <redisson.version>3.45.0</redisson.version>
         <prometheus.version>1.13.1</prometheus.version>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>com.vcasino</groupId>
+            <artifactId>common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -60,11 +64,6 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>${springdoc.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka</artifactId>
-            <version>${kafka.version}</version>
         </dependency>
 
         <dependency>

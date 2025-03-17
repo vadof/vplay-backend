@@ -1,5 +1,7 @@
 package com.vcasino.user.service;
 
+import com.vcasino.common.kafka.Topic;
+import com.vcasino.common.kafka.event.UserCreateEvent;
 import com.vcasino.user.config.ApplicationConfig;
 import com.vcasino.user.config.securiy.JwtService;
 import com.vcasino.user.dto.UserDto;
@@ -13,7 +15,6 @@ import com.vcasino.user.entity.Token;
 import com.vcasino.user.entity.TokenType;
 import com.vcasino.user.entity.User;
 import com.vcasino.user.exception.AppException;
-import com.vcasino.user.kafka.producer.UserProducer;
 import com.vcasino.user.mapper.UserMapper;
 import com.vcasino.user.mapper.UserMapperImpl;
 import com.vcasino.user.repository.UserRepository;
@@ -30,6 +31,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -75,9 +77,6 @@ public class AuthenticationServiceTests {
     private UserRepository userRepository;
 
     @Mock
-    private UserProducer userProducer;
-
-    @Mock
     private JwtService jwtService;
 
     @Spy
@@ -97,6 +96,9 @@ public class AuthenticationServiceTests {
 
     @Mock
     private CookieService cookieService;
+
+    @Mock
+    private KafkaTemplate<String, Object> kafkaTemplate;
 
     private ApplicationConfig applicationConfig;
 
@@ -517,7 +519,8 @@ public class AuthenticationServiceTests {
         verify(userRepository, times(1)).save(user);
         verify(jwtService, times(1)).generateJwtToken(user);
         verify(tokenService, times(1)).createToken(user, TokenType.REFRESH);
-        verify(userProducer, times(1)).sendUserCreated(user.getId(), user.getUsername(), null);
+        verify(kafkaTemplate, times(1))
+                .send(Topic.USER_CREATE.getName(), new UserCreateEvent(user.getId(), user.getUsername(), null));
 
         assertEquals(savedUser.getName(), user.getName());
         assertTrue(user.getActive());
@@ -653,7 +656,8 @@ public class AuthenticationServiceTests {
         verify(userRepository, times(1)).save(user);
         verify(jwtService, times(1)).generateJwtToken(user);
         verify(tokenService, times(1)).createToken(user, TokenType.REFRESH);
-        verify(userProducer, times(1)).sendUserCreated(user.getId(), user.getUsername(), null);
+        verify(kafkaTemplate, times(1))
+                .send(Topic.USER_CREATE.getName(), new UserCreateEvent(user.getId(), user.getUsername(), null));
 
         assertEquals(savedUser.getName(), user.getName());
         assertTrue(user.getActive());
