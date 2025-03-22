@@ -3,8 +3,7 @@ package com.vcasino.common.kafka;
 public enum Topic {
     USER_CREATE("user-create"),
     CLICK_EVENTS("click-events"),
-    CURRENCY_CONVERSION("currency-conversion"),
-    PROCESSED_EVENTS("processed-events");
+    COMPLETED_EVENTS("completed-events");
 
     private final String name;
 

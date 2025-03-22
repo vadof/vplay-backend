@@ -42,6 +42,12 @@ spring:
     change-log: classpath:db/changelog/changelog-master.xml
   kafka:
     bootstrap-servers: localhost:29092
+  cloud:
+    openfeign:
+      httpclient:
+        enabled: false
+      okhttp:
+        enabled: true
 
 management:
   endpoints:

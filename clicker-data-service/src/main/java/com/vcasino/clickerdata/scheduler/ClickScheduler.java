@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Component
 @AllArgsConstructor
@@ -47,21 +46,17 @@ public class ClickScheduler {
 
     private void syncClicksWithDatabase(SchedulerExecutionDate executionDate) {
         RLock lock = redissonClient.getLock(executionDate.getNow().toString());
-        try {
-            if (lock.tryLock(0, 30, TimeUnit.SECONDS)) {
-                try {
-                    log.info("Synchronize clicks with database for {} - {}",
-                            executionDate.getLastExecution(), executionDate.getNow());
-                    clickService.syncClicksWithDatabase(executionDate);
-                } finally {
-                    lock.unlock();
-                }
-            } else {
-                log.info("Another instance is executing clicks syncing for {} - {}",
+        if (lock.tryLock()) {
+            try {
+                log.info("Synchronize clicks with database for {} - {}",
                         executionDate.getLastExecution(), executionDate.getNow());
+                clickService.syncClicksWithDatabase(executionDate);
+            } finally {
+                lock.unlock();
             }
-        } catch (InterruptedException e) {
-            log.error("Lock acquisition failed: {}", e.getMessage());
+        } else {
+            log.info("Another instance is executing clicks syncing for {} - {}",
+                    executionDate.getLastExecution(), executionDate.getNow());
         }
     }
 }

@@ -32,6 +32,9 @@ public class Wallet {
     @Column(name = "balance", nullable = false, columnDefinition = "DECIMAL(14,2)")
     BigDecimal balance;
 
+    @Column(name = "reserved", nullable = false, columnDefinition = "DECIMAL(14,2)")
+    BigDecimal reserved;
+
     @Column(name = "updated_at", nullable = false)
     Instant updatedAt;
 

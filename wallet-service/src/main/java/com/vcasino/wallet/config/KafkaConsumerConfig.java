@@ -16,7 +16,7 @@ public class KafkaConsumerConfig {
     @Bean
     public KafkaListenerContainerFactory<
             ConcurrentMessageListenerContainer<String, Object>> kafkaListenerContainerFactory() {
-        return ConsumerConfigs.buildKafkaListenerContainerFactory("wallet-service-group", bootstrapServers);
+        return ConsumerConfigs.buildKafkaListenerContainerFactory("wallet-service-group", bootstrapServers, 5);
     }
 }
 

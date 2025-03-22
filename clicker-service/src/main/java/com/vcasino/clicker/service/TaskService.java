@@ -11,13 +11,13 @@ import com.vcasino.clicker.dto.task.TaskRewardRequest;
 import com.vcasino.clicker.dto.task.TaskUpdateRequest;
 import com.vcasino.clicker.dto.youtube.VideoInfo;
 import com.vcasino.clicker.entity.Account;
-import com.vcasino.clicker.entity.AccountTaskRewardReceived;
+import com.vcasino.clicker.entity.AccountCompletedTasks;
 import com.vcasino.clicker.entity.Task;
 import com.vcasino.clicker.entity.enums.TaskType;
 import com.vcasino.clicker.entity.key.AccountTaskKey;
 import com.vcasino.clicker.exception.AppException;
 import com.vcasino.clicker.mapper.TaskMapper;
-import com.vcasino.clicker.repository.AccountTaskRewardsReceivedRepository;
+import com.vcasino.clicker.repository.AccountTaskCompletedRepository;
 import com.vcasino.clicker.repository.TaskRepository;
 import com.vcasino.clicker.service.video.YoutubeService;
 import com.vcasino.clicker.utils.TimeUtil;
@@ -44,7 +44,7 @@ public class TaskService {
 
     private final YoutubeService youtubeService;
     private final TaskRepository taskRepository;
-    private final AccountTaskRewardsReceivedRepository accountTasksRepository;
+    private final AccountTaskCompletedRepository accountTasksRepository;
     private final TaskMapper mapper;
     private final AccountService accountService;
 
@@ -224,10 +224,10 @@ public class TaskService {
 
         validateClickTime(taskRequest.getClickTime(), task);
 
-        AccountTaskRewardReceived taskCompleted = AccountTaskRewardReceived.builder()
+        AccountCompletedTasks taskCompleted = AccountCompletedTasks.builder()
                 .accountId(accountId)
                 .taskId(task.getId())
-                .receivedAt(TimeUtil.getCurrentDateTime())
+                .completedAt(TimeUtil.getCurrentDateTime())
                 .build();
 
         accountTasksRepository.save(taskCompleted);

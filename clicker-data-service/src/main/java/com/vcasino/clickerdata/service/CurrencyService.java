@@ -1,56 +1,48 @@
 package com.vcasino.clickerdata.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vcasino.clickerdata.entity.EventStatus;
-import com.vcasino.clickerdata.entity.EventType;
-import com.vcasino.clickerdata.entity.OutboxEvent;
-import com.vcasino.clickerdata.repository.OutboxEventRepository;
-import com.vcasino.common.kafka.Topic;
-import com.vcasino.common.kafka.event.CurrencyConversionEvent;
-import com.vcasino.common.kafka.event.CurrencyConversionPayload;
-import com.vcasino.common.kafka.event.ProcessedEvent;
+import com.vcasino.clickerdata.client.EventStatusRequest;
+import com.vcasino.clickerdata.client.EventStatus;
+import com.vcasino.clickerdata.client.EventStatusResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 @Slf4j
 public class CurrencyService {
 
-    private final OutboxEventRepository outboxEventRepository;
-    private final KafkaTemplate<String, Object> kafkaTemplate;
-    private final ObjectMapper objectMapper;
+    private final JdbcTemplate jdbcTemplate;
 
-    public void extractInProgressEventsAndSendAgain() {
-        List<OutboxEvent> events = outboxEventRepository
-                .findAllByEventTypeAndStatusAndCreatedAtBefore(
-                        EventType.CURRENCY_CONVERSION, EventStatus.IN_PROGRESS, Instant.now().minusSeconds(60));
-
-        log.info("Found {} IN_PROGRESS events", events.size());
-
-        for (OutboxEvent event : events) {
-            CurrencyConversionEvent message =
-                    new CurrencyConversionEvent(event.getId(), event.getAggregateId(), fromString(event.getPayload()));
-            kafkaTemplate.send(Topic.CURRENCY_CONVERSION.getName(), message);
+    @Transactional(readOnly = true)
+    public EventStatusResponse getEventStatuses(EventStatusRequest request) {
+        List<UUID> eventIds = request.getEventIds();
+        if (eventIds.isEmpty()) {
+            return new EventStatusResponse(Collections.emptyMap());
         }
+
+        String inSql = String.join(",", Collections.nCopies(eventIds.size(), "?"));
+        String sql = "SELECT event_id FROM transaction WHERE event_id IN (" + inSql + ")";
+
+        Set<UUID> existingEventIds = new HashSet<>(jdbcTemplate.queryForList(sql, UUID.class, eventIds.toArray()));
+
+        Map<UUID, EventStatus> eventStatuses = eventIds.stream()
+                .collect(Collectors.toMap(
+                        id -> id,
+                        id -> existingEventIds.contains(id) ? EventStatus.COMPLETED : EventStatus.CANCELLED
+                ));
+
+        return new EventStatusResponse(eventStatuses);
     }
 
-    public void processEvent(ProcessedEvent processedEventMessage) {
-        outboxEventRepository.updateStatusById(processedEventMessage.eventId(), EventStatus.COMPLETED);
-    }
-
-    private CurrencyConversionPayload fromString(String payload) {
-        try {
-            return objectMapper.readValue(payload, CurrencyConversionPayload.class);
-        } catch (JsonProcessingException e) {
-            log.error("Error converting payload {}", payload, e);
-            throw new RuntimeException(e);
-        }
-    }
 }

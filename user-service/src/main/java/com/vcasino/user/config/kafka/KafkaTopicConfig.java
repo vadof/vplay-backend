@@ -35,20 +35,9 @@ public class KafkaTopicConfig {
     @Bean
     public NewTopic currencyConversionTopic() {
         return TopicBuilder
-                .name(Topic.CURRENCY_CONVERSION.getName())
+                .name(Topic.COMPLETED_EVENTS.getName())
                 .replicas(1)
-                .partitions(3)
-                .config(TopicConfig.RETENTION_MS_CONFIG, "604800000") // 7 Days
-                .config(TopicConfig.CLEANUP_POLICY_CONFIG, TopicConfig.CLEANUP_POLICY_DELETE)
-                .build();
-    }
-
-    @Bean
-    public NewTopic processedEventsTopic() {
-        return TopicBuilder
-                .name(Topic.PROCESSED_EVENTS.getName())
-                .replicas(1)
-                .partitions(3)
+                .partitions(5)
                 .config(TopicConfig.RETENTION_MS_CONFIG, "604800000") // 7 Days
                 .config(TopicConfig.CLEANUP_POLICY_CONFIG, TopicConfig.CLEANUP_POLICY_DELETE)
                 .build();

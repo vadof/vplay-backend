@@ -2,13 +2,22 @@ server:
   port: 8300
 
 spring:
+  threads:
+    virtual:
+      enabled: true
   application:
     name: wallet-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/wallet_service
+    url: jdbc:postgresql://localhost:5432/wallet_service?tcpKeepAlive=true
     username: postgres
     password: admin
     driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 50
+      minimum-idle: 10
+      validation-timeout: 1000
+      idle-timeout: 30000
+      leak-detection-threshold: 5000
   jpa:
     hibernate:
       ddl-auto: none

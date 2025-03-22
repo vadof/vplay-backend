@@ -203,8 +203,8 @@
     <changeSet author="vadim" id="table/total-clicks.sql">
         <sqlFile path="table/total-clicks.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
-    <changeSet author="vadim" id="table/outbox-events.sql">
-        <sqlFile path="table/outbox-events.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+    <changeSet author="vadim" id="table/transaction.sql">
+        <sqlFile path="table/transaction.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
 
 </databaseChangeLog>

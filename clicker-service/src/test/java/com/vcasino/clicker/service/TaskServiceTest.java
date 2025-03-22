@@ -9,7 +9,7 @@ import com.vcasino.clicker.dto.task.TaskRewardRequest;
 import com.vcasino.clicker.dto.task.TaskDto;
 import com.vcasino.clicker.dto.youtube.VideoInfo;
 import com.vcasino.clicker.entity.Account;
-import com.vcasino.clicker.entity.AccountTaskRewardReceived;
+import com.vcasino.clicker.entity.AccountCompletedTasks;
 import com.vcasino.clicker.entity.Task;
 import com.vcasino.clicker.entity.enums.TaskType;
 import com.vcasino.clicker.entity.key.AccountTaskKey;
@@ -18,7 +18,7 @@ import com.vcasino.clicker.mapper.TaskMapper;
 import com.vcasino.clicker.mapper.TaskMapperImpl;
 import com.vcasino.clicker.mock.AccountMocks;
 import com.vcasino.clicker.mock.TaskMocks;
-import com.vcasino.clicker.repository.AccountTaskRewardsReceivedRepository;
+import com.vcasino.clicker.repository.AccountTaskCompletedRepository;
 import com.vcasino.clicker.repository.TaskRepository;
 import com.vcasino.clicker.service.video.YoutubeService;
 import com.vcasino.clicker.utils.TimeUtil;
@@ -70,7 +70,7 @@ public class TaskServiceTest {
     TaskRepository taskRepository;
 
     @Mock
-    AccountTaskRewardsReceivedRepository accountTaskRewardsRepository;
+    AccountTaskCompletedRepository accountTaskRewardsRepository;
 
     @Spy
     TaskMapper mapper = new TaskMapperImpl();
@@ -82,7 +82,7 @@ public class TaskServiceTest {
     ArgumentCaptor<Task> taskArgumentCaptor;
 
     @Captor
-    ArgumentCaptor<AccountTaskRewardReceived> accountRewardsReceivedArgumentCaptor;
+    ArgumentCaptor<AccountCompletedTasks> accountRewardsReceivedArgumentCaptor;
 
     @InjectMocks
     TaskService taskService;
@@ -251,13 +251,13 @@ public class TaskServiceTest {
         verify(accountService, times(1)).updateAccount(account);
         verify(accountService, times(1)).toDto(account);
 
-        AccountTaskRewardReceived savedRecord = accountRewardsReceivedArgumentCaptor.getValue();
+        AccountCompletedTasks savedRecord = accountRewardsReceivedArgumentCaptor.getValue();
         assertEquals(account.getId(), savedRecord.getAccountId());
         assertEquals(task.getId(), savedRecord.getTaskId());
 
-        boolean dateEqual = savedRecord.getReceivedAt().isEqual(currentDate);
-        boolean recordDateBetween = currentDate.isBefore(savedRecord.getReceivedAt())
-                && currentDate.plusSeconds(5).isAfter(savedRecord.getReceivedAt());
+        boolean dateEqual = savedRecord.getCompletedAt().isEqual(currentDate);
+        boolean recordDateBetween = currentDate.isBefore(savedRecord.getCompletedAt())
+                && currentDate.plusSeconds(5).isAfter(savedRecord.getCompletedAt());
 
         assertTrue(dateEqual || recordDateBetween);
     }

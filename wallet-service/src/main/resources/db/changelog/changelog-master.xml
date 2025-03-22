@@ -6,8 +6,8 @@
         <sqlFile path="table/wallet.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
 
-    <changeSet author="vadim" id="table/processed-events.sql">
-        <sqlFile path="table/processed-events.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+    <changeSet author="vadim" id="table/outbox-event.sql">
+        <sqlFile path="table/outbox-event.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
 
 </databaseChangeLog>

@@ -61,6 +61,20 @@ public class ConsumerConfigs {
     }
 
     public static KafkaListenerContainerFactory<
+            ConcurrentMessageListenerContainer<String, Object>> buildKafkaListenerContainerFactory(
+            String groupId, String bootstrapServers, int cocncurrency
+    ) {
+        ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        Map<String, Object> config = consumerManualAckConfig(groupId, bootstrapServers);
+
+        factory.setConsumerFactory(new DefaultKafkaConsumerFactory<>(config));
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
+        factory.setConcurrency(cocncurrency);
+
+        return factory;
+    }
+
+    public static KafkaListenerContainerFactory<
             ConcurrentMessageListenerContainer<String, Object>> buildKafkaListenerBatchFactory(
             String groupId, String bootstrapServers
     ) {
