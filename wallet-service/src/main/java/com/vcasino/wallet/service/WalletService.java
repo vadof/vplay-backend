@@ -1,5 +1,6 @@
 package com.vcasino.wallet.service;
 
+import com.vcasino.wallet.dto.BalanceDto;
 import com.vcasino.wallet.entity.Wallet;
 import com.vcasino.wallet.repository.WalletRepository;
 import lombok.AllArgsConstructor;
@@ -30,6 +31,10 @@ public class WalletService {
 
         walletRepository.save(wallet);
         log.info("Wallet#{} saved to database", id);
+    }
+
+    public BalanceDto getBalance(Long walletId) {
+        return new BalanceDto(getById(walletId).getBalance());
     }
 
     public Wallet getById(Long id) {

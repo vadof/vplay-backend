@@ -20,7 +20,7 @@ public abstract class GenericController {
         }
     }
 
-    protected Long getAccountId() {
+    protected Long getLoggedInUserId() {
         String id = request.getHeader(CustomHeader.LOGGED_IN_USER.getValue());
         if (id == null) {
             log.warn("User ID header not found");
