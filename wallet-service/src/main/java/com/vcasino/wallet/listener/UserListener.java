@@ -1,6 +1,6 @@
 package com.vcasino.wallet.listener;
 
-import com.vcasino.common.kafka.event.UserCreateEvent;
+import com.vcasino.commonkafka.event.UserCreateEvent;
 import com.vcasino.wallet.service.WalletService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

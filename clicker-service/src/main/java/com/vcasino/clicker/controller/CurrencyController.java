@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +39,7 @@ public class CurrencyController extends GenericController {
     @ApiResponse(responseCode = "200", description = "Currency conversion request is being processed",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AccountDto.class)))
     @PostMapping(value = "/vcoins/vdollars", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccountDto> convertToVDollars(@RequestBody CurrencyConversionRequest conversionRequest) {
+    public ResponseEntity<AccountDto> convertToVDollars(@Valid @RequestBody CurrencyConversionRequest conversionRequest) {
         Long accountId = getAccountId();
         log.info("REST request to convert to VDollars Account#{}, Amount: {}", accountId, conversionRequest.getAmount());
         AccountDto account = currencyService.convertToVDollars(conversionRequest, accountId);
@@ -50,7 +51,7 @@ public class CurrencyController extends GenericController {
             " Return account with updated wallet balance",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AccountWalletResponse.class)))
     @PostMapping(value = "/vdollars/vcoins", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccountWalletResponse> convertToVCoins(@RequestBody CurrencyConversionRequest conversionRequest) {
+    public ResponseEntity<AccountWalletResponse> convertToVCoins(@Valid @RequestBody CurrencyConversionRequest conversionRequest) {
         Long accountId = getAccountId();
         log.info("REST request to convert to VCoins Account#{}, Amount: {}", accountId, conversionRequest.getAmount());
         AccountWalletResponse response = currencyService.convertToVCoins(conversionRequest, accountId);

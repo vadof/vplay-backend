@@ -1,7 +1,7 @@
 package com.vcasino.user.service;
 
-import com.vcasino.common.kafka.Topic;
-import com.vcasino.common.kafka.event.UserCreateEvent;
+import com.vcasino.commonkafka.enums.Topic;
+import com.vcasino.commonkafka.event.UserCreateEvent;
 import com.vcasino.user.config.ApplicationConfig;
 import com.vcasino.user.config.securiy.JwtService;
 import com.vcasino.user.dto.UserDto;

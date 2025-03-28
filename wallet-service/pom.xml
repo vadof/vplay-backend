@@ -22,7 +22,6 @@
         <openfeign.version>4.1.3</openfeign.version>
         <postgresql.version>42.7.3</postgresql.version>
         <liquibase.version>4.24.0</liquibase.version>
-        <jedis.version>5.1.2</jedis.version>
         <redisson.version>3.45.0</redisson.version>
         <springdoc.version>2.3.0</springdoc.version>
         <lombok.version>1.18.30</lombok.version>
@@ -34,7 +33,12 @@
     <dependencies>
         <dependency>
             <groupId>com.vcasino</groupId>
-            <artifactId>common</artifactId>
+            <artifactId>common-kafka</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vcasino</groupId>
+            <artifactId>common-redis</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -95,17 +99,6 @@
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
             <version>${liquibase.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-            <version>${spring-boot.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-            <version>${jedis.version}</version>
-            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.redisson</groupId>

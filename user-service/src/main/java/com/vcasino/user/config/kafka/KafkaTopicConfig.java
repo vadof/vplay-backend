@@ -1,6 +1,6 @@
 package com.vcasino.user.config.kafka;
 
-import com.vcasino.common.kafka.Topic;
+import com.vcasino.commonkafka.enums.Topic;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.config.TopicConfig;
 import org.springframework.context.annotation.Bean;

@@ -2,7 +2,10 @@ package com.vcasino.wallet.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vcasino.common.enums.Currency;
+import com.vcasino.commonkafka.enums.Currency;
+import com.vcasino.commonredis.enums.Channel;
+import com.vcasino.commonredis.enums.NotificationType;
+import com.vcasino.commonredis.event.NotificationEvent;
 import com.vcasino.wallet.client.EventCreatedResponse;
 import com.vcasino.wallet.config.ConversionConstants;
 import com.vcasino.wallet.entity.CurrencyConversionPayload;
@@ -16,9 +19,12 @@ import com.vcasino.wallet.repository.OutboxEventRepository;
 import com.vcasino.wallet.client.InternalCurrencyConversionRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -32,6 +38,7 @@ public class CurrencyConversionService {
     private final OutboxEventRepository outboxEventRepository;
     private final WalletService walletService;
     private final ObjectMapper objectMapper;
+    private final StringRedisTemplate redisTemplate;
 
     @Transactional
     public EventCreatedResponse convertCurrency(InternalCurrencyConversionRequest request) {
@@ -83,11 +90,14 @@ public class CurrencyConversionService {
         CurrencyConversionPayload payload = fromJson(event.getPayload(), CurrencyConversionPayload.class);
         Wallet wallet = null;
 
+        NotificationEvent notification = null;
         if (payload.getFrom().equals(Currency.VCOIN) && payload.getTo().equals(Currency.VDOLLAR))
         {
             wallet = walletService.getById(event.getAggregateId());
             BigDecimal toAdd = payload.getAmount().divide(ConversionConstants.VCOINS_TO_VDOLLARS_DIVIDER, 2, RoundingMode.DOWN);
             wallet.setBalance(wallet.getBalance().add(toAdd));
+
+            notification = new NotificationEvent(NotificationType.BALANCE,  toAdd + " added to your balance", wallet.getBalance(), wallet.getId());
         }
         else if (payload.getFrom().equals(Currency.VDOLLAR) && payload.getTo().equals(Currency.VCOIN))
         {
@@ -97,6 +107,16 @@ public class CurrencyConversionService {
         else {
             log.error("Cannot finish currency conversion. Invalid currencies {} -> {}",
                     payload.getFrom(), payload.getTo());
+        }
+
+        if (notification != null) {
+            NotificationEvent finalNotification = notification;
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    redisTemplate.convertAndSend(Channel.NOTIFICATIONS.getName(), toJson(finalNotification));
+                }
+            });
         }
 
         return wallet;

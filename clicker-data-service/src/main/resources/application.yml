@@ -29,17 +29,6 @@ spring:
         order_inserts: true
         order_updates: true
         batch_versioned_data: true
-  data:
-    redis:
-      host: localhost
-      port: 6379
-      password: "my_password"
-      timeout: 6000ms
-      lettuce:
-        pool:
-          max-active: 10
-          max-idle: 5
-          min-idle: 2
   kafka:
     bootstrap-servers: localhost:29092
 

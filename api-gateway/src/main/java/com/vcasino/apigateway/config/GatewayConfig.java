@@ -37,6 +37,9 @@ public class GatewayConfig {
                 .route("clicker-service", r -> r.path("/api/*/wallet/**")
                         .filters(f -> f.filter(authFilter))
                         .uri("lb://wallet-service"))
+                .route("notification-service", r -> r.path("/notifications/stream")
+                        .filters(f -> f.filter(authFilter))
+                        .uri("lb://notification-service"))
                 .build();
     }
 

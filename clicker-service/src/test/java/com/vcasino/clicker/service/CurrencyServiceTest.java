@@ -12,9 +12,9 @@ import com.vcasino.clicker.entity.Transaction;
 import com.vcasino.clicker.exception.AppException;
 import com.vcasino.clicker.mock.AccountMocks;
 import com.vcasino.clicker.repository.TransactionRepository;
-import com.vcasino.common.enums.Currency;
-import com.vcasino.common.kafka.Topic;
-import com.vcasino.common.kafka.event.CompletedEvent;
+import com.vcasino.commonkafka.enums.Currency;
+import com.vcasino.commonkafka.enums.Topic;
+import com.vcasino.commonkafka.event.CompletedEvent;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,7 +27,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
@@ -39,6 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -58,7 +58,7 @@ public class CurrencyServiceTest {
     @Mock
     ObjectMapper objectMapper;
     @Mock
-    KafkaTemplate<String, Object> kafkaTemplate;
+    AsyncKafkaPublisher asyncKafkaPublisher;
     @Captor
     private ArgumentCaptor<Transaction> transactionArgumentCaptor;
 
@@ -93,8 +93,8 @@ public class CurrencyServiceTest {
             assertEquals(amount, createdTransaction.getAmount());
 
             verify(accountService, times(1)).save(account);
-            verify(kafkaTemplate, times(1))
-                    .send(Topic.COMPLETED_EVENTS.getName(), new CompletedEvent(feignResponse.getEventId()));
+            verify(asyncKafkaPublisher, times(1))
+                    .send(Topic.COMPLETED_EVENTS, new CompletedEvent(feignResponse.getEventId()), true);
 
             assertEquals(BigDecimal.ZERO, account.getBalanceCoins());
         }
@@ -123,8 +123,8 @@ public class CurrencyServiceTest {
 
             assertEquals(new BigDecimal(300), account.getBalanceCoins());
             verify(accountService, times(1)).save(account);
-            verify(kafkaTemplate, times(1))
-                    .send(Topic.COMPLETED_EVENTS.getName(), new CompletedEvent(feignResponse.getEventId()));
+            verify(asyncKafkaPublisher, times(1))
+                    .send(Topic.COMPLETED_EVENTS, new CompletedEvent(feignResponse.getEventId()), true);
         }
     }
 
@@ -139,7 +139,7 @@ public class CurrencyServiceTest {
 
         assertTrue(exception.getMessage().contains("Not enough"));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
-        verify(kafkaTemplate, times(0)).send(any(), any());
+        verify(asyncKafkaPublisher, times(0)).send(any(), any(), eq(true));
     }
 
     @Test
@@ -153,7 +153,7 @@ public class CurrencyServiceTest {
 
         assertTrue(exception.getMessage().contains("minimum"));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
-        verify(kafkaTemplate, times(0)).send(any(), any());
+        verify(asyncKafkaPublisher, times(0)).send(any(), any(), eq(true));
     }
 
     @Test
@@ -172,7 +172,7 @@ public class CurrencyServiceTest {
 
         assertTrue(exception.getMessage().contains("failed"));
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.getHttpStatus());
-        verify(kafkaTemplate, times(0)).send(any(), any());
+        verify(asyncKafkaPublisher, times(0)).send(any(), any(), eq(true));
     }
 
     @Test
@@ -202,8 +202,8 @@ public class CurrencyServiceTest {
             assertEquals(amount, createdTransaction.getAmount());
 
             verify(accountService, times(1)).save(account);
-            verify(kafkaTemplate, times(1))
-                    .send(Topic.COMPLETED_EVENTS.getName(), new CompletedEvent(feignResponse.getEventId()));
+            verify(asyncKafkaPublisher, times(1))
+                    .send(Topic.COMPLETED_EVENTS, new CompletedEvent(feignResponse.getEventId()), true);
 
             assertEquals(CurrencyConstants.VDOLLARS_TO_VCOINS_MULTIPLIER.multiply(amount), account.getBalanceCoins());
             assertEquals(walletResponse.getUpdatedWalletBalance(), feignResponse.getUpdatedBalance());
@@ -231,8 +231,8 @@ public class CurrencyServiceTest {
                     new CurrencyConversionRequest(new BigDecimal("1.10437534")), account.getId());
 
             verify(accountService, times(1)).save(account);
-            verify(kafkaTemplate, times(1))
-                    .send(Topic.COMPLETED_EVENTS.getName(), new CompletedEvent(feignResponse.getEventId()));
+            verify(asyncKafkaPublisher, times(1))
+                    .send(Topic.COMPLETED_EVENTS, new CompletedEvent(feignResponse.getEventId()), true);
 
             assertEquals(CurrencyConstants.VDOLLARS_TO_VCOINS_MULTIPLIER.multiply(new BigDecimal("1.10")), account.getBalanceCoins());
             assertEquals(walletResponse.getUpdatedWalletBalance(), feignResponse.getUpdatedBalance());
@@ -251,7 +251,7 @@ public class CurrencyServiceTest {
         assertTrue(exception.getMessage().contains("minimum"));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
         assertEquals(account.getBalanceCoins(), BigDecimal.ZERO);
-        verify(kafkaTemplate, times(0)).send(any(), any());
+        verify(asyncKafkaPublisher, times(0)).send(any(), any(), eq(true));
     }
 
     @Test
@@ -271,7 +271,7 @@ public class CurrencyServiceTest {
         assertTrue(exception.getMessage().contains("failed"));
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.getHttpStatus());
         assertEquals(account.getBalanceCoins(), BigDecimal.ZERO);
-        verify(kafkaTemplate, times(0)).send(any(), any());
+        verify(asyncKafkaPublisher, times(0)).send(any(), any(), eq(true));
     }
 
 

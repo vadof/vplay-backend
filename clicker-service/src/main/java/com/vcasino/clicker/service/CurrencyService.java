@@ -13,15 +13,13 @@ import com.vcasino.clicker.entity.Account;
 import com.vcasino.clicker.entity.Transaction;
 import com.vcasino.clicker.exception.AppException;
 import com.vcasino.clicker.repository.TransactionRepository;
-import com.vcasino.common.enums.Currency;
-import com.vcasino.common.kafka.Topic;
-import com.vcasino.common.kafka.event.CompletedEvent;
+import com.vcasino.commonkafka.enums.Currency;
+import com.vcasino.commonkafka.enums.Topic;
+import com.vcasino.commonkafka.event.CompletedEvent;
 import feign.FeignException;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronization;
@@ -31,6 +29,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 @Service
+@AllArgsConstructor
 @Slf4j
 public class CurrencyService {
 
@@ -38,18 +37,7 @@ public class CurrencyService {
     private final WalletClient walletClient;
     private final TransactionRepository transactionRepository;
     private final ObjectMapper objectMapper;
-    private final KafkaTemplate<String, Object> kafkaTemplate;
-
-    @Autowired
-    public CurrencyService(AccountService accountService, WalletClient walletClient,
-                           TransactionRepository transactionRepository, ObjectMapper objectMapper,
-                           @Qualifier("defaultRetryTopicKafkaTemplate") KafkaTemplate<String, Object> kafkaTemplate) {
-        this.accountService = accountService;
-        this.walletClient = walletClient;
-        this.transactionRepository = transactionRepository;
-        this.objectMapper = objectMapper;
-        this.kafkaTemplate = kafkaTemplate;
-    }
+    private final AsyncKafkaPublisher kafkaPublisher;
 
     @Transactional
     public AccountDto convertToVDollars(CurrencyConversionRequest conversionRequest, Long accountId) {
@@ -69,7 +57,7 @@ public class CurrencyService {
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
             public void afterCommit() {
-                kafkaTemplate.send(Topic.COMPLETED_EVENTS.getName(), new CompletedEvent(response.getEventId()));
+                kafkaPublisher.send(Topic.COMPLETED_EVENTS, new CompletedEvent(response.getEventId()), true);
             }
         });
 
@@ -95,7 +83,7 @@ public class CurrencyService {
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
             public void afterCommit() {
-                kafkaTemplate.send(Topic.COMPLETED_EVENTS.getName(), new CompletedEvent(response.getEventId()));
+                kafkaPublisher.send(Topic.COMPLETED_EVENTS, new CompletedEvent(response.getEventId()), true);
             }
         });
 

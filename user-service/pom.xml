@@ -34,7 +34,7 @@
     <dependencies>
         <dependency>
             <groupId>com.vcasino</groupId>
-            <artifactId>common</artifactId>
+            <artifactId>common-kafka</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>

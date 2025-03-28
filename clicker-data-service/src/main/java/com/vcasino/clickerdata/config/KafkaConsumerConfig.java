@@ -1,6 +1,6 @@
 package com.vcasino.clickerdata.config;
 
-import com.vcasino.common.kafka.config.ConsumerConfigs;
+import com.vcasino.commonkafka.config.ConsumerConfigs;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

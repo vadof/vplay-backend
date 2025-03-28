@@ -6,31 +6,22 @@ import com.vcasino.clicker.dto.Tap;
 import com.vcasino.clicker.entity.Account;
 import com.vcasino.clicker.utils.SuspiciousTapAction;
 import com.vcasino.clicker.utils.TimeUtil;
-import com.vcasino.common.kafka.Topic;
-import com.vcasino.common.kafka.event.ClickEvent;
+import com.vcasino.commonkafka.enums.Topic;
+import com.vcasino.commonkafka.event.ClickEvent;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
 @Service
+@AllArgsConstructor
 @Slf4j
 public class ClickerService {
 
     private final AccountService accountService;
-    private final KafkaTemplate<String, Object> kafkaTemplate;
-
-    @Autowired
-    public ClickerService(
-            AccountService accountService,
-            @Qualifier("atMostOnceKafkaTemplate") KafkaTemplate<String, Object> kafkaTemplate) {
-        this.accountService = accountService;
-        this.kafkaTemplate = kafkaTemplate;
-    }
+    private final AsyncKafkaPublisher kafkaPublisher;
 
     @Transactional
     public AccountDto tap(Tap tap, Long accountId) {
@@ -71,7 +62,7 @@ public class ClickerService {
 
         account = accountService.save(account);
 
-        kafkaTemplate.send(Topic.CLICK_EVENTS.getName(), new ClickEvent(accountId, tap.getAmount()));
+        kafkaPublisher.send(Topic.CLICK_EVENTS, new ClickEvent(accountId, tap.getAmount()), false);
 
         return accountService.toDto(account);
     }

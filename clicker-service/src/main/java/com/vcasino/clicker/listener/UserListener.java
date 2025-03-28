@@ -1,7 +1,7 @@
 package com.vcasino.clicker.listener;
 
 import com.vcasino.clicker.service.AccountService;
-import com.vcasino.common.kafka.event.UserCreateEvent;
+import com.vcasino.commonkafka.event.UserCreateEvent;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;

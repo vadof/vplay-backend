@@ -29,13 +29,17 @@
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <junit.version>4.13.2</junit.version>
         <springdoc.version>2.3.0</springdoc.version>
-        <jedis.version>5.1.2</jedis.version>
         <prometheus.version>1.13.1</prometheus.version>
     </properties>
     <dependencies>
         <dependency>
             <groupId>com.vcasino</groupId>
-            <artifactId>common</artifactId>
+            <artifactId>common-kafka</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vcasino</groupId>
+            <artifactId>common-redis</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -101,17 +105,6 @@
             <artifactId>postgresql</artifactId>
             <version>${postgresql.version}</version>
             <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-            <version>${spring-boot.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-            <version>${jedis.version}</version>
-            <type>jar</type>
         </dependency>
 
         <dependency>

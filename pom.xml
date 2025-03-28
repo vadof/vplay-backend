@@ -17,7 +17,9 @@
         <module>clicker-service</module>
         <module>clicker-data-service</module>
         <module>wallet-service</module>
-        <module>common</module>
+        <module>notification-service</module>
+        <module>common-kafka</module>
+        <module>common-redis</module>
     </modules>
 
     <properties>

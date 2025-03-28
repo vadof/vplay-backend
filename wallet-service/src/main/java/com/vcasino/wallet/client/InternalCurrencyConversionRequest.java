@@ -1,6 +1,6 @@
 package com.vcasino.wallet.client;
 
-import com.vcasino.common.enums.Currency;
+import com.vcasino.commonkafka.enums.Currency;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
