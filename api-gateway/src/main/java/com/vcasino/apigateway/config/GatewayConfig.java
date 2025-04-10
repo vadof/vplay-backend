@@ -34,12 +34,15 @@ public class GatewayConfig {
                 .route("clicker-data", r -> r.path("/api/*/clicker-data/**")
                         .filters(f -> f.filter(adminFilter))
                         .uri("lb://clicker-data-service"))
-                .route("clicker-service", r -> r.path("/api/*/wallet/**")
+                .route("wallet-service", r -> r.path("/api/*/wallet/**")
                         .filters(f -> f.filter(authFilter))
                         .uri("lb://wallet-service"))
                 .route("notification-service", r -> r.path("/notifications/stream")
                         .filters(f -> f.filter(authFilter))
                         .uri("lb://notification-service"))
+                .route("bet-service", r -> r.path("/api/*/bet/**")
+                        .filters(f -> f.filter(authFilter))
+                        .uri("lb://bet-service"))
                 .build();
     }
 

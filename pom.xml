@@ -18,6 +18,8 @@
         <module>clicker-data-service</module>
         <module>wallet-service</module>
         <module>notification-service</module>
+        <module>bet-service</module>
+        <module>odds-service</module>
         <module>common-kafka</module>
         <module>common-redis</module>
     </modules>

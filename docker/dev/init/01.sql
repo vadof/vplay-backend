@@ -7,6 +7,10 @@ CREATE DATABASE clicker_service;
 DROP DATABASE IF EXISTS wallet_service;
 CREATE DATABASE wallet_service;
 
+DROP DATABASE IF EXISTS bet_service;
+CREATE DATABASE bet_service;
+
 GRANT ALL PRIVILEGES ON DATABASE user_service TO "postgres";
 GRANT ALL PRIVILEGES ON DATABASE clicker_service TO "postgres";
 GRANT ALL PRIVILEGES ON DATABASE wallet_service TO "postgres";
+GRANT ALL PRIVILEGES ON DATABASE bet_service TO "postgres";

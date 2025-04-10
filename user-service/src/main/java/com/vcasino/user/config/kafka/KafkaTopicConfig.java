@@ -43,4 +43,15 @@ public class KafkaTopicConfig {
                 .build();
     }
 
+    @Bean
+    public NewTopic marketUpdateTopic() {
+        return TopicBuilder
+                .name(Topic.MARKET_UPDATE.getName())
+                .replicas(1)
+                .partitions(3)
+                .config(TopicConfig.RETENTION_MS_CONFIG, "604800000") // 7 Days
+                .config(TopicConfig.CLEANUP_POLICY_CONFIG, TopicConfig.CLEANUP_POLICY_DELETE)
+                .build();
+    }
+
 }
