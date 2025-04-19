@@ -54,3 +54,12 @@ eureka:
   instance:
     preferIpAddress: true
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+config:
+  client-url: ${CLIENT_URL}
+  s3:
+    bucket: local-bucket
+    endpoint: http://localhost:4566
+    region: us-east-1
+    access-key: test
+    secret-key: test

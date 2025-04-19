@@ -21,12 +21,10 @@ import java.util.ArrayList;
 @Slf4j
 public class AuthFilter implements GatewayFilter {
 
-    private final RouteValidator routeValidator;
     private final JwtUtil jwtUtil;
 
     @Autowired
-    public AuthFilter(RouteValidator routeValidator, JwtUtil jwtUtil) {
-        this.routeValidator = routeValidator;
+    public AuthFilter(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
     }
 
@@ -38,35 +36,34 @@ public class AuthFilter implements GatewayFilter {
 
         String path = uri.getPath();
 
-        if (routeValidator.isSecured.test(path)) {
-            if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
-                return onError(exchange, HttpStatus.UNAUTHORIZED);
-            }
-
-            String token = request.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
-            if (token != null && token.startsWith("Bearer ")) {
-                token = token.substring(7);
-            }
-
-            try {
-                if (jwtUtil.isTokenExpired(token)) {
-                    return onError(exchange, HttpStatus.UNAUTHORIZED);
-                }
-
-                Claims claims = jwtUtil.extractAllClaims(token);
-
-                if (path.contains("admin") && !hasAdminRole(claims)) {
-                    return onError(exchange, HttpStatus.FORBIDDEN);
-                }
-
-                request = request.mutate()
-                        .header("loggedInUser", getUserId(claims))
-                        .header("userRole", getRole(claims))
-                        .build();
-            } catch (Exception e) {
-                return onError(exchange, HttpStatus.UNAUTHORIZED);
-            }
+        if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
+            return onError(exchange, HttpStatus.UNAUTHORIZED);
         }
+
+        String token = request.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+
+        try {
+            if (jwtUtil.isTokenExpired(token)) {
+                return onError(exchange, HttpStatus.UNAUTHORIZED);
+            }
+
+            Claims claims = jwtUtil.extractAllClaims(token);
+
+            if (path.contains("admin") && !hasAdminRole(claims)) {
+                return onError(exchange, HttpStatus.FORBIDDEN);
+            }
+
+            request = request.mutate()
+                    .header("loggedInUser", getUserId(claims))
+                    .header("userRole", getRole(claims))
+                    .build();
+        } catch (Exception e) {
+            return onError(exchange, HttpStatus.UNAUTHORIZED);
+        }
+
         return chain.filter(exchange.mutate().request(request).build());
     }
 

@@ -15,5 +15,7 @@ public interface MatchRepository extends JpaRepository<Match, Long> {
 
     List<Match> findByStartDateBeforeAndStatus(LocalDateTime threshold, MatchStatus status);
 
+    List<Match> findByStartDateAfterAndStatusNot(LocalDateTime threshold, MatchStatus status);
+
     boolean existsByMatchPage(String page);
 }

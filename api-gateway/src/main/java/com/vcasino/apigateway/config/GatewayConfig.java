@@ -4,6 +4,7 @@ import com.google.common.net.HttpHeaders;
 import com.vcasino.apigateway.filter.AdminFilter;
 import com.vcasino.apigateway.filter.AuthFilter;
 import lombok.AllArgsConstructor;
+import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +19,8 @@ import java.util.List;
 @AllArgsConstructor
 public class GatewayConfig {
 
+    private final GatewayFilter userServiceAuthFilter;
+    private final GatewayFilter betServiceAuthFilter;
     private final AuthFilter authFilter;
     private final AdminFilter adminFilter;
     private final ApplicationConfig applicationConfig;
@@ -26,7 +29,7 @@ public class GatewayConfig {
     public RouteLocator routeLocator(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route("user-service", r -> r.path("/api/*/users/**")
-                        .filters(f -> f.filter(authFilter))
+                        .filters(f -> f.filter(userServiceAuthFilter))
                         .uri("lb://user-service"))
                 .route("clicker-service", r -> r.path("/api/*/clicker/**")
                         .filters(f -> f.filter(authFilter))
@@ -41,7 +44,7 @@ public class GatewayConfig {
                         .filters(f -> f.filter(authFilter))
                         .uri("lb://notification-service"))
                 .route("bet-service", r -> r.path("/api/*/bet/**")
-                        .filters(f -> f.filter(authFilter))
+                        .filters(f -> f.filter(betServiceAuthFilter))
                         .uri("lb://bet-service"))
                 .build();
     }
@@ -50,7 +53,7 @@ public class GatewayConfig {
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.setAllowedHeaders(List.of(HttpHeaders.CONTENT_TYPE, HttpHeaders.AUTHORIZATION));
+        corsConfiguration.setAllowedHeaders(List.of(HttpHeaders.CONTENT_TYPE, HttpHeaders.AUTHORIZATION, HttpHeaders.ORIGIN, HttpHeaders.ACCEPT, HttpHeaders.UPGRADE, HttpHeaders.CONNECTION));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PATCH", "PUT", "DELETE"));
         corsConfiguration.addAllowedOrigin(applicationConfig.getClientUrl());
         corsConfiguration.addAllowedOrigin(applicationConfig.getAdminClientUrl());

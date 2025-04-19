@@ -1,4 +1,4 @@
-package com.vcasino.bet.dto;
+package com.vcasino.bet.dto.request;
 
 import com.vcasino.bet.entity.enums.Discipline;
 import jakarta.validation.constraints.NotBlank;
@@ -10,27 +10,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RegisterTournamentRequest {
-
-    @NotBlank(message = "Title cannot be empty")
-    String title;
-
-    @NotNull(message = "Discipline cannot be empty")
+public class RegisterParticipantRequest {
+    @NotBlank(message = "Name cannot be empty")
+    String name;
+    String shortName;
+    @NotNull(message = "Discipline cannot be null")
     Discipline discipline;
-
-    String tournamentPage;
-
-    @NotNull(message = "Start date cannot be null")
-    LocalDateTime startDate;
-
-    @NotNull(message = "Start date cannot be null")
-    LocalDateTime endDate;
-
+    @NotBlank(message = "Image cannot be null")
+    String imageKey;
+    String participantPage;
 }

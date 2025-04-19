@@ -11,19 +11,18 @@ import java.util.Optional;
 public abstract class MatchParser {
 
 //    protected final WebDriver driver;
-    protected final String matchPage;
 
     public MatchParser(String matchPage) throws ParserException {
 //        System.setProperty("webdriver.chrome.driver", "C:\\chromedriver\\chromedriver.exe");
 
-        this.matchPage = matchPage;
+        System.out.println("Initialized driver with match page " + matchPage);
 //        ChromeOptions options = new ChromeOptions();
 //        this.driver = new ChromeDriver(options);
 
         try {
 //            driver.get(matchPage);
 //            Thread.sleep(5000);
-            updateMatchPage(55);
+            updateMatchPage(matchPage.equals("1") ? 55 : 1, Long.parseLong(matchPage));
         } catch (Exception e) {
 //            this.driver = null;
             throw new ParserException("Exception happened during driver initialization", e);
@@ -54,5 +53,5 @@ public abstract class MatchParser {
 //        }
     }
 
-    public abstract void updateMatchPage(int saveCounter) throws ParserException;
+    public abstract void updateMatchPage(int saveCounter, Long matchId) throws ParserException;
 }

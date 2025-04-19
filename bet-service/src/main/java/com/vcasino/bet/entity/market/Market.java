@@ -67,6 +67,9 @@ public abstract class Market {
     @Column(name = "updated_at", nullable = false)
     LocalDateTime updatedAt;
 
+    @Column(name = "dtype", insertable = false, updatable = false)
+    String type;
+
     public Market(Match match, BigDecimal outcome, BigDecimal odds) {
         this.match = match;
         this.outcome = outcome;

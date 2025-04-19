@@ -1,4 +1,4 @@
-package com.vcasino.bet.dto;
+package com.vcasino.bet.dto.request;
 
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;

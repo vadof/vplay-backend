@@ -1,14 +1,16 @@
 package com.vcasino.bet.service;
 
 import com.vcasino.bet.entity.market.Market;
+import com.vcasino.bet.entity.market.winner.WinnerMatch;
 import com.vcasino.bet.repository.MarketRepository;
+import com.vcasino.commonkafka.enums.MarketUpdateType;
 import com.vcasino.commonkafka.event.MarketUpdateEvent;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -16,58 +18,42 @@ import java.util.Optional;
 public class MarketService {
 
     private final MarketRepository marketRepository;
+    private final RedisService redisService;
 
     public void handleMarketUpdateEvent(MarketUpdateEvent event) {
-        switch (event.updateType()) {
-            case ODDS -> handleMarketOddsUpdate(event.marketIds());
-            case CLOSE -> handleMarketClose(event.marketIds());
-            case OPEN -> handleMarketOpen(event.marketIds());
-            case RESULT -> handleMarketResult(event.marketIds());
+        if (event.updateType().equals(MarketUpdateType.RESULT)) {
+            handleMarketResult(event);
+        } else {
+            handleMarketUpdate(event);
         }
     }
 
-    private void handleMarketOddsUpdate(List<Long> marketIds) {
-        for (Long marketId : marketIds) {
-            Optional<Market> optionalMarket = marketRepository.findById(marketId);
-            if (optionalMarket.isEmpty()) {
-                log.error("Market#{} not found", marketId);
-            } else {
-                log.info("Market#{} odds update -> {}", marketId, optionalMarket.get().getOdds());
+    private void handleMarketUpdate(MarketUpdateEvent event) {
+        List<Market> markets = marketRepository.findMarketsByIds(event.marketIds());
+        if (markets.isEmpty()) {
+            log.error("Markets {} not found for {} update type", event.marketIds(), event.updateType());
+            return;
+        }
+
+        redisService.updateTournamentMatchMarkets(event.matchId(), markets);
+
+        List<Market> winnerMatchMarkets = new ArrayList<>();
+
+        for (Market market : markets) {
+            if (market instanceof WinnerMatch) {
+                winnerMatchMarkets.add(market);
             }
         }
+
+        if (!winnerMatchMarkets.isEmpty()) {
+            redisService.publishUpdatedMatchEvent(event.matchId(), winnerMatchMarkets, null, false);
+        }
+
+        redisService.publishUpdatedMarketsEvent(event.matchId(), markets);
     }
 
-    private void handleMarketClose(List<Long> marketIds) {
-        for (Long marketId : marketIds) {
-            Optional<Market> optionalMarket = marketRepository.findById(marketId);
-            if (optionalMarket.isEmpty()) {
-                log.error("Market#{} not found", marketId);
-            } else {
-                log.info("Market#{} closed", marketId);
-            }
-        }
-    }
-
-    private void handleMarketOpen(List<Long> marketIds) {
-        for (Long marketId : marketIds) {
-            Optional<Market> optionalMarket = marketRepository.findById(marketId);
-            if (optionalMarket.isEmpty()) {
-                log.error("Market#{} not found", marketId);
-            } else {
-                log.info("Market#{} opened", marketId);
-            }
-        }
-    }
-
-    private void handleMarketResult(List<Long> marketIds) {
-        for (Long marketId : marketIds) {
-            Optional<Market> optionalMarket = marketRepository.findById(marketId);
-            if (optionalMarket.isEmpty()) {
-                log.error("Market#{} not found", marketId);
-            } else {
-                log.info("Market#{} result -> {}", marketId, optionalMarket.get().getResult());
-            }
-        }
+    private void handleMarketResult(MarketUpdateEvent event) {
+        // TODO HANDLE MARKET RESULTS
     }
 
 }

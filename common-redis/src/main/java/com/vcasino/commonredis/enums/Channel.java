@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Channel {
-    NOTIFICATIONS("notifications");
+    NOTIFICATIONS("notifications"),
+    BET_MATCH("bet-match"),
+    BET_MATCH_MARKETS("bet-match-markets");
 
     private final String name;
 

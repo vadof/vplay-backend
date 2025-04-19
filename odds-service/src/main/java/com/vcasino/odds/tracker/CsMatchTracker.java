@@ -12,6 +12,7 @@ import com.vcasino.odds.util.MapState;
 import com.vcasino.odds.util.ParticipantMapStatistics;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -29,25 +30,31 @@ public class CsMatchTracker {
     private final MatchMapRepository matchMapRepository;
     private final MatchRepository matchRepository;
 
+    @Async
     public void trackLiveMatchData(Match match) {
         if (watchList.containsKey(match.getMatchPage())) {
             log.warn("Match#{} already tracking", match.getId());
+            return;
         }
 
         try {
             long updateInterval = 500;
 
             // TODO replace here
-            CsMatchParser matchParser = new CsMatchParser("ddd");
+            log.info("PREPARE to start tracking Match#{}", match.getId());
+            CsMatchParser matchParser = new CsMatchParser(match.getId() + "");
 
             watchList.put(match.getMatchPage(), matchParser);
             log.info("Start tracking Match#{}", match.getId());
 
             MatchData matchData = new MatchData(matchParser, match, null, null);
 
-            int counter = 290;
+            int counter = 1;
+            if (match.getId() == 1) {
+                counter = 290;
+            }
             while (true) {
-                matchParser.updateMatchPage(counter);
+                matchParser.updateMatchPage(counter, match.getId());
 
                 switch (match.getStatus()) {
                     case LIVE -> handleLive(matchData);
@@ -61,7 +68,7 @@ public class CsMatchTracker {
 
                 Thread.sleep(updateInterval);
 
-                log.info("Status -> {} | Save_{}", match.getStatus(), counter);
+                log.info("Match#{}: Status -> {} | Save_{} | Thread -> {}", match.getId(), match.getStatus(), counter, Thread.currentThread().getName());
                 counter++;
             }
         } catch (Exception e) {
@@ -78,7 +85,7 @@ public class CsMatchTracker {
         }
 
         if (exception) {
-            oddsService.closeMarkets(match.getMarkets());
+            oddsService.closeMarkets(match, match.getMarkets());
         }
     }
 

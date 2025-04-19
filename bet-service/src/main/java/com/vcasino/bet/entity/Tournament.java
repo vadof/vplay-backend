@@ -8,8 +8,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -48,9 +46,8 @@ public class Tournament {
     @Column(name = "tournament_page")
     String tournamentPage;
 
-    @ManyToOne
-    @JoinColumn(name = "image_id", referencedColumnName = "image_id")
-    Image image;
+    @Column(name = "image_s3_key", nullable = false)
+    String image;
 
     @Column(name = "start_date", nullable = false)
     LocalDateTime startDate;

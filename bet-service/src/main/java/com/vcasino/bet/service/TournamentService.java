@@ -1,6 +1,6 @@
 package com.vcasino.bet.service;
 
-import com.vcasino.bet.dto.RegisterTournamentRequest;
+import com.vcasino.bet.dto.request.RegisterTournamentRequest;
 import com.vcasino.bet.entity.Tournament;
 import com.vcasino.bet.exception.AppException;
 import com.vcasino.bet.repository.TournamentRepository;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 public class TournamentService {
 
     private final TournamentRepository tournamentRepository;
+    private final ImageStorageService imageStorageService;
 
     public Tournament addTournament(RegisterTournamentRequest request) {
         if (!request.getStartDate().isBefore(request.getEndDate())) {
@@ -26,11 +27,15 @@ public class TournamentService {
                     .formatted(request.getTitle(), request.getDiscipline()), HttpStatus.BAD_REQUEST);
         }
 
+        if (!imageStorageService.existsByKey(request.getImageKey())) {
+            throw new AppException("Image not found", HttpStatus.NOT_FOUND);
+        }
+
         Tournament tournament = Tournament.builder()
                 .title(request.getTitle())
                 .discipline(request.getDiscipline())
                 .tournamentPage(request.getTournamentPage())
-                .image(null) // TODO
+                .image(request.getImageKey())
                 .startDate(request.getStartDate())
                 .endDate(request.getEndDate())
                 .build();

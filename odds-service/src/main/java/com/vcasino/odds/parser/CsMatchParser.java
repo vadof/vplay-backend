@@ -32,8 +32,8 @@ public class CsMatchParser extends MatchParser {
 
     // TODO remove counter
     @Override
-    public void updateMatchPage(int saveCounter) throws ParserException {
-        String filePath = "C:\\Users\\Vadim\\Desktop\\vitality_spirit\\save_" + saveCounter + ".html";
+    public void updateMatchPage(int saveCounter, Long matchId) throws ParserException {
+        String filePath = "C:\\Users\\Vadim\\Desktop\\" + matchId + "\\save_" + saveCounter + ".html";
         try {
             File inputFile = new File(filePath);
             this.matchPage = Jsoup.parse(inputFile, "UTF-8");

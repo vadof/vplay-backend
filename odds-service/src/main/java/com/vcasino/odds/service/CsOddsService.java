@@ -37,7 +37,7 @@ public class CsOddsService extends OddsService {
 
     private final MarketRepository marketRepository;
     private final MatchMapRepository matchMapRepository;
-    private final MarketUpdateService marketUpdateService;
+    private final MatchUpdateService matchUpdateService;
     private final Double ROUND_WIN_PERCENT = 0.075;
     private final List<Double> totalOverOutcomes = List.of(23.5, 22.5, 21.5, 20.5, 19.5, 18.5);
 
@@ -101,7 +101,7 @@ public class CsOddsService extends OddsService {
 
         if (totalMaps < 2) return winnerMaps;
 
-        for (int i = 1; i <= totalMaps; i++) {
+        for (int i = 1; i < totalMaps; i++) {
             double[] winProbabilities = mapWinnerProbabilities.get(i);
 
             winnerMaps.add(new WinnerMap(match, i, BigDecimal.ONE, calculateOddsFromProbability(winProbabilities[0])));
@@ -189,7 +189,7 @@ public class CsOddsService extends OddsService {
         setMapWinnerProbabilitiesBasedOnMapStatistics(match, mapsStatistics);
 
         updateWinnerMatchOdds(match);
-        updateWinnerMapOdds(match);
+        match.getMatchMaps().forEach(matchMap -> updateWinnerMapOdds(match, matchMap));
         updateTotalMapsOdds(match);
         updateHandicapOdds(match);
 
@@ -219,7 +219,7 @@ public class CsOddsService extends OddsService {
                 matchMapRepository.save(currentMap);
 
                 updateWinnerMatchOdds(match);
-                updateWinnerMapOdds(match);
+                updateWinnerMapOdds(match, currentMap);
                 updateTotalMapsOdds(match);
                 updateHandicapOdds(match);
             }
@@ -229,16 +229,18 @@ public class CsOddsService extends OddsService {
     public void updateOddsAfterRoundWinner(Match match, MatchMap currentMap) {
         if (getMinRoundsBeforeMapWin(currentMap.getParticipant1Score(), currentMap.getParticipant2Score()) <= 2) {
             closeMarketsOnCurrentMap(match, currentMap);
+            matchMapRepository.save(currentMap);
         } else {
             updateMapWinnerProbabilitiesBasedOnScore(currentMap);
             matchMapRepository.save(currentMap);
 
             updateWinnerMatchOdds(match);
-            updateWinnerMapOdds(match);
+            updateWinnerMapOdds(match, currentMap);
             updateTotalMapsOdds(match);
             updateTotalMapRoundsOdds(match, currentMap);
             updateHandicapOdds(match);
         }
+        matchUpdateService.sendMatchUpdate(match.getId(), true, false);
     }
 
     public void updateOddsAfterMapWinner(Match match, MatchMap currentMap) {
@@ -250,6 +252,8 @@ public class CsOddsService extends OddsService {
 
         setResultsToHandicapMarkets(match);
         setResultsToTotalMapsMarket(match);
+
+        matchUpdateService.sendMatchUpdate(match.getId(), true, false);
     }
 
     public void updateOddsAfterMatchWinner(Match match, MatchMap currentMap) {
@@ -259,6 +263,7 @@ public class CsOddsService extends OddsService {
         setResultsToTotalMapsMarket(match);
         setResultsToHandicapMarkets(match);
         cancelNotCompletedMarkets(match);
+        matchUpdateService.sendMatchUpdate(match.getId(), false, true);
     }
 
     private void updateWinnerMatchOdds(Match match) {
@@ -271,6 +276,7 @@ public class CsOddsService extends OddsService {
         int[] wins = getMapWins(match);
 
         int lastIncludedMap = maps.size();
+        // TODO change logic
         if (wins[0] - wins[1] != 0) {
             int mapsFinished = maps.stream().filter(m -> m.getWinner() != null).toList().size();
             int needWins = maps.size() / 2 + 1 - mapsFinished;
@@ -302,25 +308,19 @@ public class CsOddsService extends OddsService {
         winProbability1 /= totalProbability;
         winProbability2 /= totalProbability;
 
-        setMarketOddsWith2Outcomes(markets, BigDecimal.ONE, winProbability1, winProbability2);
+        setMarketOddsWith2Outcomes(match, markets, BigDecimal.ONE, winProbability1, winProbability2);
     }
 
-    private void updateWinnerMapOdds(Match match) {
+    private void updateWinnerMapOdds(Match match, MatchMap map) {
+        int totalMaps = Integer.parseInt(match.getFormat().substring(2));
+        if (totalMaps == map.getMapNumber()) return;
+
         List<WinnerMap> markets = match.getMarkets().stream()
-                .filter(m -> m instanceof WinnerMap)
+                .filter(m -> m instanceof WinnerMap && ((WinnerMap) m).getMapNumber().equals(map.getMapNumber()))
                 .map(m -> (WinnerMap) m)
                 .toList();
 
-        List<MatchMap> matchMaps = match.getMatchMaps();
-        if (matchMaps.size() < 2) return;
-
-        for (MatchMap matchMap : matchMaps) {
-            if (matchMap.getWinner() != null) continue;
-            List<WinnerMap> marketsByMap = markets.stream()
-                    .filter(m -> m.getMapNumber().equals(matchMap.getMapNumber())).toList();
-
-            setMarketOddsWith2Outcomes(marketsByMap, BigDecimal.ONE, matchMap.getCurrentWP1(), matchMap.getCurrentWP2());
-        }
+        setMarketOddsWith2Outcomes(match, markets, BigDecimal.ONE, map.getCurrentWP1(), map.getCurrentWP2());
     }
 
     private void updateTotalMapsOdds(Match match) {
@@ -340,7 +340,7 @@ public class CsOddsService extends OddsService {
 
         double overProbability = map1.getCurrentWP1() > map1.getCurrentWP2() ? map2.getCurrentWP2() : map2.getCurrentWP1();
 
-        setMarketOddsWith2Outcomes(overUnderMarkets, marketOutcome, overProbability, 1.0 - overProbability);
+        setMarketOddsWith2Outcomes(match, overUnderMarkets, marketOutcome, overProbability, 1.0 - overProbability);
     }
 
     private void updateTotalMapRoundsOdds(Match match, MatchMap currentMap) {
@@ -369,15 +369,15 @@ public class CsOddsService extends OddsService {
             if (under.getResult() != null && over.getResult() != null) continue;
 
             if (roundsPlayed + minRoundsBeforeWin > overOutcome) {
-                setMarketResultsWith2Outcomes(List.of(over, under), List.of(MarketResult.WIN, MarketResult.LOSS));
+                setMarketResultsWith2Outcomes(match, List.of(over, under), List.of(MarketResult.WIN, MarketResult.LOSS));
             } else if (minRoundsBeforeWin == 0 && roundsPlayed < overOutcome) {
-                setMarketResultsWith2Outcomes(List.of(over, under), List.of(MarketResult.LOSS, MarketResult.WIN));
+                setMarketResultsWith2Outcomes(match, List.of(over, under), List.of(MarketResult.LOSS, MarketResult.WIN));
             }
 
             if (over.getClosed()) continue;
 
             if (roundsPlayed + minRoundsBeforeWin + 2 > overOutcome) {
-                closeMarkets(List.of(over, under));
+                closeMarkets(match, List.of(over, under));
             } else {
                 if (totalRoundsProbabilities == null) {
                     Map<Integer, Double> totalRoundsProbabilitiesMap = new HashMap<>();
@@ -393,7 +393,7 @@ public class CsOddsService extends OddsService {
                     }
                 }
 
-                setMarketOddsWith2Outcomes(List.of(over, under), over.getOutcome(), overProbability, 1 - overProbability);
+                setMarketOddsWith2Outcomes(match, List.of(over, under), over.getOutcome(), overProbability, 1 - overProbability);
             }
         }
     }
@@ -425,16 +425,16 @@ public class CsOddsService extends OddsService {
 
         if (handicapPair1.getFirst().getResult() == null) {
             double p1Win2_0 = map1.getCurrentWP1() * map2.getCurrentWP1();
-            setMarketOddsWith2Outcomes(handicapPair1, handicapPair1.getFirst().getOutcome(), p1Win2_0, 1 - p1Win2_0);
+            setMarketOddsWith2Outcomes(match, handicapPair1, handicapPair1.getFirst().getOutcome(), p1Win2_0, 1 - p1Win2_0);
         }
 
         if (handicapPair2.getFirst().getResult() == null) {
             double p2Win2_0 = map1.getCurrentWP2() * map2.getCurrentWP2();
-            setMarketOddsWith2Outcomes(handicapPair2, handicapPair2.getFirst().getOutcome(), p2Win2_0, 1 - p2Win2_0);
+            setMarketOddsWith2Outcomes(match, handicapPair2, handicapPair2.getFirst().getOutcome(), p2Win2_0, 1 - p2Win2_0);
         }
     }
 
-    private <T extends Market> void setMarketOddsWith2Outcomes(List<T> markets, BigDecimal outcome1,
+    private <T extends Market> void setMarketOddsWith2Outcomes(Match match, List<T> markets, BigDecimal outcome1,
                                                                double winProbability1, double winProbability2) {
         if (markets.size() != 2) {
             log.error("Unable to set odds to markets because list size is invalid {}, should be 2", markets.size());
@@ -462,18 +462,18 @@ public class CsOddsService extends OddsService {
         BigDecimal odds2 = m1.getOdds();
 
         if (closed2 && !closed1) {
-            sendMarketClose(markets);
             marketRepository.saveAll(markets);
+            sendMarketClose(match, markets);
         } else if (closed1 && !closed2) {
-            sendMarketOpen(markets);
             marketRepository.saveAll(markets);
+            sendMarketOpen(match, markets);
         } else if (!closed2 && odds1.compareTo(odds2) != 0) {
-            sendMarketOddsUpdate(markets);
             marketRepository.saveAll(markets);
+            sendMarketOddsUpdate(match, markets);
         }
     }
 
-    private <T extends Market> void setMarketResultsWith2Outcomes(List<T> markets, List<MarketResult> results) {
+    private <T extends Market> void setMarketResultsWith2Outcomes(Match match, List<T> markets, List<MarketResult> results) {
         if (markets.size() != results.size() || markets.size() != 2) {
             log.error("Unable to set market results because list sizes are invalid {} - {}, should be 2 - 2",
                     markets.size(), results.size());
@@ -487,25 +487,25 @@ public class CsOddsService extends OddsService {
         }
 
         marketRepository.saveAll(markets);
-        sendMarketResult(markets);
+        sendMarketResult(match, markets);
     }
 
-    public <T extends Market> void closeMarkets(List<T> markets) {
+    public <T extends Market> void closeMarkets(Match match, List<T> markets) {
         for (T market : markets) {
             market.setClosed(true);
         }
 
         marketRepository.saveAll(markets);
-        sendMarketClose(markets);
+        sendMarketClose(match, markets);
     }
 
-    private <T extends Market> void cancelMarkets(List<T> markets) {
+    private <T extends Market> void cancelMarkets(Match match, List<T> markets) {
         for (T market : markets) {
             market.setClosed(true);
             market.setResult(MarketResult.CANCELLED);
         }
         marketRepository.saveAll(markets);
-        sendMarketResult(markets);
+        sendMarketResult(match, markets);
     }
 
 
@@ -532,7 +532,7 @@ public class CsOddsService extends OddsService {
     private void closeMatchWinnerMarkets(Match match) {
         List<Market> markets = match.getMarkets().stream()
                 .filter(m -> m instanceof WinnerMatch && !m.getClosed()).toList();
-        closeMarkets(markets);
+        closeMarkets(match, markets);
     }
 
     private void closeMapWinnerMarkets(Match match, MatchMap currentMap) {
@@ -541,14 +541,14 @@ public class CsOddsService extends OddsService {
                         && ((WinnerMap) m).getMapNumber().equals(currentMap.getMapNumber()) && !m.getClosed())
                 .toList();
 
-        closeMarkets(markets);
+        closeMarkets(match, markets);
     }
 
     private void closeTotalMapsMarkets(Match match) {
         List<Market> markets = match.getMarkets().stream()
                 .filter(m -> m instanceof TotalMaps && !m.getClosed()).toList();
 
-        closeMarkets(markets);
+        closeMarkets(match, markets);
     }
 
     private void closeTotalMapRoundsMarkets(Match match, MatchMap currentMap) {
@@ -557,14 +557,14 @@ public class CsOddsService extends OddsService {
                         && ((TotalMapRounds) m).getMapNumber().equals(currentMap.getMapNumber()) && !m.getClosed())
                 .toList();
 
-        closeMarkets(markets);
+        closeMarkets(match, markets);
     }
 
     private void closeHandicapMarkets(Match match) {
         List<Market> markets = match.getMarkets().stream()
                 .filter(m -> m instanceof HandicapMaps && !m.getClosed()).toList();
 
-        closeMarkets(markets);
+        closeMarkets(match, markets);
     }
 
 
@@ -581,9 +581,9 @@ public class CsOddsService extends OddsService {
         Market m2 = markets.getLast();
 
         if (match.getWinner() == 1) {
-            setMarketResultsWith2Outcomes(List.of(m1, m2), List.of(MarketResult.WIN, MarketResult.LOSS));
+            setMarketResultsWith2Outcomes(match, List.of(m1, m2), List.of(MarketResult.WIN, MarketResult.LOSS));
         } else {
-            setMarketResultsWith2Outcomes(List.of(m1, m2), List.of(MarketResult.LOSS, MarketResult.WIN));
+            setMarketResultsWith2Outcomes(match, List.of(m1, m2), List.of(MarketResult.LOSS, MarketResult.WIN));
         }
     }
 
@@ -593,17 +593,24 @@ public class CsOddsService extends OddsService {
                 .sorted(Comparator.comparing(m -> m.getOutcome().intValue()))
                 .toList();
 
-        Market m1 = mapWinnerMarkets.getFirst();
-        Market m2 = mapWinnerMarkets.getLast();
+        int totalMaps = Integer.parseInt(match.getFormat().substring(2));
+        if (!matchMap.getMapNumber().equals(totalMaps)) {
+            Market m1 = mapWinnerMarkets.getFirst();
+            Market m2 = mapWinnerMarkets.getLast();
+
+            if (matchMap.getWinner() == 1) {
+                setMarketResultsWith2Outcomes(match, List.of(m1, m2), List.of(MarketResult.WIN, MarketResult.LOSS));
+            } else {
+                setMarketResultsWith2Outcomes(match, List.of(m1, m2), List.of(MarketResult.LOSS, MarketResult.WIN));
+            }
+        }
 
         if (matchMap.getWinner() == 1) {
             matchMap.setCurrentWP1(1.0);
             matchMap.setCurrentWP2(0.0);
-            setMarketResultsWith2Outcomes(List.of(m1, m2), List.of(MarketResult.WIN, MarketResult.LOSS));
         } else {
             matchMap.setCurrentWP1(0.0);
             matchMap.setCurrentWP2(1.0);
-            setMarketResultsWith2Outcomes(List.of(m1, m2), List.of(MarketResult.LOSS, MarketResult.WIN));
         }
 
         matchMapRepository.save(matchMap);
@@ -636,19 +643,19 @@ public class CsOddsService extends OddsService {
         List<MarketResult> lossWin = List.of(MarketResult.LOSS, MarketResult.WIN);
 
         if (wins[0] == 1 && wins[1] == 0) {
-            setMarketResultsWith2Outcomes(handicapPair2, winLoss);
+            setMarketResultsWith2Outcomes(match, handicapPair2, winLoss);
         } else if (wins[0] == 0 && wins[1] == 1) {
-            setMarketResultsWith2Outcomes(handicapPair1, lossWin);
+            setMarketResultsWith2Outcomes(match, handicapPair1, lossWin);
         } else if (wins[0] == 1 && wins[1] == 1) {
             if (handicapPair1.getFirst().getResult() == null) {
-                setMarketResultsWith2Outcomes(handicapPair1, lossWin);
+                setMarketResultsWith2Outcomes(match, handicapPair1, lossWin);
             } else if (handicapPair2.getFirst().getResult() == null) {
-                setMarketResultsWith2Outcomes(handicapPair2, winLoss);
+                setMarketResultsWith2Outcomes(match, handicapPair2, winLoss);
             }
         } else if (wins[0] == 2 && wins[1] == 0) {
-            setMarketResultsWith2Outcomes(handicapPair1, winLoss);
+            setMarketResultsWith2Outcomes(match, handicapPair1, winLoss);
         } else if (wins[0] == 0 && wins[1] == 2) {
-            setMarketResultsWith2Outcomes(handicapPair2, lossWin);
+            setMarketResultsWith2Outcomes(match, handicapPair2, lossWin);
         }
     }
 
@@ -662,7 +669,6 @@ public class CsOddsService extends OddsService {
             setResultsToTotalMapsMarket(match, mapsPlayed, totalMapsMarket, BigDecimal.valueOf(2.5));
         } else if (match.getFormat().equals("BO5")) {
             setResultsToTotalMapsMarket(match, mapsPlayed, totalMapsMarket, BigDecimal.valueOf(3.5));
-            setResultsToTotalMapsMarket(match, mapsPlayed, totalMapsMarket, BigDecimal.valueOf(4.5));
         }
     }
 
@@ -676,9 +682,9 @@ public class CsOddsService extends OddsService {
 
         if (mapsPlayed > value.doubleValue()
                 || (match.getWinner() == null && mapsPlayed > value.subtract(BigDecimal.ONE).doubleValue())) {
-            setMarketResultsWith2Outcomes(underOverMarkets, List.of(MarketResult.LOSS, MarketResult.WIN));
+            setMarketResultsWith2Outcomes(match, underOverMarkets, List.of(MarketResult.LOSS, MarketResult.WIN));
         } else if (match.getWinner() != null) {
-            setMarketResultsWith2Outcomes(underOverMarkets, List.of(MarketResult.WIN, MarketResult.LOSS));
+            setMarketResultsWith2Outcomes(match, underOverMarkets, List.of(MarketResult.WIN, MarketResult.LOSS));
         }
     }
 
@@ -697,7 +703,7 @@ public class CsOddsService extends OddsService {
                 .filter(m -> m instanceof WinnerMap && ((WinnerMap) m).getMapNumber() > mapsPlayed)
                 .toList();
 
-        cancelMarkets(markets);
+        cancelMarkets(match, markets);
     }
 
     private void cancelNotCompletedTotalMapRoundsMarkets(Match match, int mapsPlayed) {
@@ -705,7 +711,7 @@ public class CsOddsService extends OddsService {
                 .filter(m -> m instanceof TotalMapRounds && ((TotalMapRounds) m).getMapNumber() > mapsPlayed)
                 .toList();
 
-        cancelMarkets(markets);
+        cancelMarkets(match, markets);
     }
 
     // --------------------------- OTHER HERE ----------------------------
@@ -918,20 +924,20 @@ public class CsOddsService extends OddsService {
     // --------------------------- SEND TO SERVER HERE ----------------------------
     // --------------------------- SEND TO SERVER HERE ----------------------------
 
-    private <T extends Market> void sendMarketOddsUpdate(List<T> markets) {
-        marketUpdateService.sendMarketUpdate(markets, MarketUpdateType.ODDS);
+    private <T extends Market> void sendMarketOddsUpdate(Match match, List<T> markets) {
+        matchUpdateService.sendMarketUpdate(match.getId(), markets, MarketUpdateType.ODDS);
     }
 
-    private <T extends Market> void sendMarketClose(List<T> markets) {
-        marketUpdateService.sendMarketUpdate(markets, MarketUpdateType.CLOSE);
+    private <T extends Market> void sendMarketClose(Match match, List<T> markets) {
+        matchUpdateService.sendMarketUpdate(match.getId(), markets, MarketUpdateType.CLOSE);
     }
 
-    private <T extends Market> void sendMarketOpen(List<T> markets) {
-        marketUpdateService.sendMarketUpdate(markets, MarketUpdateType.OPEN);
+    private <T extends Market> void sendMarketOpen(Match match, List<T> markets) {
+        matchUpdateService.sendMarketUpdate(match.getId(), markets, MarketUpdateType.OPEN);
     }
 
-    private <T extends Market> void sendMarketResult(List<T> markets) {
-        marketUpdateService.sendMarketUpdate(markets, MarketUpdateType.RESULT);
+    private <T extends Market> void sendMarketResult(Match match, List<T> markets) {
+        matchUpdateService.sendMarketUpdate(match.getId(), markets, MarketUpdateType.RESULT);
     }
 
 }

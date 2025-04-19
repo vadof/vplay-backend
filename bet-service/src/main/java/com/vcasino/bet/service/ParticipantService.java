@@ -1,6 +1,6 @@
 package com.vcasino.bet.service;
 
-import com.vcasino.bet.dto.RegisterParticipantRequest;
+import com.vcasino.bet.dto.request.RegisterParticipantRequest;
 import com.vcasino.bet.entity.Participant;
 import com.vcasino.bet.exception.AppException;
 import com.vcasino.bet.repository.ParticipantRepository;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class ParticipantService {
 
+    private final ImageStorageService imageStorageService;
     private final ParticipantRepository participantRepository;
 
     public Participant addParticipant(RegisterParticipantRequest request) {
@@ -23,11 +24,15 @@ public class ParticipantService {
             throw new AppException("Participant already exists", HttpStatus.BAD_REQUEST);
         }
 
+        if (!imageStorageService.existsByKey(request.getImageKey())) {
+            throw new AppException("Image not found", HttpStatus.NOT_FOUND);
+        }
+
         Participant participant = Participant.builder()
                 .name(request.getName())
                 .shortName(Strings.isBlank(request.getShortName()) ? request.getName() : request.getShortName())
                 .discipline(request.getDiscipline())
-                .image(null) // TODO
+                .image(request.getImageKey())
                 .participantPage(request.getParticipantPage())
                 .build();
 

@@ -18,9 +18,6 @@ public class MarketService {
     private final MatchRepository matchRepository;
     private final CsOddsService csOddsService;
 
-    // TODO remove
-    private final TrackingService trackingService;
-
     public void initializeMarkets(MarketInitializationRequest request) {
         Optional<Match> matchOptional = matchRepository.findById(request.getMatchId());
         if (matchOptional.isEmpty()) {
@@ -30,7 +27,6 @@ public class MarketService {
         Match match = matchOptional.get();
         if (match.getTournament().getDiscipline().equals(Discipline.COUNTER_STRIKE)) {
             csOddsService.initMatchMarkets(match);
-            trackingService.trackUpcomingMatches();
         } else {
             throw new RuntimeException("Cannot initialize markets for this Discipline");
         }
