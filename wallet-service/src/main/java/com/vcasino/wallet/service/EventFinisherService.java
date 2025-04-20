@@ -20,7 +20,8 @@ public class EventFinisherService {
 
     private final OutboxEventRepository outboxEventRepository;
     private final WalletService walletService;
-    private final CurrencyConversionService currencyService;
+    private final CurrencyConversionService currencyConversionService;
+    private final CurrencyService currencyService;
 
     public OutboxEvent getOutboxEventById(UUID id) {
         return outboxEventRepository.findById(id)
@@ -43,7 +44,9 @@ public class EventFinisherService {
 
         Wallet wallet = null;
         if (outboxEvent.getType().equals(EventType.CURRENCY_CONVERSION)) {
-            wallet = currencyService.completeCurrencyConversion(outboxEvent);
+            wallet = currencyConversionService.completeCurrencyConversion(outboxEvent);
+        } else if (outboxEvent.getType().equals(EventType.RESERVATION)) {
+            wallet = currencyService.completeCurrencyReservation(outboxEvent);
         }
 
         outboxEvent.setStatus(EventStatus.COMPLETED);
@@ -70,7 +73,9 @@ public class EventFinisherService {
 
         Wallet wallet = null;
         if (outboxEvent.getType().equals(EventType.CURRENCY_CONVERSION)) {
-            wallet = currencyService.cancelCurrencyConversion(outboxEvent);
+            wallet = currencyConversionService.cancelCurrencyConversion(outboxEvent);
+        } else if (outboxEvent.getType().equals(EventType.RESERVATION)) {
+            wallet = currencyService.cancelCurrencyReservation(outboxEvent);
         }
 
         outboxEvent.setStatus(EventStatus.COMPLETED);

@@ -69,10 +69,12 @@ public class MatchService {
         }
 
         try {
-            // TODO try to rollback match save if exception
             oddsClient.initializeMarkets(new MarketInitializationRequest(match.getId()));
         } catch (Exception e) {
-            log.error("Error happened during markets initialization", e);
+            matchRepository.delete(match);
+            String errorMessage = "Error happened during markets initialization";
+            log.error(errorMessage, e);
+            throw new AppException(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return match;
@@ -88,16 +90,15 @@ public class MatchService {
         Match match = Match.builder()
                 .tournament(tournament)
                 .matchPage(request.getMatchPage())
+                .startDate(getValidatedStartDate(request.getStartDate()))
                 .participant1(participantRepository.findByNameAndDiscipline(request.getParticipant1(), discipline)
                         .orElseThrow(() -> new AppException("Participant not found", HttpStatus.NOT_FOUND)))
                 .participant2(participantRepository.findByNameAndDiscipline(request.getParticipant2(), discipline)
                         .orElseThrow(() -> new AppException("Participant not found", HttpStatus.NOT_FOUND)))
                 .format(getValidatedCsFormat(request.getFormat()))
-                .startDate(getValidatedStartDate(request.getStartDate()))
                 .status(MatchStatus.WAITING_TO_START)
                 .winProbability1(request.getWinProbability1().doubleValue())
                 .winProbability2(request.getWinProbability2().doubleValue())
-                .startDate(request.getStartDate())
                 .build();
 
         return matchRepository.save(match);
@@ -113,8 +114,8 @@ public class MatchService {
     }
 
     private LocalDateTime getValidatedStartDate(LocalDateTime startDate) {
-        if (startDate.isBefore(LocalDateTime.now().minusMinutes(10))) {
-            throw new AppException("It is not possible to add a match earlier than 10 minutes before the start", HttpStatus.BAD_REQUEST);
+        if (startDate.isBefore(LocalDateTime.now().minusMinutes(15))) {
+            throw new AppException("It is not possible to add a match earlier than 15 minutes before the start", HttpStatus.BAD_REQUEST);
         }
         return startDate;
     }

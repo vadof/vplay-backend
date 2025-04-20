@@ -1,4 +1,4 @@
-package com.vcasino.bet.service;
+package com.vcasino.bet.service.image;
 
 import com.vcasino.bet.dto.LoadedImage;
 import com.vcasino.bet.exception.AppException;

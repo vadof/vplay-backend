@@ -1,4 +1,4 @@
-package com.vcasino.bet.service;
+package com.vcasino.bet.service.image;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.AmazonS3Exception;

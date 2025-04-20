@@ -41,16 +41,19 @@ public class Bet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "market_id", referencedColumnName = "market_id", nullable = false)
     Market market;
 
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     User user;
 
     @Column(name = "odds", nullable = false, columnDefinition = "DECIMAL(4,2)")
     BigDecimal odds;
+
+    @Column(name = "amount", nullable = false, columnDefinition = "DECIMAL(14,2)")
+    BigDecimal amount;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)

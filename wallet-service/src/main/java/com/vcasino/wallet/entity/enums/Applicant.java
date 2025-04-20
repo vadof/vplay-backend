@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Applicant {
-    CLICKER("clicker"),
-    BET("bet");
+    CLICKER("CLICKER"),
+    BET("BET");
 
     private final String name;
 
@@ -19,7 +19,7 @@ public enum Applicant {
             throw new IllegalArgumentException("Value cannot be empty");
         }
 
-        Applicant applicant = Applicant.valueOf(value.toLowerCase().replace("-", "_"));
+        Applicant applicant = Applicant.valueOf(value.toUpperCase());
 
         if (applicant == null) {
             throw new RuntimeException("Unknown applicant " + value);

@@ -34,6 +34,7 @@ public class EventService {
     private final EventFinisherService eventFinisher;
     private final Map<Applicant, Client> clientMap = new HashMap<>();
     private final ClickerDataClient clickerDataClient;
+    private final ClickerDataClient betClient;
 
     public void handlePendingConfirmationEvents() {
         int recordsPerApplicant = 50000;
@@ -128,6 +129,7 @@ public class EventService {
     @PostConstruct
     private void initClientMap() {
         clientMap.put(Applicant.CLICKER, clickerDataClient);
+        clientMap.put(Applicant.BET, betClient);
     }
 
 }

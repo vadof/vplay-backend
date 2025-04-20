@@ -1,10 +1,6 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
-
-    <changeSet author="vadim" id="table/image.sql">
-        <sqlFile path="table/image.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
-    </changeSet>
     <changeSet author="vadim" id="table/tournament.sql">
         <sqlFile path="table/tournament.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
@@ -25,6 +21,9 @@
     </changeSet>
     <changeSet author="vadim" id="table/bet.sql">
         <sqlFile path="table/bet.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+    </changeSet>
+    <changeSet author="vadim" id="table/transaction.sql">
+        <sqlFile path="table/transaction.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
 
 </databaseChangeLog>

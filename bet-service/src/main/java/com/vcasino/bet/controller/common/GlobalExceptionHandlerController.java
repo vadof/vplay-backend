@@ -1,4 +1,4 @@
-package com.vcasino.bet.controller;
+package com.vcasino.bet.controller.common;
 
 import com.vcasino.bet.exception.AppException;
 import lombok.Getter;

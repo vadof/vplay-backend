@@ -4,6 +4,7 @@ import com.vcasino.bet.dto.request.RegisterTournamentRequest;
 import com.vcasino.bet.entity.Tournament;
 import com.vcasino.bet.exception.AppException;
 import com.vcasino.bet.repository.TournamentRepository;
+import com.vcasino.bet.service.image.ImageStorageService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

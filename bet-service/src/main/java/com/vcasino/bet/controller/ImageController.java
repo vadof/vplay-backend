@@ -1,7 +1,7 @@
 package com.vcasino.bet.controller;
 
 import com.vcasino.bet.dto.LoadedImage;
-import com.vcasino.bet.service.ImageStorageService;
+import com.vcasino.bet.service.image.ImageStorageService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;

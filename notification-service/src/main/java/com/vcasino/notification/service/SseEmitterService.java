@@ -34,10 +34,8 @@ public class SseEmitterService {
 
     public void sendMessageToUser(NotificationEvent event) {
         SseEmitter emitter = userEmitters.get(event.userId());
-        log.info("1Send event to User#{} emitter - {}", event.userId(), emitter);
         if (emitter != null) {
             try {
-                log.info("2Send event to User#{}", event.userId());
                 NotificationPayload payload = new NotificationPayload(event.message(), event.type(), event.data());
                 emitter.send(SseEmitter.event().data(payload));
             } catch (IOException e) {

@@ -40,13 +40,11 @@ public class MatchWebsocketService implements MessageListener {
     }
 
     private void sendUpdatedMatch(MatchUpdateDto matchUpdateDto) {
-        System.out.println("Send updated match " + matchUpdateDto);
         messagingTemplate.convertAndSend("/topic/matches", matchUpdateDto);
     }
 
     private void sendUpdatedMatchMarkets(MatchMarketsUpdateDto matchMarketsUpdate) {
         String destination = "/topic/matches/" + matchMarketsUpdate.getMatchId();
-        System.out.println("Send updated markets " + matchMarketsUpdate.getMarkets());
         messagingTemplate.convertAndSend(destination, matchMarketsUpdate.getMarkets());
     }
 

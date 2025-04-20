@@ -3,10 +3,13 @@ package com.vcasino.bet.controller;
 import com.vcasino.bet.dto.request.RegisterMatchRequest;
 import com.vcasino.bet.dto.request.RegisterParticipantRequest;
 import com.vcasino.bet.dto.request.RegisterTournamentRequest;
+import com.vcasino.bet.dto.request.SetMarketResultRequest;
 import com.vcasino.bet.entity.Match;
 import com.vcasino.bet.entity.Participant;
 import com.vcasino.bet.entity.Tournament;
-import com.vcasino.bet.service.ImageStorageService;
+import com.vcasino.bet.service.MarketService;
+import com.vcasino.bet.service.bet.BetProcessingService;
+import com.vcasino.bet.service.image.ImageStorageService;
 import com.vcasino.bet.service.MatchService;
 import com.vcasino.bet.service.ParticipantService;
 import com.vcasino.bet.service.TournamentService;
@@ -42,6 +45,8 @@ public class AdminController {
     private final ParticipantService participantService;
     private final MatchService matchService;
     private final ImageStorageService imageStorageService;
+    private final MarketService marketService;
+    private final BetProcessingService betProcessingService;
 
     @Operation(summary = "Add new Image")
     @ApiResponse(responseCode = "200", description = "Image added",
@@ -49,13 +54,13 @@ public class AdminController {
     @PostMapping("/images/upload/{folder}")
     public ResponseEntity<List<String>> upload(@PathVariable String folder,
                                          @RequestParam("files") List<MultipartFile> files) {
-        log.info("REST request to upload {} images to {}", folder, files.size());
+        log.info("REST request to upload {} images to {}", files.size(), folder);
         List<String> keys = imageStorageService.upload(folder, files);
         return ResponseEntity.ok(keys);
     }
 
-    @Operation(summary = "Add new Image")
-    @ApiResponse(responseCode = "200", description = "Image added",
+    @Operation(summary = "Get image keys in folder")
+    @ApiResponse(responseCode = "200", description = "Return image keys",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
     @GetMapping("/images/{folder}")
     public ResponseEntity<List<String>> getImagesInFolder(@PathVariable String folder) {
@@ -92,6 +97,15 @@ public class AdminController {
         log.info("REST request to add Match: {} vs {}", request.getParticipant1(), request.getParticipant2());
         Match match = matchService.addMatch(request);
         return ResponseEntity.ok(match);
+    }
+
+    @Operation(summary = "Set result to markets")
+    @ApiResponse(responseCode = "200", description = "Return not found ids")
+    @PostMapping(value = "/markets/result", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Long>> setMarketResults(@Valid @RequestBody SetMarketResultRequest request) {
+        log.info("REST request to set {} result to Markets: {}", request.getMarketResult(), request.getMarketIds());
+        List<Long> missingIds = marketService.setResultToMarkets(request);
+        return ResponseEntity.ok(missingIds);
     }
 
 }

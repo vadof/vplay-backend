@@ -4,6 +4,7 @@ import com.vcasino.bet.dto.request.RegisterParticipantRequest;
 import com.vcasino.bet.entity.Participant;
 import com.vcasino.bet.exception.AppException;
 import com.vcasino.bet.repository.ParticipantRepository;
+import com.vcasino.bet.service.image.ImageStorageService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
