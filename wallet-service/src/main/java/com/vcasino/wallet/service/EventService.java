@@ -1,5 +1,6 @@
 package com.vcasino.wallet.service;
 
+import com.vcasino.wallet.client.BetClient;
 import com.vcasino.wallet.client.ClickerDataClient;
 import com.vcasino.wallet.client.Client;
 import com.vcasino.wallet.client.EventStatusRequest;
@@ -34,7 +35,7 @@ public class EventService {
     private final EventFinisherService eventFinisher;
     private final Map<Applicant, Client> clientMap = new HashMap<>();
     private final ClickerDataClient clickerDataClient;
-    private final ClickerDataClient betClient;
+    private final BetClient betClient;
 
     public void handlePendingConfirmationEvents() {
         int recordsPerApplicant = 50000;
