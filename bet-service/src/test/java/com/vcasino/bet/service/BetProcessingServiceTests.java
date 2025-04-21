@@ -127,6 +127,25 @@ public class BetProcessingServiceTests {
     }
 
     @Test
+    @DisplayName("Process bet place market has result")
+    void processBetPlaceMarketHasResult() {
+        Market market = MarketMocks.getMarketPairMocks(MatchMocks.getMatchMock(1L), "WinnerMatch", 1).getFirst();
+        market.setResult(MarketResult.WIN);
+
+        when(marketRepository.findById(market.getId())).thenReturn(Optional.of(market));
+
+        BetRequest request = new BetRequest(market.getId(), market.getOdds(), BigDecimal.ONE, true);
+
+        User user = new User(1L, false);
+
+        BetResponse betResponse = betProcessingService.processBetPlace(request, user.getId());
+
+        assertNull(betResponse.getUpdatedBalance());
+        assertFalse(betResponse.getBetPlaced());
+        assertTrue(Strings.isNotBlank(betResponse.getReason()));
+    }
+
+    @Test
     @DisplayName("Process bet place odds have changed")
     void processBetPlaceOddsHaveChanged() {
         Market market = MarketMocks.getMarketPairMocks(MatchMocks.getMatchMock(1L), "WinnerMatch", 1).getFirst();

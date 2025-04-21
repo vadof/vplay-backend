@@ -51,15 +51,23 @@ public class MarketService {
                 .filter(id -> !foundIds.contains(id))
                 .toList();
 
+        List<Market> marketsToSave = new ArrayList<>(markets.size());
+
         MarketResult marketResult = request.getMarketResult();
         for (Market market : markets) {
-            market.setResult(marketResult);
+            if (market.getResult() != null) {
+                log.warn("Market#{} already has result", market.getId());
+            } else {
+                market.setResult(marketResult);
+                market.setClosed(true);
+                marketsToSave.add(market);
+            }
         }
 
-        marketRepository.saveAll(markets);
+        marketRepository.saveAll(marketsToSave);
 
-        for (Long foundId : foundIds) {
-            betProcessingService.processMarketResult(foundId);
+        for (Market market : marketsToSave) {
+            betProcessingService.processMarketResult(market.getId());
         }
 
         return missingIds;

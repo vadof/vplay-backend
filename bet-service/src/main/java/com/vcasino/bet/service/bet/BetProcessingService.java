@@ -44,7 +44,7 @@ public class BetProcessingService {
     public BetResponse processBetPlace(BetRequest request, Long userId) {
         Market market = getMarketById(request.getMarketId());
 
-        if (market.getClosed()) {
+        if (market.getClosed() || market.getResult() != null) {
             return new BetResponse(null, false, "Market is closed");
         }
 
