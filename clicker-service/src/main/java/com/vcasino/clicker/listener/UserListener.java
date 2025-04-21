@@ -25,7 +25,7 @@ public class UserListener {
     )
     public void handle(UserCreateEvent userData, Acknowledgment ack) {
         log.info("Received user-create event - {}", userData);
-        accountService.createAccount(userData.id(), userData.username(), userData.invitedBy());
+        accountService.createAccount(userData.id(), userData.username(), userData.invitedByUserId());
         ack.acknowledge();
     }
 }

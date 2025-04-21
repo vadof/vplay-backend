@@ -25,7 +25,7 @@ public class UserListener {
     )
     public void handle(UserCreateEvent userData, Acknowledgment ack) {
         log.info("Received user-create event - {}", userData);
-        walletService.createWallet(userData.id());
+        walletService.createWallet(userData.id(), userData.invitedByUserId());
         ack.acknowledge();
     }
 }

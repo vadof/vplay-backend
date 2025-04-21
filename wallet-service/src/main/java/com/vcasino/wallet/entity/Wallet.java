@@ -2,7 +2,11 @@ package com.vcasino.wallet.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import lombok.AccessLevel;
@@ -40,6 +44,13 @@ public class Wallet {
 
     @Column(name = "frozen", nullable = false)
     Boolean frozen;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "invited_by", referencedColumnName = "id")
+    Wallet invitedBy;
+
+    @OneToOne(mappedBy = "wallet", fetch = FetchType.LAZY, orphanRemoval = true)
+    ReferralBonus referralBonus;
 
     @Version
     @Column(name = "version", nullable = false)

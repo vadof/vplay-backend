@@ -84,7 +84,7 @@ public class AuthenticationService {
         userRepository.save(user);
 
         log.info("Admin#{} saved to database", user.getId());
-        sendUserCreated(user.getId(), user.getUsername(), registeredBy != null ? registeredBy.getUsername() : null);
+        sendUserCreated(user.getId(), user.getUsername(), registeredBy);
     }
 
     private User validateUserFields(UserDto userDto, Role role) {
@@ -195,8 +195,7 @@ public class AuthenticationService {
 
         log.info("User#{} has activated the account", user.getId());
 
-        User invitedBy = user.getInvitedBy();
-        sendUserCreated(user.getId(), user.getUsername(), invitedBy == null ? null : invitedBy.getUsername());
+        sendUserCreated(user.getId(), user.getUsername(), user.getInvitedBy());
 
         HttpHeaders headers = null;
         if (includeHeaders) {
@@ -207,9 +206,10 @@ public class AuthenticationService {
         return new AuthenticationResponse(jwtToken, refreshToken.getToken(), userMapper.toDto(user), headers);
     }
 
-    public void sendUserCreated(Long id, String username, @Nullable String invitedBy) {
+    public void sendUserCreated(Long id, String username, @Nullable User invitedBy) {
         log.info("Send user-create event for \"{}\"", username);
-        kafkaTemplate.send(Topic.USER_CREATE.getName(), new UserCreateEvent(id, username, invitedBy));
+        Long invitedById = invitedBy == null ? null : invitedBy.getId();
+        kafkaTemplate.send(Topic.USER_CREATE.getName(), new UserCreateEvent(id, username, invitedById));
     }
 
     @Transactional(noRollbackFor = AppException.class)

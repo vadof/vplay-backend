@@ -40,7 +40,7 @@ public class AccountService {
     private final LevelService levelService;
     private final UpgradeService upgradeService;
 
-    public void createAccount(Long id, String username, String invitedBy) {
+    public void createAccount(Long id, String username, Long invitedBy) {
         Account account = buildAccount(id, username);
         setInvitedBy(account, invitedBy);
         account = save(account);
@@ -66,7 +66,7 @@ public class AccountService {
     }
 
     // TODO
-    public void setInvitedBy(Account account, String inivitedBy) {
+    public void setInvitedBy(Account account, Long inivitedBy) {
 
     }
 

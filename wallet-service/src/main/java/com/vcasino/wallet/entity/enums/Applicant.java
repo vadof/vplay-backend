@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Applicant {
     CLICKER("CLICKER"),
-    BET("BET");
+    BET("BET"),
+    WALLET("WALLET");
 
     private final String name;
 

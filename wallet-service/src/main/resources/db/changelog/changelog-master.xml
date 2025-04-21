@@ -10,4 +10,8 @@
         <sqlFile path="table/outbox-event.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
     </changeSet>
 
+    <changeSet author="vadim" id="table/referral_bonus.sql">
+        <sqlFile path="table/referral-bonus.sql" relativeToChangelogFile="true" endDelimiter="\nGO"/>
+    </changeSet>
+
 </databaseChangeLog>
