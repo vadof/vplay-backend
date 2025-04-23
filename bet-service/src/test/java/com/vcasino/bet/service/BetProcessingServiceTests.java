@@ -24,6 +24,8 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
@@ -41,6 +43,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -62,6 +66,10 @@ public class BetProcessingServiceTests {
     TransactionService transactionService;
     @Mock
     NotificationService notificationService;
+    @Mock
+    RedissonClient redissonClient;
+    @Mock
+    private RLock lock;
 
     @InjectMocks
     BetProcessingService betProcessingService;
@@ -81,7 +89,7 @@ public class BetProcessingServiceTests {
         when(userService.getById(user.getId())).thenReturn(user);
 
         EventCreatedResponse eventCreatedResponse = new EventCreatedResponse(UUID.randomUUID(), BigDecimal.ZERO);
-        when(transactionService.createWithdrawalEvent(request, user)).thenReturn(eventCreatedResponse);
+        when(transactionService.createWithdrawalEvent(eq(request), any())).thenReturn(eventCreatedResponse);
 
         try (MockedStatic<TransactionSynchronizationManager> mockedStatic = Mockito.mockStatic(TransactionSynchronizationManager.class)) {
             mockedStatic.when(() -> TransactionSynchronizationManager.registerSynchronization(any(TransactionSynchronization.class)))
@@ -175,7 +183,7 @@ public class BetProcessingServiceTests {
         when(userService.getById(user.getId())).thenReturn(user);
 
         EventCreatedResponse eventCreatedResponse = new EventCreatedResponse(UUID.randomUUID(), BigDecimal.ZERO);
-        when(transactionService.createWithdrawalEvent(request, user)).thenReturn(eventCreatedResponse);
+        when(transactionService.createWithdrawalEvent(eq(request), any())).thenReturn(eventCreatedResponse);
 
         try (MockedStatic<TransactionSynchronizationManager> mockedStatic = Mockito.mockStatic(TransactionSynchronizationManager.class)) {
             mockedStatic.when(() -> TransactionSynchronizationManager.registerSynchronization(any(TransactionSynchronization.class)))
@@ -212,7 +220,7 @@ public class BetProcessingServiceTests {
 
         BetRequest request = new BetRequest(market.getId(), market.getOdds(), BigDecimal.ONE, true);
         doThrow(new AppException("Bet processing failed", HttpStatus.INTERNAL_SERVER_ERROR))
-                .when(transactionService).createWithdrawalEvent(request, user);
+                .when(transactionService).createWithdrawalEvent(eq(request), any());
 
         assertThrows(AppException.class, () -> betProcessingService.processBetPlace(request, user.getId()));
     }
@@ -223,6 +231,8 @@ public class BetProcessingServiceTests {
         User user = new User(1L, false);
         Market market = MarketMocks.getMarketPairMocks(MatchMocks.getMatchMock(1L), "WinnerMatch", 1).getFirst();
         market.setResult(MarketResult.WIN);
+        when(redissonClient.getLock(anyString())).thenReturn(lock);
+        when(lock.tryLock()).thenReturn(true);
 
         when(marketRepository.findById(market.getId())).thenReturn(Optional.of(market));
 
@@ -245,7 +255,7 @@ public class BetProcessingServiceTests {
             verify(betRepository, times(1)).saveAll(anyList());
             assertEquals(MarketResult.WIN, bet.getResult());
             verify(transactionService, times(1))
-                    .createDepositEvent(bet.getOdds().multiply(bet.getAmount()).setScale(2, RoundingMode.DOWN), user);
+                    .createDepositEvent(eq(bet.getOdds().multiply(bet.getAmount()).setScale(2, RoundingMode.DOWN)), any(Bet.class));
             verify(transactionService, times(1)).sendCompletedEvents(anyList());
             verify(notificationService, times(1)).sendBetStatusUpdateNotifications(anyList());
         }
@@ -260,6 +270,8 @@ public class BetProcessingServiceTests {
         market.setResult(MarketResult.LOSS);
 
         when(marketRepository.findById(market.getId())).thenReturn(Optional.of(market));
+        when(redissonClient.getLock(anyString())).thenReturn(lock);
+        when(lock.tryLock()).thenReturn(true);
 
         Bet bet = new Bet(1L, market, user, BigDecimal.TWO, BigDecimal.ONE, null, null, null);
         List<Bet> bets = List.of(bet);
@@ -289,6 +301,8 @@ public class BetProcessingServiceTests {
         User user = new User(1L, false);
         Market market = MarketMocks.getMarketPairMocks(MatchMocks.getMatchMock(1L), "WinnerMatch", 1).getFirst();
         market.setResult(MarketResult.CANCELLED);
+        when(redissonClient.getLock(anyString())).thenReturn(lock);
+        when(lock.tryLock()).thenReturn(true);
 
         when(marketRepository.findById(market.getId())).thenReturn(Optional.of(market));
 
@@ -310,7 +324,7 @@ public class BetProcessingServiceTests {
 
             verify(betRepository, times(1)).saveAll(anyList());
             assertEquals(MarketResult.CANCELLED, bet.getResult());
-            verify(transactionService, times(1)).createDepositEvent(bet.getAmount(), user);
+            verify(transactionService, times(1)).createDepositEvent(eq(bet.getAmount()), any());
             verify(transactionService, times(1)).sendCompletedEvents(anyList());
             verify(notificationService, times(1)).sendBetStatusUpdateNotifications(anyList());
         }
@@ -325,6 +339,8 @@ public class BetProcessingServiceTests {
         market.setResult(MarketResult.WIN);
 
         when(marketRepository.findById(market.getId())).thenReturn(Optional.of(market));
+        when(redissonClient.getLock(anyString())).thenReturn(lock);
+        when(lock.tryLock()).thenReturn(true);
 
         Bet bet = new Bet(1L, market, user, BigDecimal.TWO, BigDecimal.ONE, null, null, null);
         List<Bet> bets = List.of(bet);

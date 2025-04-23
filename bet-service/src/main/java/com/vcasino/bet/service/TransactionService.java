@@ -10,8 +10,9 @@ import com.vcasino.bet.client.ReservationRequest;
 import com.vcasino.bet.client.ReservationType;
 import com.vcasino.bet.client.WalletClient;
 import com.vcasino.bet.dto.request.BetRequest;
+import com.vcasino.bet.entity.Bet;
 import com.vcasino.bet.entity.Transaction;
-import com.vcasino.bet.entity.User;
+import com.vcasino.bet.entity.enums.TransactionType;
 import com.vcasino.bet.exception.AppException;
 import com.vcasino.bet.repository.TransactionRepository;
 import com.vcasino.commonkafka.enums.Topic;
@@ -45,14 +46,14 @@ public class TransactionService {
     private final ObjectMapper objectMapper;
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    public EventCreatedResponse createWithdrawalEvent(BetRequest request, User user) {
+    public EventCreatedResponse createWithdrawalEvent(BetRequest request, Bet bet) {
         try {
             ReservationRequest withdrawalRequest = new ReservationRequest(request.getAmount(), "BET",
-                    user.getId(), ReservationType.WITHDRAWAL);
+                    bet.getUser().getId(), ReservationType.WITHDRAWAL);
 
             EventCreatedResponse response = walletClient.reserveCurrency(withdrawalRequest).getBody();
 
-            Transaction transaction = new Transaction(response.getEventId(), request.getAmount(), user);
+            Transaction transaction = new Transaction(response.getEventId(), request.getAmount(), bet, TransactionType.WITHDRAWAL);
             transactionRepository.save(transaction);
 
             return response;
@@ -64,14 +65,14 @@ public class TransactionService {
         }
     }
 
-    public Optional<EventCreatedResponse> createDepositEvent(BigDecimal amount, User user) {
+    public Optional<EventCreatedResponse> createDepositEvent(BigDecimal amount, Bet bet) {
         try {
             ReservationRequest depositRequest = new ReservationRequest(amount, "BET",
-                    user.getId(), ReservationType.DEPOSIT);
+                    bet.getUser().getId(), ReservationType.DEPOSIT);
 
             EventCreatedResponse response = walletClient.reserveCurrency(depositRequest).getBody();
 
-            Transaction transaction = new Transaction(response.getEventId(), amount, user);
+            Transaction transaction = new Transaction(response.getEventId(), amount, bet, TransactionType.DEPOSIT);
             transactionRepository.save(transaction);
 
             return Optional.of(response);

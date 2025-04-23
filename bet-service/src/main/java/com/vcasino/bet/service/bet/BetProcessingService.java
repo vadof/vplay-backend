@@ -15,6 +15,8 @@ import com.vcasino.bet.service.TransactionService;
 import com.vcasino.bet.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -39,6 +41,7 @@ public class BetProcessingService {
     private final BetRepository betRepository;
     private final TransactionService transactionService;
     private final NotificationService notificationService;
+    private final RedissonClient redissonClient;
 
     @Transactional
     public BetResponse processBetPlace(BetRequest request, Long userId) {
@@ -57,8 +60,6 @@ public class BetProcessingService {
 
         BigDecimal amount = request.getAmount().setScale(2, RoundingMode.DOWN);
 
-        EventCreatedResponse response = transactionService.createWithdrawalEvent(request, user);
-
         Bet bet = Bet.builder()
                 .market(market)
                 .user(user)
@@ -66,7 +67,9 @@ public class BetProcessingService {
                 .amount(amount)
                 .build();
 
-        betRepository.save(bet);
+        bet = betRepository.save(bet);
+
+        EventCreatedResponse response = transactionService.createWithdrawalEvent(request, bet);
 
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
@@ -98,25 +101,34 @@ public class BetProcessingService {
         List<Bet> bets = betRepository.findAllByMarketId(market.getId());
         if (bets.isEmpty()) return;
 
-        BetResult betResult;
-        if (result.equals(MarketResult.WIN) || result.equals(MarketResult.CANCELLED)) {
-            betResult = processResultsWithDeposit(bets, result);
-        } else {
-            betResult = processResultsWithoutDeposit(bets, result);
-        }
+        RLock lock = redissonClient.getLock("esport-market-result-processing:" + marketId);
+        if (lock.tryLock()) {
+            try {
+                BetResult betResult;
+                if (result.equals(MarketResult.WIN) || result.equals(MarketResult.CANCELLED)) {
+                    betResult = processResultsWithDeposit(bets, result);
+                } else {
+                    betResult = processResultsWithoutDeposit(bets, result);
+                }
 
-        if (!betResult.betsToSave.isEmpty()) {
-            betRepository.saveAll(betResult.betsToSave);
-        }
+                if (!betResult.betsToSave.isEmpty()) {
+                    betRepository.saveAll(betResult.betsToSave);
+                }
 
-        BetResult finalBetResult = betResult;
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                transactionService.sendCompletedEvents(finalBetResult.successEvents);
-                notificationService.sendBetStatusUpdateNotifications(finalBetResult.userIds);
+                BetResult finalBetResult = betResult;
+                TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                    @Override
+                    public void afterCommit() {
+                        transactionService.sendCompletedEvents(finalBetResult.successEvents);
+                        notificationService.sendBetStatusUpdateNotifications(finalBetResult.userIds);
+                    }
+                });
+            } finally {
+                lock.unlock();
             }
-        });
+        } else {
+            log.info("Another instance is processing Market#{} result", marketId);
+        }
     }
 
     private BetResult processResultsWithDeposit(List<Bet> bets, MarketResult result) {
@@ -129,7 +141,7 @@ public class BetProcessingService {
                     bet.getAmount().multiply(bet.getOdds()).setScale(2, RoundingMode.DOWN);
 
             User user = bet.getUser();
-            Optional<EventCreatedResponse> depositEventOpt = transactionService.createDepositEvent(toDeposit, user);
+            Optional<EventCreatedResponse> depositEventOpt = transactionService.createDepositEvent(toDeposit, bet);
             if (depositEventOpt.isEmpty()) continue;
 
             bet.setResult(result);

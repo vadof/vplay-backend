@@ -1,7 +1,10 @@
 package com.vcasino.bet.entity;
 
+import com.vcasino.bet.entity.enums.TransactionType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -34,7 +37,11 @@ public class Transaction {
     @Column(name = "amount")
     BigDecimal amount;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
-    User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bet_id", referencedColumnName = "bet_id", nullable = false)
+    Bet bet;
+
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "transaction_type", nullable = false)
+    TransactionType type;
 }
