@@ -61,6 +61,10 @@ public class MatchService {
             throw new AppException("Match already registered", HttpStatus.BAD_REQUEST);
         }
 
+        if (request.getParticipant1().equals(request.getParticipant2())) {
+            throw new AppException("Participant 1 must not be equals to Participant 2", HttpStatus.BAD_REQUEST);
+        }
+
         Match match;
         if (tournament.getDiscipline().equals(Discipline.COUNTER_STRIKE)) {
             match = addCsMatch(tournament, request);
@@ -91,10 +95,10 @@ public class MatchService {
                 .tournament(tournament)
                 .matchPage(request.getMatchPage())
                 .startDate(getValidatedStartDate(request.getStartDate()))
-                .participant1(participantRepository.findByNameAndDiscipline(request.getParticipant1(), discipline)
-                        .orElseThrow(() -> new AppException("Participant not found", HttpStatus.NOT_FOUND)))
-                .participant2(participantRepository.findByNameAndDiscipline(request.getParticipant2(), discipline)
-                        .orElseThrow(() -> new AppException("Participant not found", HttpStatus.NOT_FOUND)))
+                .participant1(participantRepository.findByNameAndDiscipline(request.getParticipant1(), discipline).orElseThrow(() ->
+                        new AppException("Participant %s not found".formatted(request.getParticipant1()), HttpStatus.NOT_FOUND)))
+                .participant2(participantRepository.findByNameAndDiscipline(request.getParticipant2(), discipline).orElseThrow(() ->
+                        new AppException("Participant %s not found".formatted(request.getParticipant2()), HttpStatus.NOT_FOUND)))
                 .format(getValidatedCsFormat(request.getFormat()))
                 .status(MatchStatus.WAITING_TO_START)
                 .winProbability1(request.getWinProbability1().doubleValue())

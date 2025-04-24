@@ -2,6 +2,7 @@ package com.vcasino.bet.service;
 
 import com.vcasino.bet.dto.request.RegisterParticipantRequest;
 import com.vcasino.bet.entity.Participant;
+import com.vcasino.bet.entity.enums.Discipline;
 import com.vcasino.bet.exception.AppException;
 import com.vcasino.bet.repository.ParticipantRepository;
 import com.vcasino.bet.service.image.ImageStorageService;
@@ -10,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -38,5 +41,9 @@ public class ParticipantService {
                 .build();
 
         return participantRepository.save(participant);
+    }
+
+    public List<String> getParticipants(Discipline discipline) {
+        return participantRepository.findAllNamesByDiscipline(discipline);
     }
 }

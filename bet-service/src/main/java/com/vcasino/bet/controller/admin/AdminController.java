@@ -1,4 +1,4 @@
-package com.vcasino.bet.controller;
+package com.vcasino.bet.controller.admin;
 
 import com.vcasino.bet.dto.request.RegisterMatchRequest;
 import com.vcasino.bet.dto.request.RegisterParticipantRequest;
@@ -7,6 +7,7 @@ import com.vcasino.bet.dto.request.SetMarketResultRequest;
 import com.vcasino.bet.entity.Match;
 import com.vcasino.bet.entity.Participant;
 import com.vcasino.bet.entity.Tournament;
+import com.vcasino.bet.entity.enums.Discipline;
 import com.vcasino.bet.service.MarketService;
 import com.vcasino.bet.service.bet.BetProcessingService;
 import com.vcasino.bet.service.image.ImageStorageService;
@@ -46,7 +47,6 @@ public class AdminController {
     private final MatchService matchService;
     private final ImageStorageService imageStorageService;
     private final MarketService marketService;
-    private final BetProcessingService betProcessingService;
 
     @Operation(summary = "Add new Image")
     @ApiResponse(responseCode = "200", description = "Image added",
@@ -87,6 +87,16 @@ public class AdminController {
         log.info("REST request to add Participant: '{}'", request.getName());
         Participant participant = participantService.addParticipant(request);
         return ResponseEntity.ok(participant);
+    }
+
+    @Operation(summary = "Get Participants by discipline")
+    @ApiResponse(responseCode = "200", description = "Return participant names",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Participant.class)))
+    @GetMapping(value = "/participants", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<String>> getParticipants(@RequestParam String discipline) {
+        log.info("REST request to get Participants in {} discipline", discipline);
+        List<String> res = participantService.getParticipants(Discipline.fromValue(discipline));
+        return ResponseEntity.ok(res);
     }
 
     @Operation(summary = "Add new Match")
