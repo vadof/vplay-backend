@@ -1,5 +1,6 @@
 package com.vcasino.user.config.securiy;
 
+import com.vcasino.user.config.ApplicationConfig;
 import com.vcasino.user.dto.UserDto;
 import com.vcasino.user.repository.UserRepository;
 import com.vcasino.user.service.AuthenticationService;
@@ -15,6 +16,7 @@ public class AdminInitialization {
 
     private final UserRepository userRepository;
     private final AuthenticationService authenticationService;
+    private final ApplicationConfig applicationConfig;
 
     @Bean
     void initAdmin() {
@@ -23,7 +25,7 @@ public class AdminInitialization {
             UserDto admin = UserDto.builder()
                     .username("admin")
                     .email("admin@vcasino.com")
-                    .password("R84+sc5+6'cx'(35qcmaf.=1;D9Hiq[j-J=ol$b{n)VaQ[HQ6N")
+                    .password(applicationConfig.getAdminPassword())
                     .name("Super Admin")
                     .build();
             authenticationService.registerAdmin(admin, null);

@@ -73,22 +73,22 @@ spring:
             user-name-attribute: username
 
   mail:
-    host: localhost
-    port: 1025
-    username: hello
-    password: hello
+    host: ${SMTP_HOST}
+    port: ${SMTP_PORT}
+    username: ${SMTP_USERNAME}
+    password: ${SMTP_PASSWORD}
 
     properties:
       mail:
         smtp:
           ssl:
-            trust: "*"
+            trust: ${SMTP_TRUST}
           auth: true
           starttls:
             enable: true
-          connectiontimeout: 5000
+          connectionTimeout: 5000
           timeout: 3000
-          writetimeout: 5000
+          writeTimeout: 5000
 
 management:
   endpoints:
@@ -112,6 +112,7 @@ eureka:
 
 config:
   production: ${PRODUCTION}
+  admin-password: ${ADMIN_PASSWORD}
   jwt:
     expirationMs: ${JWT_EXPIRATION}
     refreshExpirationMs: ${JWT_REFRESH_EXPIRATION}
@@ -120,3 +121,4 @@ config:
   confirmation:
     token:
       expirationMs: ${CONFIRMATION_TOKEN_EXPIRATION_MS}
+  smtp-sender: ${SMTP_SENDER}

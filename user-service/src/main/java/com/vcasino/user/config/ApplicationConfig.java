@@ -12,9 +12,11 @@ import org.springframework.stereotype.Component;
 public class ApplicationConfig {
 
     private Boolean production;
+    private String adminPassword;
     private JwtProperties jwt;
     private String clientUrl;
     private ConfirmationProperties confirmation;
+    private String smtpSender;
 
     @Setter
     @Getter
