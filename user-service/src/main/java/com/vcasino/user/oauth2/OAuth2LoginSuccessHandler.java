@@ -202,7 +202,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         log.info("Authenticating User#{}", user.getId());
         String jwtToken = jwtService.generateJwtToken(user);
         Token refreshToken = tokenService.createToken(user, TokenType.REFRESH);
-        String url = "%s/login/success?name=%s&username=%s&email=%s"
+        String url = "%s/authentication/success?name=%s&username=%s&email=%s"
                 .formatted(config.getClientUrl(), user.getName(), user.getUsername(), user.getEmail());
         response.addCookie(cookieService.generateJwtCookie(jwtToken));
         response.addCookie(cookieService.generateJwtRefreshCookie(refreshToken));

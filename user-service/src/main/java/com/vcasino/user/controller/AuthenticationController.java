@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Authentication", description = "API operations with Authentication")
@@ -47,7 +46,7 @@ public class AuthenticationController {
     @ApiResponse(responseCode = "200", description = "An email has been sent to confirm an email. The email can be resent in emailsSent * 30 seconds")
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EmailTokenOptionsDto> register(@RequestBody @Valid UserDto userDto,
-                                                         @RequestParam(required = false, value = "ref") String ref) {
+                                                         @CookieValue(name = "ref", required = false) String ref) {
         log.info("REST request to register User");
         EmailTokenOptionsDto tokenOptions = authenticationService.registerUser(userDto, ref);
         return ResponseEntity.ok().body(tokenOptions);
