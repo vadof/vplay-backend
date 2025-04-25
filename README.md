@@ -11,6 +11,13 @@ For Test environment run `vcasino-backend/docker/test/docker-compose.yml`
 Environment variables
 ```
 YOUTUBE_API_KEY (key to interact with youtube videos)
+SMTP_HOST=localhost (dev smtp server)
+SMTP_PORT=1025
+SMTP_USERNAME=hello
+SMTP_PASSWORD=hello
+SMTP_TRUST=*
+SMTP_SENDER=vcasino@gmail.com
+ADMIN_PASSWORD="R84+sc5+6'cx'(35qcmaf.=1;D9Hiq[j-J=ol$b{n)VaQ[HQ6N" (admin master password)
 GOOGLE_OAUTH_CLIENT_ID (Google OAuth2)
 GOOGLE_OAUTH_CLIENT_SECRET (Google OAuth2)
 GITHUB_OAUTH_CLIENT_ID (GitHub OAuth2)

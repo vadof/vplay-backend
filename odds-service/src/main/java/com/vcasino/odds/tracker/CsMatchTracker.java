@@ -29,32 +29,29 @@ public class CsMatchTracker {
     private final CsOddsService oddsService;
     private final MatchMapRepository matchMapRepository;
     private final MatchRepository matchRepository;
+    private final Map<MatchStatus, Long> updateIntervalByStatus = Map.of(
+            MatchStatus.WAITING_TO_START, 120000L,
+            MatchStatus.LIVE, 15000L,
+            MatchStatus.BREAK, 120000L
+    );
 
     @Async
     public void trackLiveMatchData(Match match) {
         if (watchList.containsKey(match.getMatchPage())) {
-            log.warn("Match#{} already tracking", match.getId());
             return;
         }
 
         try {
-            long updateInterval = 500;
-
-            // TODO replace here
-            log.info("PREPARE to start tracking Match#{}", match.getId());
-            CsMatchParser matchParser = new CsMatchParser(match.getId() + "");
+            log.info("Prepare to start tracking Match#{}", match.getId());
+            CsMatchParser matchParser = new CsMatchParser(match.getMatchPage());
 
             watchList.put(match.getMatchPage(), matchParser);
             log.info("Start tracking Match#{}", match.getId());
 
-            MatchData matchData = new MatchData(matchParser, match, null, null);
+            MatchData matchData = new MatchData(matchParser, false, match);
 
-            int counter = 1;
-            if (match.getId() == 1) {
-                counter = 290;
-            }
             while (true) {
-                matchParser.updateMatchPage(counter, match.getId());
+                matchParser.updateMatchPage(matchData.getUpdatePageWithRefresh());
 
                 switch (match.getStatus()) {
                     case LIVE -> handleLive(matchData);
@@ -66,10 +63,9 @@ public class CsMatchTracker {
                     }
                 }
 
-                Thread.sleep(updateInterval);
+                log.info("Match#{}: Status -> {}", match.getId(), match.getStatus());
 
-                log.info("Match#{}: Status -> {} | Save_{} | Thread -> {}", match.getId(), match.getStatus(), counter, Thread.currentThread().getName());
-                counter++;
+                Thread.sleep(updateIntervalByStatus.getOrDefault(match.getStatus(), 30000L));
             }
         } catch (Exception e) {
             log.error("Error happened while tracking Match#{}, closing all markets", match.getId(), e);
@@ -94,6 +90,7 @@ public class CsMatchTracker {
         CsMatchParser matchParser = matchData.getMatchParser();
 
         if (match.getMatchMaps().isEmpty()) {
+            matchData.setUpdatePageWithRefresh(true);
             boolean mapsAppeared = matchParser.isMapsAppeared();
             if (mapsAppeared) {
                 List<MatchMap> matchMaps = matchParser.getMatchMaps();
@@ -114,6 +111,7 @@ public class CsMatchTracker {
         } else {
             boolean matchStarted = matchParser.isMatchStarted();
             if (matchStarted) {
+                matchData.setUpdatePageWithRefresh(false);
                 match.setStatus(MatchStatus.LIVE);
                 matchRepository.save(match);
                 handleLive(matchData);
@@ -231,8 +229,10 @@ public class CsMatchTracker {
         int team2Wins = match.getMatchMaps().stream()
                 .filter(map -> map.getWinner() != null && map.getWinner() == 2).toList().size();
 
-        int needWins = 2;
-        if (match.getFormat().equals("BO5")) {
+        int needWins = 1;
+        if (match.getFormat().equals("BO2")) {
+            needWins = 2;
+        } else if (match.getFormat().equals("BO5")) {
             needWins = 3;
         }
 

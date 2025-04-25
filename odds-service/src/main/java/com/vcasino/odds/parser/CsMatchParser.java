@@ -11,8 +11,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 
-import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -24,29 +25,42 @@ import java.util.Optional;
 public class CsMatchParser extends MatchParser {
 
     private final List<String> pistolPrefixes = List.of("cz75", "deagle", "elite", "five", "glock", "hkp2000", "p250", "revolver", "tec9", "usp");
-    private Document matchPage;
+    private Document matchPageDocument;
 
     public CsMatchParser(String matchPage) throws ParserException {
         super(matchPage);
     }
 
-    // TODO remove counter
     @Override
-    public void updateMatchPage(int saveCounter, Long matchId) throws ParserException {
-        String filePath = "C:\\Users\\Vadim\\Desktop\\" + matchId + "\\save_" + saveCounter + ".html";
+    public void updateMatchPage(boolean updateWithPageRefresh) throws ParserException {
         try {
-            File inputFile = new File(filePath);
-            this.matchPage = Jsoup.parse(inputFile, "UTF-8");
+            if (updateWithPageRefresh) {
+                if (mainDriver != null) {
+                    mainDriver.close();
+                }
+
+                Optional<WebDriver> driverOptional = startDriver(matchPage);
+                if (driverOptional.isEmpty()) {
+                    throw new Exception("Exception updating match page with refresh " + matchPage);
+                }
+
+                mainDriver = driverOptional.get();
+            }
+
+            matchPageDocument = getContent(mainDriver, null, "match-page");
         } catch (Exception e) {
-            throw new ParserException("Cannot parse " + filePath);
+            throw new ParserException("Exception happened parsing " + matchPage);
         }
-        // TODO uncomment and wrap in try catch
-//        String matchPageHtml = driver.findElement(By.className("match-page")).getAttribute("outerHTML");
-//        this.matchPage = Jsoup.parse(matchPageHtml);
+    }
+
+    private Document getContent(WebDriver driver, String contentId, String contentClassName) {
+        String html = driver.findElement(contentId != null ? By.id(contentId) : By.className(contentClassName))
+                .getAttribute("outerHTML");
+        return Jsoup.parse(html);
     }
 
     public Optional<MapState> getMapState(Participant participant1) {
-        Elements scoreboardElements = matchPage.getElementsByClass("scoreboard");
+        Elements scoreboardElements = matchPageDocument.getElementsByClass("scoreboard");
         if (scoreboardElements.isEmpty()) return Optional.empty();
 
         Element scoreboard = scoreboardElements.getFirst();
@@ -123,7 +137,7 @@ public class CsMatchParser extends MatchParser {
     }
 
     public List<MatchMap> getMatchMaps() {
-        Elements mapElements = matchPage.getElementsByClass("maps").getFirst().getElementsByClass("mapholder");
+        Elements mapElements = matchPageDocument.getElementsByClass("maps").getFirst().getElementsByClass("mapholder");
         List<MatchMap> matchMaps = new ArrayList<>();
 
         for (int i = 0; i < mapElements.size(); i++) {
@@ -164,11 +178,17 @@ public class CsMatchParser extends MatchParser {
 
     public void setParticipantWinRateAndMapsPlayed(List<MatchMap> matchMaps, Participant p, boolean p1,
                                                    Map<Integer, ParticipantMapStatistics> mapsStatistics) {
+
+        WebDriver participantPageDriver = null;
+
         try {
-            // TODO replace with opening a new parser
-            String filePath = p.getName() + ".html";
-            File inputFile = new File(filePath);
-            Document participantPage = Jsoup.parse(inputFile, "UTF-8");
+            Optional<WebDriver> participantPageDriverOptional = startDriver(p.getParticipantPage());
+            if (participantPageDriverOptional.isEmpty()) {
+                throw new Exception("Exception initializing participant driver for " + p.getParticipantPage());
+            }
+
+            participantPageDriver = participantPageDriverOptional.get();
+            Document participantPage = getContent(participantPageDriver, "statsBox", null);
 
             Elements mapStats = participantPage.getElementsByClass("map-statistics-container");
             for (Element element : mapStats) {
@@ -214,11 +234,15 @@ public class CsMatchParser extends MatchParser {
                 }
                 mapsStatistics.put(matchMap.getMapNumber(), mapStatistics);
             }
+        } finally {
+            if (participantPageDriver != null) {
+                participantPageDriver.close();
+            }
         }
     }
 
     public boolean isMapsAppeared() {
-        Elements mapElements = matchPage.getElementsByClass("maps").getFirst().getElementsByClass("mapholder");
+        Elements mapElements = matchPageDocument.getElementsByClass("maps").getFirst().getElementsByClass("mapholder");
 
         return mapElements.stream().noneMatch(e -> {
             String mapName = e.getElementsByClass("mapname").getFirst().text();
@@ -227,7 +251,7 @@ public class CsMatchParser extends MatchParser {
     }
 
     public boolean isMatchStarted() {
-        Elements scoreboardElements = matchPage.getElementsByClass("scoreboard");
+        Elements scoreboardElements = matchPageDocument.getElementsByClass("scoreboard");
         if (scoreboardElements.isEmpty()) {
             return false;
         } else {
@@ -237,7 +261,7 @@ public class CsMatchParser extends MatchParser {
     }
 
     public boolean isMapStarted() {
-        Elements scoreboardElements = matchPage.getElementsByClass("scoreboard");
+        Elements scoreboardElements = matchPageDocument.getElementsByClass("scoreboard");
         if (scoreboardElements.isEmpty()) {
             return false;
         } else {

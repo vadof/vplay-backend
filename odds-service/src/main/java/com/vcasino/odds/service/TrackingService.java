@@ -21,17 +21,11 @@ public class TrackingService {
     private final CsMatchTracker csMatchTracker;
 
     public void trackUpcomingMatches() {
-        // TODO uncomment
-        int startTrackingBeforeMinutes = 30;
-        List<Match> matchesToTrack = matchRepository.findByStartDateBeforeAndStatus(
-                LocalDateTime.now().plusMinutes(startTrackingBeforeMinutes), MatchStatus.WAITING_TO_START);
+        int startTrackingBeforeMinutes = 5;
+        List<Match> matchesToTrack = matchRepository.findByStartDateBeforeAndStatusNot(
+                LocalDateTime.now().plusMinutes(startTrackingBeforeMinutes), MatchStatus.FINISHED);
 
         for (Match match : matchesToTrack) {
-            // TODO remove delay
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-            }
             if (match.getTournament().getDiscipline().equals(Discipline.COUNTER_STRIKE)) {
                 csMatchTracker.trackLiveMatchData(match);
             } else {
