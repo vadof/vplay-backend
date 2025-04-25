@@ -30,15 +30,15 @@ public class StatisticsRepository {
 
     public BetServiceStatisticsDto getServiceStatistics() {
         String sql = """
-            SELECT
-                (SELECT COUNT(*) FROM bet) AS totalBets,
-                (SELECT COUNT(*) FROM bet WHERE created_at >= CURRENT_DATE) AS betsToday,
-                (SELECT COUNT(*) FROM bet WHERE created_at >= NOW() - INTERVAL '1 WEEK') AS betsLastWeek,
-                (SELECT COUNT(*) FROM bet WHERE created_at >= NOW() - INTERVAL '1 MONTH') AS betsLastMonth,
-                (SELECT COALESCE(SUM(amount), 0) FROM bet) AS totalAmountWagered,
-                (SELECT COALESCE(SUM(amount * odds - amount), 0) FROM bet WHERE result = 'WIN') AS totalAmountWin,
-                (SELECT COALESCE(SUM(amount), 0) FROM bet WHERE result = 'LOSS') AS totalAmountLoss
-            """;
+                SELECT
+                    (SELECT COUNT(*) FROM bet) AS totalBets,
+                    (SELECT COUNT(*) FROM bet WHERE created_at >= CURRENT_DATE) AS betsToday,
+                    (SELECT COUNT(*) FROM bet WHERE created_at >= NOW() - INTERVAL '1 WEEK') AS betsLastWeek,
+                    (SELECT COUNT(*) FROM bet WHERE created_at >= NOW() - INTERVAL '1 MONTH') AS betsLastMonth,
+                    (SELECT COALESCE(SUM(amount), 0) FROM bet) AS totalAmountWagered,
+                    (SELECT COALESCE(SUM(amount * odds - amount), 0) FROM bet WHERE result = 'WIN') AS totalAmountWin,
+                    (SELECT COALESCE(SUM(amount), 0) FROM bet WHERE result = 'LOSS') AS totalAmountLoss
+                """;
 
         BetServiceStatisticsDto stats = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(BetServiceStatisticsDto.class));
         stats.setTotalServiceProfit(stats.getTotalAmountLoss().subtract(stats.getTotalAmountWin()));
@@ -55,27 +55,27 @@ public class StatisticsRepository {
             args = new Object[]{startDate};
         }
         String sql = """
-               SELECT
-                  t.tournament_id AS tournamentId,
-                  t.title,
-                  t.discipline,
-                  t.tournament_page AS tournamentPage,
-                  t.image_s3_key AS image,
-                  COUNT(DISTINCT ma.match_id) AS matchCount,
-                  t.start_date AS startDate,
-                  t.end_date AS endDate,
-                  COUNT(DISTINCT b.bet_id) AS betCount,
-                  COALESCE(SUM(b.amount), 0) AS totalAmountWagered,
-                  COALESCE(SUM(CASE WHEN b.result = 'WIN' THEN (b.amount * b.odds - b.amount) ELSE 0 END), 0) AS totalAmountWin,
-                  COALESCE(SUM(CASE WHEN b.result = 'LOSS' THEN b.amount ELSE 0 END), 0) AS totalAmountLoss
-               FROM tournament t
-                        LEFT JOIN match ma ON ma.tournament_id = t.tournament_id
-                        LEFT JOIN market m ON m.match_id = ma.match_id
-                        LEFT JOIN bet b ON b.market_id = m.market_id
-               %s
-               GROUP BY t.tournament_id, t.title, t.discipline, t.tournament_page, t.image_s3_key, t.start_date, t.end_date
-               ORDER BY t.start_date;
-               """.formatted(whereSql);
+                SELECT
+                   t.tournament_id AS tournamentId,
+                   t.title,
+                   t.discipline,
+                   t.tournament_page AS tournamentPage,
+                   t.image_s3_key AS image,
+                   COUNT(DISTINCT ma.match_id) AS matchCount,
+                   t.start_date AS startDate,
+                   t.end_date AS endDate,
+                   COUNT(DISTINCT b.bet_id) AS betCount,
+                   COALESCE(SUM(b.amount), 0) AS totalAmountWagered,
+                   ROUND(COALESCE(SUM(CASE WHEN b.result = 'WIN' THEN (b.amount * b.odds - b.amount) ELSE 0 END), 0), 2) AS totalAmountWin,
+                   COALESCE(SUM(CASE WHEN b.result = 'LOSS' THEN b.amount ELSE 0 END), 0) AS totalAmountLoss
+                FROM tournament t
+                         LEFT JOIN match ma ON ma.tournament_id = t.tournament_id
+                         LEFT JOIN market m ON m.match_id = ma.match_id
+                         LEFT JOIN bet b ON b.market_id = m.market_id
+                %s
+                GROUP BY t.tournament_id, t.title, t.discipline, t.tournament_page, t.image_s3_key, t.start_date, t.end_date
+                ORDER BY t.start_date;
+                """.formatted(whereSql);
 
         List<TournamentStatisticsDto> stats = jdbcTemplate.query(sql,
                 new BeanPropertyRowMapper<>(TournamentStatisticsDto.class), args);
@@ -135,7 +135,7 @@ public class StatisticsRepository {
                     SELECT
                         COUNT(DISTINCT b.bet_id) AS betCount,
                         COALESCE(SUM(b.amount), 0) AS totalAmountWagered,
-                        COALESCE(SUM(CASE WHEN b.result = 'WIN' THEN (b.amount * b.odds - b.amount) ELSE 0 END), 0) AS totalAmountWin,
+                        ROUND(COALESCE(SUM(CASE WHEN b.result = 'WIN' THEN (b.amount * b.odds - b.amount) ELSE 0 END), 0), 2) AS totalAmountWin,
                         COALESCE(SUM(CASE WHEN b.result = 'LOSS' THEN b.amount ELSE 0 END), 0) AS totalAmountLoss,
                         COUNT(*) FILTER (WHERE b.result = 'WIN') AS totalWinBets,
                         COUNT(*) FILTER (WHERE b.result = 'LOSS') AS totalLossBets,
@@ -169,7 +169,7 @@ public class StatisticsRepository {
                     m.result,
                     COUNT(b.bet_id) AS betCount,
                     COALESCE(SUM(b.amount), 0) AS totalAmountWagered,
-                    COALESCE(SUM(CASE WHEN b.result = 'WIN' THEN (b.amount * b.odds - b.amount) ELSE 0 END), 0) AS totalAmountWin,
+                    ROUND(COALESCE(SUM(CASE WHEN b.result = 'WIN' THEN (b.amount * b.odds - b.amount) ELSE 0 END), 0), 2) AS totalAmountWin,
                     COALESCE(SUM(CASE WHEN b.result = 'LOSS' THEN b.amount ELSE 0 END), 0) AS totalAmountLoss,
                     ROUND(COALESCE(AVG(b.amount), 0), 2) AS averageBetAmount,
                     COALESCE(MAX(b.amount), 0) AS maxBetAmount
@@ -187,14 +187,11 @@ public class StatisticsRepository {
         String sql = """
                 SELECT
                     b.user_id as userId,
-                    COALESCE(SUM(CASE WHEN b.result = 'WIN' THEN (b.amount * b.odds - b.amount) ELSE 0 END), 0) AS totalWinAmount,
-                    COALESCE(SUM(CASE WHEN b.result = 'LOSS' THEN (b.amount * b.odds - b.amount) ELSE 0 END), 0) AS totalLossAmount
-                FROM
-                    bet b
-                GROUP BY
-                    b.user_id
-                ORDER BY
-                    totalWinAmount DESC
+                    ROUND(COALESCE(SUM(CASE WHEN b.result = 'WIN' THEN (b.amount * b.odds - b.amount) ELSE 0 END), 0), 2) AS totalWinAmount,
+                    ROUND(COALESCE(SUM(CASE WHEN b.result = 'LOSS' THEN (b.amount * b.odds - b.amount) ELSE 0 END), 0), 2) AS totalLossAmount
+                FROM bet b
+                GROUP BY b.user_id
+                ORDER BY totalWinAmount DESC
                 LIMIT 20;
                 """;
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(TopPlayerDto.class));
@@ -206,14 +203,14 @@ public class StatisticsRepository {
                     u.user_id,
                     COUNT(DISTINCT b.bet_id) AS totalBetsPlaced,
                     COALESCE(SUM(b.amount), 0) AS totalAmountWagered,
-                    COALESCE(SUM(CASE WHEN b.result = 'WIN' THEN (b.amount * b.odds - b.amount) ELSE 0 END), 0) AS totalWinAmount,
+                    ROUND(COALESCE(SUM(CASE WHEN b.result = 'WIN' THEN (b.amount * b.odds - b.amount) ELSE 0 END), 0), 2) AS totalWinAmount,
                     COALESCE(SUM(CASE WHEN b.result = 'LOSS' THEN b.amount ELSE 0 END), 0) AS totalLossAmount,
                     COUNT(b.bet_id) FILTER (WHERE b.result = 'WIN') AS totalWinBets,
                     COUNT(b.bet_id) FILTER (WHERE b.result = 'LOSS') AS totalLossBets,
                     COUNT(b.bet_id) FILTER (WHERE b.result = 'CANCELLED') AS totalCancelledBets,
                     MAX(b.amount) AS biggestBet,
                     MIN(b.amount) AS smallestBet,
-                    AVG(b.amount) AS averageBet,
+                    ROUND(AVG(b.amount), 2) AS averageBet,
                     COUNT(DISTINCT t.tournament_id) AS totalTournamentsParticipated,
                     COUNT(DISTINCT m.match_id) AS totalMatchesParticipated
                 FROM
@@ -222,10 +219,8 @@ public class StatisticsRepository {
                         LEFT JOIN market ma ON ma.market_id = b.market_id
                         LEFT JOIN match m ON m.match_id = ma.match_id
                         LEFT JOIN tournament t ON t.tournament_id = m.tournament_id
-                WHERE
-                    u.user_id = ?
-                GROUP BY
-                    u.user_id;
+                WHERE u.user_id = ?
+                GROUP BY u.user_id;
                 """;
 
         List<UserInformationDto> resList = jdbcTemplate.query(mainSql, new BeanPropertyRowMapper<>(UserInformationDto.class), userId);
@@ -234,7 +229,6 @@ public class StatisticsRepository {
         }
 
         UserInformationDto res = resList.getFirst();
-
 
         int totalBetsPlaceWithoutCancelled = res.getTotalBetsPlaced() - res.getTotalCancelledBets();
         BigDecimal winPercentage;
@@ -247,16 +241,24 @@ public class StatisticsRepository {
 
         res.setWinPercentage(winPercentage);
 
+        res.setLatestBets(getUserBets(userId));
+
+        return res;
+    }
+
+    private List<UserBetDto> getUserBets(Long userId) {
         String latestBetsSql = """
-                SELECT b.odds as betOdds,
-                       b.amount as betAmount,
-                       b.created_at as createdAt,
-                       b.result as betResult,
-                       ma.outcome as marketOutcome,
-                       ma.dtype as marketType,
-                       p1.name as matchParticipant1,
-                       p2.name as matchParticipant2,
-                       t.title as tournamentTitle,
+                SELECT b.odds as bet_odds,
+                       b.amount as bet_amount,
+                       b.created_at as created_at,
+                       b.result as bet_result,
+                       ma.outcome as market_outcome,
+                       ma.dtype as market_type,
+                       ma.map_number as map_number,
+                       ma.participant as market_participant,
+                       p1.name as match_participant1,
+                       p2.name as match_participant2,
+                       t.title as tournament_title,
                        t.discipline as discipiline
                 FROM
                     bet b
@@ -270,8 +272,54 @@ public class StatisticsRepository {
                 LIMIT 10;
                 """;
 
-        res.setLatestBets(jdbcTemplate.query(latestBetsSql, new BeanPropertyRowMapper<>(UserBetDto.class), userId));
+        return jdbcTemplate.query(latestBetsSql, (rs, rowNum) -> {
+            BigDecimal outcome = rs.getBigDecimal("market_outcome");
+            String marketType = rs.getString("market_type");
+            String p1Name = rs.getString("match_participant1");
+            String p2Name = rs.getString("match_participant2");
+            Integer participant = rs.getInt("market_participant");
+            Integer mapNumber = rs.getInt("map_number");
 
-        return res;
+            String marketOutcome = getMarketOutcomeWithCategory(outcome, marketType, p1Name, p2Name, participant, mapNumber);
+            String matchDescription = rs.getString("tournament_title") + ". " +
+                    rs.getString("discipiline") + ". " + p1Name + " VS " + p2Name;
+
+            return UserBetDto.builder()
+                    .betOdds(rs.getBigDecimal("bet_odds"))
+                    .betAmount(rs.getBigDecimal("bet_amount"))
+                    .createdAt(rs.getString("created_at"))
+                    .betResult(rs.getString("bet_result"))
+                    .marketOutcome(marketOutcome)
+                    .matchDescription(matchDescription)
+                    .build();
+        }, userId);
+    }
+
+    private String getMarketOutcomeWithCategory(BigDecimal outcome, String marketType,
+                                                String p1Name, String p2Name,
+                                                Integer participant, Integer mapNumber) {
+        switch (marketType) {
+            case "WinnerMatch" -> {
+                return "Match Winner. " + (outcome.compareTo(BigDecimal.ONE) == 0 ? p1Name : p2Name);
+            }
+            case "WinnerMap" -> {
+                return "Winner Map " + mapNumber + "." + (outcome.compareTo(BigDecimal.ONE) == 0 ? p1Name : p2Name);
+            }
+            case "TotalMaps" -> {
+                return "Total Maps. " + mapNumber + "." + (outcome.compareTo(BigDecimal.ZERO) < 0 ?
+                        "Under " + outcome.abs() : "Over " + outcome);
+            }
+            case "TotalMapRounds" -> {
+                return "Total Map " + mapNumber + ". " + (outcome.compareTo(BigDecimal.ZERO) < 0 ?
+                        "Under " + outcome.abs() : "Over " + outcome);
+            }
+            case "HandicapMaps" -> {
+                String participantName = participant == 1 ? p1Name : p2Name;
+                return "Handicap Maps. " + participantName + " " +
+                        (outcome.compareTo(BigDecimal.ZERO) < 0 ? outcome.toString() : "+" + outcome + " " + outcome);
+            }
+        }
+
+        return outcome.toString();
     }
 }

@@ -19,10 +19,6 @@ public class UserBetDto {
     BigDecimal betAmount;
     String createdAt;
     String betResult;
-    BigDecimal marketOutcome;
-    String marketType;
-    String matchParticipant1;
-    String matchParticipant2;
-    String tournamentTitle;
-    String discipline;
+    String marketOutcome;
+    String matchDescription;
 }
