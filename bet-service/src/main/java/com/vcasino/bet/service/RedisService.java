@@ -128,12 +128,18 @@ public class RedisService {
         }
     }
 
-    public void cacheMatchMarkets(List<MarketDto> marketDtos) {
+    public void updateMatchMaps(Long matchId, List<MatchMapDto> matchMaps) {
+        String data = redisTemplate.opsForValue().get(MATCH_KEY + matchId);
+        if (data == null) return;
+
         try {
-            String value = objectMapper.writeValueAsString(marketDtos);
-            redisTemplate.opsForValue().set(TOURNAMENTS_KEY, value, 15, TimeUnit.MINUTES);
+            MatchDto match = objectMapper.readValue(data, MatchDto.class);
+            match.setMatchMaps(matchMaps);
+
+            String value = objectMapper.writeValueAsString(match);
+            redisTemplate.opsForValue().set(MATCH_KEY + matchId, value, 30, TimeUnit.MINUTES);
         } catch (Exception e) {
-            log.error("Error caching match markets", e);
+            log.error("Error updating match maps cache", e);
         }
     }
 

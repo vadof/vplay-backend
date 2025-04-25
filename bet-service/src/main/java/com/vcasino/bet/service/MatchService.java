@@ -7,6 +7,7 @@ import com.vcasino.bet.dto.response.MarketPairDto;
 import com.vcasino.bet.dto.response.MarketsByCategory;
 import com.vcasino.bet.dto.response.MatchDto;
 import com.vcasino.bet.dto.request.RegisterMatchRequest;
+import com.vcasino.bet.dto.response.MatchMapDto;
 import com.vcasino.bet.dto.response.TournamentDto;
 import com.vcasino.bet.entity.Match;
 import com.vcasino.bet.entity.Tournament;
@@ -155,6 +156,12 @@ public class MatchService {
 
         redisService.cacheTournaments(tournamentDtos);
 
+        for (TournamentDto tournamentDto : tournamentDtos) {
+            for (MatchDto match : tournamentDto.getMatches()) {
+                System.out.println(match.getMatchMaps());
+            }
+        }
+
         return tournamentDtos;
     }
 
@@ -198,7 +205,9 @@ public class MatchService {
             redisService.publishUpdatedMatchEvent(match.getId(), null, null, true);
         } else if (event.scoreUpdated()) {
             log.info("Match#{} score updated", event.matchId());
-            redisService.publishUpdatedMatchEvent(match.getId(), null, matchMapper.getMatchMaps(match), false);
+            List<MatchMapDto> matchMapDtos = matchMapper.getMatchMaps(match);
+            redisService.updateMatchMaps(event.matchId(), matchMapDtos);
+            redisService.publishUpdatedMatchEvent(match.getId(), null, matchMapDtos, false);
         }
     }
 
@@ -207,6 +216,8 @@ public class MatchService {
         List<Market> winnerMatchMarkets = markets.stream().filter(m -> m.getType().equals("WinnerMatch"))
                 .sorted(Comparator.comparingInt(m -> m.getOutcome().intValue()))
                 .toList();
+
+        if (winnerMatchMarkets.isEmpty()) return;
 
         List<MarketDto> marketDtos = marketMapper.toDtos(winnerMatchMarkets, p1Name, p2Name);
         MarketPairDto marketPair = new MarketPairDto(marketDtos, marketDtos.getFirst().getClosed());
@@ -220,9 +231,14 @@ public class MatchService {
                 .sorted(Comparator.comparingInt(m -> ((WinnerMap )m).getMapNumber()))
                 .toList();
 
+        if (winnerMapMarkets.isEmpty()) return;
+
         int mapNumber = 1;
         for (int i = 0; i < winnerMapMarkets.size(); i += 2) {
             List<Market> mapMarkets = new ArrayList<>(List.of(winnerMapMarkets.get(i), winnerMapMarkets.get(i + 1)));
+
+            if (mapMarkets.isEmpty()) continue;
+
             mapMarkets.sort(Comparator.comparingInt(m -> m.getOutcome().intValue()));
 
             List<MarketDto> marketDtos = marketMapper.toDtos(List.of(winnerMapMarkets.get(i), winnerMapMarkets.get(i + 1)), p1Name, p2Name);
@@ -239,6 +255,8 @@ public class MatchService {
                 .sorted(Comparator.comparingInt(m -> m.getOutcome().intValue()))
                 .toList();
 
+        if (totalMapsMarkets.isEmpty()) return;
+
         List<MarketDto> marketDtos = marketMapper.toDtos(totalMapsMarkets, p1Name, p2Name);
         MarketPairDto marketPair = new MarketPairDto(marketDtos, marketDtos.getFirst().getClosed());
 
@@ -251,11 +269,15 @@ public class MatchService {
                 .sorted(Comparator.comparingInt(m -> ((TotalMapRounds) m).getMapNumber()))
                 .toList();
 
+        if (totalMapRoundsMarkets.isEmpty()) return;
+
         for (int i = 1; i <= totalMaps; i++) {
             int finalMapNumber = i;
             List<Market> mapMarkets = totalMapRoundsMarkets.stream()
                     .filter(m -> ((TotalMapRounds) m).getMapNumber().equals(finalMapNumber))
                     .toList();
+
+            if (mapMarkets.isEmpty()) continue;
 
             List<Market> under = mapMarkets.stream().filter(m -> m.getOutcome().compareTo(BigDecimal.ZERO) < 0)
                     .sorted(Comparator.comparingDouble(m -> m.getOutcome().doubleValue())).toList();
@@ -278,6 +300,8 @@ public class MatchService {
         List<Market> handicapMarkets = markets.stream().filter(m -> m.getType().equals("HandicapMaps"))
                 .sorted(Comparator.comparingLong(Market::getId))
                 .toList();
+
+        if (handicapMarkets.isEmpty()) return;
 
         List<MarketPairDto> pairs = new ArrayList<>();
         for (int i = 0; i < handicapMarkets.size(); i += 2) {
