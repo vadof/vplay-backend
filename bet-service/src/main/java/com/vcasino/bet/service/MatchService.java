@@ -156,12 +156,6 @@ public class MatchService {
 
         redisService.cacheTournaments(tournamentDtos);
 
-        for (TournamentDto tournamentDto : tournamentDtos) {
-            for (MatchDto match : tournamentDto.getMatches()) {
-                System.out.println(match.getMatchMaps());
-            }
-        }
-
         return tournamentDtos;
     }
 

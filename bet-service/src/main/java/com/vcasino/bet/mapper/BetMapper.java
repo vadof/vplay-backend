@@ -6,7 +6,12 @@ import com.vcasino.bet.entity.Match;
 import com.vcasino.bet.entity.Tournament;
 import com.vcasino.bet.entity.market.Market;
 import com.vcasino.bet.entity.market.MarketResult;
+import com.vcasino.bet.entity.market.handicap.HandicapMaps;
+import com.vcasino.bet.entity.market.total.TotalMapRounds;
+import com.vcasino.bet.entity.market.total.TotalMaps;
 import com.vcasino.bet.entity.market.winner.WinnerMap;
+import com.vcasino.bet.entity.market.winner.WinnerMatch;
+import org.hibernate.Hibernate;
 import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -51,19 +56,23 @@ public abstract class BetMapper implements EntityMapper<Bet, BetDto> {
     protected String getOutcome(Bet entity) {
         Market market = entity.getMarket();
         Match match = entity.getMarket().getMatch();
+        market = (Market) Hibernate.unproxy(market);
 
         String marketTypeStr = "";
         String outcomeName = marketMapper.getOutcomeStr(market,
                 match.getParticipant1().getName(), match.getParticipant2().getName());
 
-        marketTypeStr = switch (market.getType()) {
-            case "WinnerMatch" -> "Match Winner";
-            case "WinnerMap" -> "Winner. Map " + ((WinnerMap) market).getMapNumber();
-            case "TotalMaps" -> "Total Maps";
-            case "TotalMapRounds" -> "Total";
-            case "HandicapMaps" -> "Handicap Maps";
-            default -> marketTypeStr;
-        };
+        if (market instanceof WinnerMatch) {
+            marketTypeStr = "Match Winner";
+        } else if (market instanceof WinnerMap) {
+            marketTypeStr = "Winner. Map " + ((WinnerMap) market).getMapNumber();
+        } else if (market instanceof TotalMaps) {
+            marketTypeStr = "Total Maps";
+        } else if (market instanceof TotalMapRounds) {
+            marketTypeStr = "Total";
+        } else if (market instanceof HandicapMaps) {
+            marketTypeStr = "Handicap Maps";
+        }
 
         return marketTypeStr + ". " + outcomeName;
     }
