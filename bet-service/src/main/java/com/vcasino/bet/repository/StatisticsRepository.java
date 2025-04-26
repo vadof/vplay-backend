@@ -188,7 +188,7 @@ public class StatisticsRepository {
                 SELECT
                     b.user_id as userId,
                     ROUND(COALESCE(SUM(CASE WHEN b.result = 'WIN' THEN (b.amount * b.odds - b.amount) ELSE 0 END), 0), 2) AS totalWinAmount,
-                    ROUND(COALESCE(SUM(CASE WHEN b.result = 'LOSS' THEN (b.amount * b.odds - b.amount) ELSE 0 END), 0), 2) AS totalLossAmount
+                    ROUND(COALESCE(SUM(CASE WHEN b.result = 'LOSS' THEN (b.amount) ELSE 0 END), 0), 2) AS totalLossAmount
                 FROM bet b
                 GROUP BY b.user_id
                 ORDER BY totalWinAmount DESC
