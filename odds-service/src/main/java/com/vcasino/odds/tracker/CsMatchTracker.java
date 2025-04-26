@@ -230,7 +230,7 @@ public class CsMatchTracker {
                 .filter(map -> map.getWinner() != null && map.getWinner() == 2).toList().size();
 
         int needWins = 1;
-        if (match.getFormat().equals("BO2")) {
+        if (match.getFormat().equals("BO3")) {
             needWins = 2;
         } else if (match.getFormat().equals("BO5")) {
             needWins = 3;
