@@ -32,19 +32,22 @@ public class ClickerService {
             return handleSuspiciousBehaviour(new SuspiciousTapAction(account, tap, message));
         }
 
-        if (tap.getTimestamp() > TimeUtil.getCurrentUnixTime()) {
+        Long tapTimestamp = tap.getTimestamp();
+        Long currentTimestamp = TimeUtil.getCurrentUnixTime();
+
+        if (tapTimestamp > currentTimestamp && tapTimestamp - currentTimestamp > 3) {
             String message = "Does the user live in the future???";
             return handleSuspiciousBehaviour(new SuspiciousTapAction(account, tap, message));
         }
 
         long lastSync = TimeUtil.toUnixTime(account.getLastSyncDate());
 
-        if (lastSync >= tap.getTimestamp()) {
-            log.warn("Late request received lastSync={}, tapTimestamp={}", lastSync, tap.getTimestamp());
+        if (lastSync >= tapTimestamp) {
+            log.warn("Late request received lastSync={}, tapTimestamp={}", lastSync, tapTimestamp);
             return accountService.toDto(account);
         }
 
-        long diff = TimeUtil.getDifferenceInSeconds(lastSync, tap.getTimestamp());
+        long diff = TimeUtil.getDifferenceInSeconds(lastSync, tapTimestamp);
         long recoveredOverTime = account.getLevel().getTapsRecoverPerSec() * (diff + ClickerConstants.UNCERTAINTY_IN_SECONDS);
         long canBeTappedOverTime = account.getAvailableTaps() + recoveredOverTime - tap.getAvailableTaps();
 
@@ -58,7 +61,7 @@ public class ClickerService {
         accountService.addCoins(account, toAdd);
 
         account.setAvailableTaps(tap.getAvailableTaps());
-        account.setLastSyncDate(TimeUtil.toTimestamp(tap.getTimestamp()));
+        account.setLastSyncDate(TimeUtil.toTimestamp(tapTimestamp));
 
         account = accountService.save(account);
 
