@@ -10,8 +10,6 @@ spring:
   kafka:
     bootstrap-servers: localhost:29092
 
-
-
 management:
   endpoints:
     web:
@@ -31,3 +29,8 @@ eureka:
   instance:
     preferIpAddress: true
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+config:
+  client-url: ${CLIENT_URL}
+  jwt:
+    public-key-path: ${PUBLIC_KEY_PATH}

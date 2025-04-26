@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vcasino.commonredis.config.JedisConfig;
 import com.vcasino.commonredis.enums.Channel;
 import com.vcasino.notification.listener.RedisNotificationListener;
-import com.vcasino.notification.service.SseEmitterService;
+import com.vcasino.notification.service.WebSocketService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
@@ -31,8 +31,8 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisNotificationListener redisNotificationListener(SseEmitterService emitterService, ObjectMapper objectMapper) {
-        return new RedisNotificationListener(emitterService, objectMapper);
+    public RedisNotificationListener redisNotificationListener(WebSocketService webSocketService, ObjectMapper objectMapper) {
+        return new RedisNotificationListener(webSocketService, objectMapper);
     }
 
     @Bean

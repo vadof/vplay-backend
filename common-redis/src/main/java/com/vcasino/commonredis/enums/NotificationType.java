@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum NotificationType {
     BALANCE("BALANCE"),
-    BET("BET");
+    BET("BET"),
+    ERROR("ERROR");
 
     private final String name;
 

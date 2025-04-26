@@ -2,6 +2,9 @@ package com.vcasino.wallet.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vcasino.commonredis.enums.Channel;
+import com.vcasino.commonredis.enums.NotificationType;
+import com.vcasino.commonredis.event.NotificationEvent;
 import com.vcasino.wallet.dto.BalanceDto;
 import com.vcasino.wallet.dto.DepositRequestDto;
 import com.vcasino.wallet.entity.DepositPayload;
@@ -17,9 +20,12 @@ import com.vcasino.wallet.repository.WalletRepository;
 import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -33,6 +39,7 @@ public class WalletService {
     private final WalletRepository walletRepository;
     private final OutboxEventRepository outboxEventRepository;
     private final ObjectMapper objectMapper;
+    private final StringRedisTemplate redisTemplate;
 
     @Transactional
     public void createWallet(Long id, @Nullable Long invitedBy) {
@@ -92,6 +99,14 @@ public class WalletService {
         save(wallet);
 
         createDepositEvent(wallet.getId(), toAdd, depositBy);
+
+        NotificationEvent notification = new NotificationEvent(NotificationType.BALANCE,  toAdd + " added to your balance", wallet.getBalance(), wallet.getId());
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                redisTemplate.convertAndSend(Channel.NOTIFICATIONS.getName(), toJson(notification));
+            }
+        });
 
         return new BalanceDto(wallet.getBalance());
     }

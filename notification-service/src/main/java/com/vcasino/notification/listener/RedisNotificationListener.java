@@ -2,7 +2,7 @@ package com.vcasino.notification.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vcasino.commonredis.event.NotificationEvent;
-import com.vcasino.notification.service.SseEmitterService;
+import com.vcasino.notification.service.WebSocketService;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class RedisNotificationListener implements MessageListener {
 
-    private final SseEmitterService emitterService;
+    private final WebSocketService webSocketService;
     private final ObjectMapper objectMapper;
 
     @Override
@@ -25,7 +25,7 @@ public class RedisNotificationListener implements MessageListener {
         try {
             String json = new String(message.getBody(), StandardCharsets.UTF_8);
             NotificationEvent event = objectMapper.readValue(json, NotificationEvent.class);
-            emitterService.sendMessageToUser(event);
+            webSocketService.sendMessageToUser(event);
         } catch (Exception e) {
             log.error("Error receiving message from Redis", e);
         }

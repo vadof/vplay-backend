@@ -23,6 +23,7 @@ public class GatewayConfig {
     private final GatewayFilter betServiceAuthFilter;
     private final AuthFilter authFilter;
     private final AdminFilter adminFilter;
+    private final GatewayFilter notificationsFilter;
     private final ApplicationConfig applicationConfig;
 
     @Bean
@@ -40,8 +41,8 @@ public class GatewayConfig {
                 .route("wallet-service", r -> r.path("/api/*/wallet/**")
                         .filters(f -> f.filter(authFilter))
                         .uri("lb://wallet-service"))
-                .route("notification-service", r -> r.path("/notifications/stream")
-                        .filters(f -> f.filter(authFilter))
+                .route("notification-service", r -> r.path("/api/*/notifications/**")
+                        .filters(f -> f.filter(notificationsFilter))
                         .uri("lb://notification-service"))
                 .route("bet-service", r -> r.path("/api/*/bet/**")
                         .filters(f -> f.filter(betServiceAuthFilter))
