@@ -1,5 +1,6 @@
 package com.vcasino.user.service;
 
+import com.vcasino.user.dto.UserStatisticsDto;
 import com.vcasino.user.exception.AppException;
 import com.vcasino.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -17,8 +18,8 @@ public class StatisticsService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public UserRepository.UserStatistics getStatistics() {
-        return userRepository.fetchUserStatistics();
+    public UserStatisticsDto getStatistics() {
+        return new UserStatisticsDto(userRepository.fetchUserStatistics(), userRepository.fetchRegistrationStatistics());
     }
 
     @Transactional(readOnly = true)

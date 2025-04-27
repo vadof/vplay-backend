@@ -32,9 +32,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
         COUNT(CASE WHEN u.frozen = TRUE THEN 1 END) AS frozenUsers
     FROM my_user u
     """)
-    UserStatistics fetchUserStatistics();
+    UserGeneralStatistics fetchUserStatistics();
 
-    interface UserStatistics {
+    interface UserGeneralStatistics {
         long getRegisteredUsers();
         long getRegisteredUsersWithOAuth();
         long getRegisteredUsersInvitedByOthers();
@@ -43,6 +43,24 @@ public interface UserRepository extends JpaRepository<User, Long> {
         long getRegisteredUsersLastMonth();
         long getActiveUsers();
         long getFrozenUsers();
+    }
+
+    @Query(nativeQuery = true, value = """
+    SELECT
+        u.id as userId,
+        u.username as username,
+        u.register_date as registerDate
+    FROM my_user u
+    WHERE u.active = TRUE
+    ORDER BY u.register_date DESC
+    LIMIT 20;
+    """)
+    List<UserRegistrationStatistics> fetchRegistrationStatistics();
+
+    interface UserRegistrationStatistics {
+        long getUserId();
+        String getUsername();
+        String getRegisterDate();
     }
 
     @Query(nativeQuery = true, value = """

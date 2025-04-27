@@ -20,12 +20,9 @@ public class NotificationsFilter implements GatewayFilter {
         ServerHttpRequest request = exchange.getRequest();
 
         HttpHeaders headers = request.getHeaders();
-        System.out.println(headers);
         if ("websocket".equalsIgnoreCase(headers.getUpgrade())) {
-            log.info("Through");
             return chain.filter(exchange.mutate().request(request).build());
         } else {
-            log.info("Error");
             return onError(exchange, HttpStatus.BAD_REQUEST);
         }
     }

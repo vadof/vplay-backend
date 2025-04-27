@@ -1,5 +1,6 @@
 package com.vcasino.user.controller;
 
+import com.vcasino.user.dto.UserStatisticsDto;
 import com.vcasino.user.exception.AppException;
 import com.vcasino.user.repository.UserRepository;
 import com.vcasino.user.service.StatisticsService;
@@ -23,9 +24,9 @@ public class AdminStatisticsController {
     private final StatisticsService statisticsService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserRepository.UserStatistics> getStatistics() {
+    public ResponseEntity<UserStatisticsDto> getStatistics() {
         log.info("REST request to get Statistics");
-        UserRepository.UserStatistics statistics = statisticsService.getStatistics();
+        UserStatisticsDto statistics = statisticsService.getStatistics();
         return ResponseEntity.ok(statistics);
     }
 
