@@ -722,6 +722,18 @@ public class CsOddsService extends OddsService {
         for (MatchMap map : match.getMatchMaps()) {
             ParticipantMapStatistics statistics = mapsStatistics.get(map.getMapNumber());
 
+            if (statistics == null) {
+                statistics = new ParticipantMapStatistics(0, 0, 0.0, 0.0);
+            }
+
+            if (statistics.getMapsPlayed1() == null) {
+                statistics.setMapsPlayed1(0);
+            }
+
+            if (statistics.getMapsPlayed2() == null) {
+                statistics.setMapsPlayed2(0);
+            }
+
             double mapWinRate1 = statistics.getMapsPlayed1() < 3 ? 0.3 : statistics.getWinRate1();
             double mapWinRate2 = statistics.getMapsPlayed2() < 3 ? 0.3 : statistics.getWinRate2();
 
