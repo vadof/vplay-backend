@@ -33,7 +33,7 @@ public class WalletController extends GenericController {
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = BalanceDto.class)))
     @GetMapping(value = "/balance", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BalanceDto> getBalance() {
-        log.info("REST request to get Balance");
+        log.debug("REST request to get Balance");
         BalanceDto balance = walletService.getBalance(getLoggedInUserId());
         return ResponseEntity.ok(balance);
     }

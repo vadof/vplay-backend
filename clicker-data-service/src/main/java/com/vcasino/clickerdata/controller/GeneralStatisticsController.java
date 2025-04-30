@@ -23,7 +23,7 @@ public class GeneralStatisticsController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GeneralStatistics> getGeneralStatistics() {
-        log.info("REST request to get General Statistics");
+        log.debug("REST request to get General Statistics");
         GeneralStatistics generalStatistics = service.getGeneralStatistics();
         return ResponseEntity.ok(generalStatistics);
     }
@@ -31,7 +31,7 @@ public class GeneralStatisticsController {
     @GetMapping(value = "/charts/activeUsers", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ChartData<String, Integer>> getActiveUsersChart(
             @RequestParam(name = "chartOption") ChartOption chartOption) {
-        log.info("REST request to get Active Users Chart with option: {}", chartOption);
+        log.debug("REST request to get Active Users Chart with option: {}", chartOption);
         ChartData<String, Integer> activeUsersChart = service.getActiveUsersChart(chartOption);
         return ResponseEntity.ok(activeUsersChart);
     }
@@ -39,7 +39,7 @@ public class GeneralStatisticsController {
     @GetMapping(value = "/charts/totalClicks", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ChartData<String, Long>> getTotalClicksChart(
             @RequestParam(name = "chartOption") ChartOption chartOption) {
-        log.info("REST request to get Total Clicks Chart with option: {}", chartOption);
+        log.debug("REST request to get Total Clicks Chart with option: {}", chartOption);
         ChartData<String, Long> totalClicksChart = service.getTotalClicksChart(chartOption);
         return ResponseEntity.ok(totalClicksChart);
     }

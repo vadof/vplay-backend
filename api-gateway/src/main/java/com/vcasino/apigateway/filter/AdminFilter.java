@@ -33,7 +33,7 @@ public class AdminFilter implements GatewayFilter {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
         URI uri = request.getURI();
-        log.info("{} request to {}", request.getMethod(), uri);
+        log.debug("{} request to {}", request.getMethod(), uri);
 
         if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
             return onError(exchange, HttpStatus.UNAUTHORIZED);

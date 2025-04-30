@@ -32,7 +32,7 @@ public class AuthFilter implements GatewayFilter {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
         URI uri = request.getURI();
-        log.info("{} request to {}", request.getMethod(), uri);
+        log.debug("{} request to {}", request.getMethod(), uri);
 
         String path = uri.getPath();
 

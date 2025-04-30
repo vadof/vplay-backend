@@ -26,14 +26,14 @@ public class MatchController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<TournamentDto>> getTournamentsAndItsMatches() {
-        log.info("REST request to get Tournaments");
+        log.debug("REST request to get Tournaments");
         List<TournamentDto> res = matchService.getTournamentsAndMatches();
         return ResponseEntity.ok(res);
     }
 
     @GetMapping(value = "/{matchId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MarketsByCategory>> getMatchMarkets(@PathVariable(name = "matchId") Long matchId) {
-        log.info("REST request to get Match#{} markets", matchId);
+        log.debug("REST request to get Match#{} markets", matchId);
         List<MarketsByCategory> matchMarkets = matchService.getMatchMarkets(matchId);
         return ResponseEntity.ok(matchMarkets);
     }

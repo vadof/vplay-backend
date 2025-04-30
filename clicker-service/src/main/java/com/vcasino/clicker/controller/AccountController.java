@@ -42,7 +42,7 @@ public class AccountController extends GenericController {
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AccountResponse.class)))
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccountResponse> getAccount() {
-        log.info("REST request to get Account");
+        log.debug("REST request to get Account");
         AccountResponse response = accountService.getAccount(getAccountId());
         return ResponseEntity.ok().body(response);
     }
@@ -52,7 +52,7 @@ public class AccountController extends GenericController {
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = LevelDto.class)))
     @GetMapping(value = "/levels", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<LevelDto>> getLevels() {
-        log.info("REST request to get Levels");
+        log.debug("REST request to get Levels");
         List<LevelDto> levels = levelService.getLevels();
         return ResponseEntity.ok().body(levels);
     }

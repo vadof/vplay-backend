@@ -22,7 +22,7 @@ public class InternalController {
 
     @PostMapping("/events/status")
     public ResponseEntity<EventStatusResponse> getEventStatuses(@Valid @RequestBody EventStatusRequest request) {
-        log.info("Request to get {} event statuses", request.getEventIds().size());
+        log.debug("Request to get {} event statuses", request.getEventIds().size());
         EventStatusResponse response = transactionService.getEventStatuses(request);
         return ResponseEntity.ok(response);
     }

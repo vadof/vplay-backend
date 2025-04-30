@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Profile;
 
 @Configuration
 @AllArgsConstructor
-@Profile("dev")
+@Profile("prod")
 public class S3LocalConfig {
 
     private final ApplicationConfig applicationConfig;

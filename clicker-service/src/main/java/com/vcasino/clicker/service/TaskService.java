@@ -234,7 +234,7 @@ public class TaskService {
         accountService.addCoins(account, task.getRewardCoins());
         accountService.updateAccount(account);
 
-        log.info("Account#{} received reward for completed Task#{}", accountId, task.getId());
+        log.debug("Account#{} received reward for completed Task#{}", accountId, task.getId());
 
         return accountService.toDto(account);
     }

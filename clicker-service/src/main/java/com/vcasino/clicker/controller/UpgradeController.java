@@ -39,7 +39,7 @@ public class UpgradeController extends GenericController {
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AccountResponse.class)))
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccountResponse> buyUpgrade(@RequestBody @Valid BuyUpgradeRequest request) {
-        log.info("Rest request to buy Upgrade: {}", request.getUpgradeName());
+        log.debug("Rest request to buy Upgrade: {}", request.getUpgradeName());
         AccountResponse updatedAccount = accountService.buyUpgrade(request, getAccountId());
         return ResponseEntity.ok().body(updatedAccount);
     }

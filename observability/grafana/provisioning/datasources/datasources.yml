@@ -31,3 +31,11 @@ datasources:
     secureJsonData:
       password: my_password
     isDefault: false
+
+  - name: Loki
+    type: loki
+    access: proxy
+    url: loki:3100
+    jsonData:
+      maxLines: 1000
+    isDefault: false

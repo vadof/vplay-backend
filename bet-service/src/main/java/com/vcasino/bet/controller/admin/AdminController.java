@@ -9,7 +9,6 @@ import com.vcasino.bet.entity.Participant;
 import com.vcasino.bet.entity.Tournament;
 import com.vcasino.bet.entity.enums.Discipline;
 import com.vcasino.bet.service.MarketService;
-import com.vcasino.bet.service.bet.BetProcessingService;
 import com.vcasino.bet.service.image.ImageStorageService;
 import com.vcasino.bet.service.MatchService;
 import com.vcasino.bet.service.ParticipantService;
@@ -54,7 +53,7 @@ public class AdminController {
     @PostMapping("/images/upload/{folder}")
     public ResponseEntity<List<String>> upload(@PathVariable String folder,
                                          @RequestParam("files") List<MultipartFile> files) {
-        log.info("REST request to upload {} images to {}", files.size(), folder);
+        log.debug("REST request to upload {} images to {}", files.size(), folder);
         List<String> keys = imageStorageService.upload(folder, files);
         return ResponseEntity.ok(keys);
     }
@@ -64,7 +63,7 @@ public class AdminController {
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
     @GetMapping("/images/{folder}")
     public ResponseEntity<List<String>> getImagesInFolder(@PathVariable String folder) {
-        log.info("REST request to get images in {}", folder);
+        log.debug("REST request to get images in {}", folder);
         List<String> keys = imageStorageService.getKeysInFolder(folder);
         return ResponseEntity.ok(keys);
     }
@@ -74,7 +73,7 @@ public class AdminController {
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Tournament.class)))
     @PostMapping(value = "/tournaments", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Tournament> addTournament(@Valid @RequestBody RegisterTournamentRequest request) {
-        log.info("REST request to add Tournament: '{}'", request.getTitle());
+        log.debug("REST request to add Tournament: '{}'", request.getTitle());
         Tournament tournament = tournamentService.addTournament(request);
         return ResponseEntity.ok(tournament);
     }
@@ -94,7 +93,7 @@ public class AdminController {
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Participant.class)))
     @GetMapping(value = "/participants", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<String>> getParticipants(@RequestParam String discipline) {
-        log.info("REST request to get Participants in {} discipline", discipline);
+        log.debug("REST request to get Participants in {} discipline", discipline);
         List<String> res = participantService.getParticipants(Discipline.fromValue(discipline));
         return ResponseEntity.ok(res);
     }

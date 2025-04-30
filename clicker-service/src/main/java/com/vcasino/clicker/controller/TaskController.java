@@ -48,7 +48,7 @@ public class TaskController extends GenericController {
             @Schema(implementation = TaskDto.class)))
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<TaskDto>> getTasksInfo() {
-        log.info("REST request to get tasks info");
+        log.debug("REST request to get tasks info");
         List<TaskDto> tasks = taskService.getTasks(getAccountId());
         return ResponseEntity.ok().body(tasks);
     }
@@ -59,7 +59,7 @@ public class TaskController extends GenericController {
             @Schema(implementation = AccountDto.class)))
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccountDto> receiveTaskReward(@RequestBody @Valid TaskRewardRequest taskRequest) {
-        log.info("REST request to complete task");
+        log.debug("REST request to complete task");
         AccountDto accountDto = taskService.receiveTaskReward(getAccountId(), taskRequest);
         return ResponseEntity.ok().body(accountDto);
     }
@@ -70,7 +70,7 @@ public class TaskController extends GenericController {
             @Schema(implementation = StreakInfo.class)))
     @GetMapping(value = "/streaks", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<StreakInfo> getStreakInfo() {
-        log.info("REST request to get StreakInfo");
+        log.debug("REST request to get StreakInfo");
         StreakInfo streakInfo = streakService.getStreakInfo(getAccountId());
         return ResponseEntity.ok().body(streakInfo);
     }
@@ -81,7 +81,7 @@ public class TaskController extends GenericController {
             @Schema(implementation = AccountDto.class)))
     @PostMapping(value = "/streaks", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccountDto> receiveStreakReward() {
-        log.info("REST request to receive streak reward");
+        log.debug("REST request to receive streak reward");
         AccountDto accountDto = streakService.receiveReward(getAccountId());
         return ResponseEntity.ok().body(accountDto);
     }

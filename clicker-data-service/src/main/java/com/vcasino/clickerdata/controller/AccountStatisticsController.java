@@ -35,7 +35,7 @@ public class AccountStatisticsController {
             throw new AppException("Either 'eventId' or 'username' must be provided", HttpStatus.BAD_REQUEST);
         }
 
-        log.info("REST request to get User information");
+        log.debug("REST request to get User information");
         AccountInformation information = service.getAccountInformation(id, username);
         return ResponseEntity.ok(information);
     }
@@ -44,14 +44,14 @@ public class AccountStatisticsController {
     public ResponseEntity<ChartData<String, Integer>> getAccountClicksChart(
             @RequestParam(name = "accountId") Long accountId,
             @RequestParam(name = "chartOption") ChartOption chartOption) {
-        log.info("REST request to get Account Clicks Chart with option: {}", chartOption);
+        log.debug("REST request to get Account Clicks Chart with option: {}", chartOption);
         ChartData<String, Integer> chart = service.getAccountClicksChart(accountId, chartOption);
         return ResponseEntity.ok(chart);
     }
 
     @GetMapping(value = "/top", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<TopAccount>> getTop10Accounts() {
-        log.info("REST request to get Top 10 Accounts");
+        log.debug("REST request to get Top 10 Accounts");
         List<TopAccount> topAccounts = service.getTop10Accounts();
         return ResponseEntity.ok(topAccounts);
     }

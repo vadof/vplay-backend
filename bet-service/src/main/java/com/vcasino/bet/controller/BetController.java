@@ -43,7 +43,7 @@ public class BetController extends GenericController {
 
     @GetMapping(value = "/history", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PaginatedResponse<BetDto>> getBets(@RequestParam(defaultValue = "0") Integer page) {
-        log.info("REST request to get bets");
+        log.debug("REST request to get bets");
         PaginatedResponse<BetDto> res = betService.getUserBets(getUserId(), page);
         return ResponseEntity.ok(res);
     }

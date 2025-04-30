@@ -51,7 +51,7 @@ public class AdminController extends GenericController {
     @GetMapping(value = "/statistics", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ServiceStatisticsDto> getStatistics() {
         validateAdminRole();
-        log.info("REST request to get Service statistics");
+        log.debug("REST request to get Service statistics");
         ServiceStatisticsDto statistics = statisticsService.getStatistics();
         return ResponseEntity.ok(statistics);
     }
@@ -62,7 +62,7 @@ public class AdminController extends GenericController {
     @GetMapping(value = "/statistics/wallet", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WalletInformationDto> getStatistics(@RequestParam(name = "id") Long id) {
         validateAdminRole();
-        log.info("REST request to get Wallet#{} information", id);
+        log.debug("REST request to get Wallet#{} information", id);
         WalletInformationDto information = statisticsService.getWalletInformation(id);
         return ResponseEntity.ok(information);
     }

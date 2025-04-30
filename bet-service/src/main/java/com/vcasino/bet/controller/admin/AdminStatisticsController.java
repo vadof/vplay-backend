@@ -33,7 +33,7 @@ public class AdminStatisticsController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BetServiceStatisticsDto> getServiceStatistics() {
-        log.info("REST request to get Service Statistics");
+        log.debug("REST request to get Service Statistics");
         BetServiceStatisticsDto betStatistics = statisticsService.getBetStatistics();
         return ResponseEntity.ok(betStatistics);
     }
@@ -42,7 +42,7 @@ public class AdminStatisticsController {
     public ResponseEntity<List<TournamentStatisticsDto>> getTournamentsStatistics(
             @RequestParam("startDate") LocalDate startDate,
             @RequestParam(value = "endDate", required = false) LocalDate endDate) {
-        log.info("REST request to get Tournament Statistics in range {} - {}", startDate, endDate);
+        log.debug("REST request to get Tournament Statistics in range {} - {}", startDate, endDate);
         List<TournamentStatisticsDto> res = statisticsService.getTournamentsStatistics(startDate, endDate);
         return ResponseEntity.ok(res);
     }
@@ -52,28 +52,28 @@ public class AdminStatisticsController {
             @RequestParam(value = "tournamentId", required = false) Integer tournamentId,
             @RequestParam(value = "startDate", required = false) LocalDateTime startDate,
             @RequestParam(value = "endDate", required = false) LocalDateTime endDate) {
-        log.info("REST request to get Matches Statistics with params - {} {} {}", tournamentId, startDate, endDate);
+        log.debug("REST request to get Matches Statistics with params - {} {} {}", tournamentId, startDate, endDate);
         List<MatchStatisticsDto> res = statisticsService.getMatchStatistics(tournamentId, startDate, endDate);
         return ResponseEntity.ok(res);
     }
 
     @GetMapping(value = "/markets/{matchId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MarketStatisticsByCategory>> getMatchMarketsStatistics(@PathVariable Long matchId) {
-        log.info("REST request to get Match#{} Markets Statistics", matchId);
+        log.debug("REST request to get Match#{} Markets Statistics", matchId);
         List<MarketStatisticsByCategory> res = statisticsService.getMatchMarketsStatistics(matchId);
         return ResponseEntity.ok(res);
     }
 
     @GetMapping(value = "/users/top", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<TopPlayerDto>> getTopPlayers() {
-        log.info("REST request to get top bettors");
+        log.debug("REST request to get top bettors");
         List<TopPlayerDto> res = statisticsService.getTopPlayers();
         return ResponseEntity.ok(res);
     }
 
     @GetMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserInformationDto> getUserInformation(@RequestParam Long userId) {
-        log.info("REST request to get User#{} Statistics", userId);
+        log.debug("REST request to get User#{} Statistics", userId);
         UserInformationDto res = statisticsService.getUserInformation(userId);
         return ResponseEntity.ok(res);
     }

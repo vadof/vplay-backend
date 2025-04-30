@@ -26,14 +26,14 @@ public class TaskStatisticsController {
 
     @GetMapping(value = "/active", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<TaskInformation>> getActiveTasks() {
-        log.info("REST request to get active Tasks");
+        log.debug("REST request to get active Tasks");
         List<TaskInformation> tasks = service.getActiveTasks();
         return ResponseEntity.ok(tasks);
     }
 
     @GetMapping(value = "/recent", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<TaskInformation>> getRecentlyCreatedTasks() {
-        log.info("REST request to get recently added Tasks");
+        log.debug("REST request to get recently added Tasks");
         List<TaskInformation> tasks = service.getRecentlyCreatedTasks();
         return ResponseEntity.ok(tasks);
     }
@@ -46,7 +46,7 @@ public class TaskStatisticsController {
             throw new AppException("Either 'taskId', 'taskName' or 'linkId' must be provided", HttpStatus.BAD_REQUEST);
         }
 
-        log.info("REST request to get Task");
+        log.debug("REST request to get Task");
         List<TaskInformation> task = service.getTaskInformation(taskId, taskName, linkId);
         return ResponseEntity.ok(task);
     }

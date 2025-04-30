@@ -47,7 +47,7 @@ public class AuthenticationController {
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EmailTokenOptionsDto> register(@RequestBody @Valid UserDto userDto,
                                                          @CookieValue(name = "ref", required = false) String ref) {
-        log.info("REST request to register User");
+        log.debug("REST request to register User");
         EmailTokenOptionsDto tokenOptions = authenticationService.registerUser(userDto, ref);
         return ResponseEntity.ok().body(tokenOptions);
     }
@@ -66,7 +66,7 @@ public class AuthenticationController {
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AuthenticationResponse.class)))
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody @Valid AuthenticationRequest request) {
-        log.info("REST request to login {}", request.getUsername());
+        log.debug("REST request to login {}", request.getUsername());
         AuthenticationResponse response = authenticationService.authenticate(request);
         return ResponseEntity.ok().body(response);
     }
@@ -76,7 +76,7 @@ public class AuthenticationController {
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = TokenRefreshResponse.class)))
     @PostMapping(value = "/refreshToken", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TokenRefreshResponse> refreshToken(@RequestBody @Valid TokenRefreshRequest request) {
-        log.info("REST request to refresh token");
+        log.debug("REST request to refresh token");
         TokenRefreshResponse response = authenticationService.refreshToken(request);
         return ResponseEntity.ok().body(response);
     }
@@ -89,7 +89,7 @@ public class AuthenticationController {
             @RequestBody @Valid OAuthConfirmation oAuthConfirmation,
             @CookieValue("confirmationToken") String confirmationToken,
             @CookieValue(name = "ref", required = false) String ref) {
-        log.info("REST request to confirm oauth registration");
+        log.debug("REST request to confirm oauth registration");
         AuthenticationResponse response = authenticationService.confirmUsername(oAuthConfirmation.getUsername(), confirmationToken, ref);
         return ResponseEntity.ok().headers(response.getHeaders()).body(response);
     }
@@ -99,7 +99,7 @@ public class AuthenticationController {
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AuthenticationResponse.class)))
     @PostMapping(value = "/email-confirmation", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AuthenticationResponse> emailConfirmation(@RequestBody @Valid EmailConfirmation emailConfirmation) {
-        log.info("REST request to confirm an email");
+        log.debug("REST request to confirm an email");
         AuthenticationResponse response = authenticationService.confirmEmail(emailConfirmation.getConfirmationToken());
         return ResponseEntity.ok().body(response);
     }
@@ -109,7 +109,7 @@ public class AuthenticationController {
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = EmailTokenOptionsDto.class)))
     @PostMapping(value = "/email-confirmation-resend", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EmailTokenOptionsDto> resendConfirmationEmail(@RequestBody @Valid EmailTokenOptionsDto tokenOptions) {
-        log.info("REST request to resend confirmation email to {}", tokenOptions.getEmail());
+        log.debug("REST request to resend confirmation email to {}", tokenOptions.getEmail());
         EmailTokenOptionsDto res = authenticationService.resendConfirmationEmail(tokenOptions);
         return ResponseEntity.ok().body(res);
     }
@@ -118,7 +118,7 @@ public class AuthenticationController {
     @ApiResponse(responseCode = "200", description = "The pending user has been deleted")
     @PostMapping(value = "/delete-pending-user", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> deletePendingUser(@RequestBody @Valid EmailTokenOptionsDto tokenOptions) {
-        log.info("REST request to delete pending user with email {}", tokenOptions.getEmail());
+        log.debug("REST request to delete pending user with email {}", tokenOptions.getEmail());
         authenticationService.deletePendingUser(tokenOptions);
         return ResponseEntity.ok().body(null);
     }

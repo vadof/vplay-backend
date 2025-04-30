@@ -40,7 +40,7 @@ public class ClickerController extends GenericController {
     @PostMapping(value = "/tap", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccountDto> tap(@Valid @RequestBody Tap tap) {
         Long accountId = getAccountId();
-        log.info("REST request to Tap: {}, Account#{}", tap.getAmount(), accountId);
+        log.debug("REST request to Tap: {}, Account#{}", tap.getAmount(), accountId);
         AccountDto account = clickerService.tap(tap, accountId);
         return ResponseEntity.ok().body(account);
     }

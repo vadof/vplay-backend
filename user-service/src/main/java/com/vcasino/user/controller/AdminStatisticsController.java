@@ -25,7 +25,7 @@ public class AdminStatisticsController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserStatisticsDto> getStatistics() {
-        log.info("REST request to get Statistics");
+        log.debug("REST request to get Statistics");
         UserStatisticsDto statistics = statisticsService.getStatistics();
         return ResponseEntity.ok(statistics);
     }
@@ -38,7 +38,7 @@ public class AdminStatisticsController {
             throw new AppException("Either 'id' or 'username' must be provided", HttpStatus.BAD_REQUEST);
         }
 
-        log.info("REST request to get User information");
+        log.debug("REST request to get User information");
         UserRepository.UserInformation information = statisticsService.getUserInformation(id, username);
         return ResponseEntity.ok(information);
     }

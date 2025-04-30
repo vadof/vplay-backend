@@ -32,7 +32,7 @@ public class EmailService {
             helper.setSubject("Activate Your VCasino Account Now");
             helper.setFrom(sender);
             mailSender.send(mimeMessage);
-            log.info("Email sent to {}", to);
+            log.debug("Email sent to {}", to);
         } catch (MessagingException e) {
             log.error("Failed to send email to {}", to, e);
             throw new RuntimeException(e);

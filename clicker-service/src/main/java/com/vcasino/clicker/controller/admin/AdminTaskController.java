@@ -41,14 +41,14 @@ public class AdminTaskController extends GenericController {
 
     @GetMapping(value = "/properties", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<SupportedTaskServices>> getSupportedServicesByTaskType() {
-        log.info("REST request to get supported services by task type");
+        log.debug("REST request to get supported services by task type");
         validateAdminRole();
         return ResponseEntity.ok().body(taskService.getSupportedServicesByTaskType());
     }
 
     @GetMapping(value = "/video-info", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<VideoInfo> getVideoInfo(@RequestParam String videoId, @RequestParam IntegratedService service) {
-        log.info("REST request to get info about a video");
+        log.debug("REST request to get info about a video");
         validateAdminRole();
         VideoInfo videoInfo = taskService.getVideoInfo(videoId, service);
         return ResponseEntity.ok().body(videoInfo);

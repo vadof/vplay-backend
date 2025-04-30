@@ -34,6 +34,8 @@ CONFIRMATION_TOKEN_EXPIRATION_MS=3600000
 KEYS_PATH (absolute path to folder with public.key/private.key for jwt auth)
 PUBLIC_KEY_PATH (absolute path to public.key)
 PRODUCTION=false
+SPRING_PROFILES_ACTIVE= (dev/prod according production false/true)
+LOKI_URL=http://localhost:3100 (Loki url for sending logs)
 ```
 
 # Services:

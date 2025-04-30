@@ -25,6 +25,7 @@
         <spring-web.version>6.1.2</spring-web.version>
         <lombok.version>1.18.30</lombok.version>
         <prometheus.version>1.13.1</prometheus.version>
+        <loki-logback.version>1.5.2</loki-logback.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
     </properties>
@@ -78,6 +79,11 @@
             <version>${prometheus.version}</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.loki4j</groupId>
+            <artifactId>loki-logback-appender</artifactId>
+            <version>${loki-logback.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -91,11 +97,6 @@
             <version>${reactor-test.version}</version>
             <scope>test</scope>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.springframework</groupId>-->
-<!--            <artifactId>spring-web</artifactId>-->
-<!--            <version>${spring-web.version}</version>-->
-<!--        </dependency>-->
 
         <dependency>
             <groupId>org.projectlombok</groupId>

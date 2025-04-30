@@ -10,7 +10,7 @@ scrape_configs:
     metrics_path: '/actuator/prometheus'
     relabel_configs:
       - source_labels: [__meta_eureka_app_name]
-        regex: "(CLICKER-SERVICE|CLICKER-DATA-SERVICE|USER-SERVICE|WALLET-SERVICE|NOTIFICATION-SERVICE|BET-SERVICE|API-GATEWAY)"
+        regex: "(CLICKER-SERVICE|CLICKER-DATA-SERVICE|USER-SERVICE|WALLET-SERVICE|NOTIFICATION-SERVICE|BET-SERVICE|ODDS-SERVICE|API-GATEWAY)"
         target_label: application
       - source_labels: [__meta_eureka_instance_id]
         separator: ":"

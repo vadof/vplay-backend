@@ -55,7 +55,7 @@ public class StreakService {
         streak.setLastReceivedDate(TimeUtil.getCurrentDate());
         repository.save(streak);
 
-        log.info("Account#{} took daily reward #{}", accountId, streakState.getDay());
+        log.debug("Account#{} took daily reward #{}", accountId, streakState.getDay());
 
         return accountService.toDto(account);
     }

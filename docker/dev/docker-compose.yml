@@ -136,6 +136,14 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=password
       - GF_INSTALL_PLUGINS=redis-app
 
+  loki:
+    container_name: loki
+    image: grafana/loki:2.9.0
+    networks:
+      - vcasino
+    ports:
+      - "3100:3100"
+
   mail-dev:
     container_name: mail-dev
     image: maildev/maildev
@@ -156,9 +164,11 @@ services:
       - SERVICES=s3
       - DEBUG=1
       - DATA_DIR=/tmp/localstack/data
+      - LOCALSTACK_CLEAR_TMP_FOLDER=0
     volumes:
-      - "localstack_data:/tmp/localstack"
+      - "localstack_data:/tmp/localstack/data"
       - "/var/run/docker.sock:/var/run/docker.sock"
+
 
 volumes:
   db:

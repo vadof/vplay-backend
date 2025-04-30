@@ -48,7 +48,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         String providerId = oauthToken.getName();
         OAuthProvider provider = OAuthProvider.valueOf(oauthToken.getAuthorizedClientRegistrationId().toUpperCase());
 
-        log.info("OAuth success {}: {}", provider, providerId);
+        log.debug("OAuth success {}: {}", provider, providerId);
 
         Optional<User> optionalUser = userRepository.findByOauthProviderAndOauthProviderId(provider, providerId);
         if (optionalUser.isPresent()) {
@@ -60,7 +60,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
                 redirectUserToConfirmation(response, user, token);
             }
         } else {
-            log.info("{} user registration", provider);
+            log.debug("{} user registration", provider);
             if (provider.equals(OAuthProvider.GOOGLE)) {
                 handleGoogleRegistration(response, oauthToken);
             } else if (provider.equals(OAuthProvider.FACEBOOK)) {
@@ -147,7 +147,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             } else {
                 User user = userByEmail.get();
                 if (user.getActive()) {
-                    log.info("Active User#{} with email {} already exists, connecting oauth", user.getId(), email);
+                    log.debug("Active User#{} with email {} already exists, connecting oauth", user.getId(), email);
                     if (user.getOauthProvider() == null) {
                         user.setOauthProvider(provider);
                         user.setOauthProviderId(providerId);
@@ -182,14 +182,14 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
         userRepository.save(user);
 
-        log.info("Pending User#{} saved to database", user.getId());
+        log.debug("Pending User#{} saved to database", user.getId());
 
         Token token = tokenService.createToken(user, TokenType.USERNAME_CONFIRMATION);
         redirectUserToConfirmation(response, user, token);
     }
 
     private void redirectUserToConfirmation(HttpServletResponse response, User user, Token token) throws IOException {
-        log.info("Redirecting User#{} to confirmation", user.getId());
+        log.debug("Redirecting User#{} to confirmation", user.getId());
         String url = config.getClientUrl() + "/register/confirmation?type=username";
         if (user.getUsername() != null) {
             url += "&username=" + user.getUsername();
@@ -199,7 +199,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     }
 
     private void authenticateUser(HttpServletResponse response, User user) throws IOException {
-        log.info("Authenticating User#{}", user.getId());
+        log.debug("Authenticating User#{}", user.getId());
         String jwtToken = jwtService.generateJwtToken(user);
         Token refreshToken = tokenService.createToken(user, TokenType.REFRESH);
         String url = "%s/authentication/success?name=%s&username=%s&email=%s"
