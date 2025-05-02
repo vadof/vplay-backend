@@ -21,6 +21,7 @@
         <spring-cloud-starter-gateway.version>4.1.0</spring-cloud-starter-gateway.version>
         <spring-cloud-starter-netflix-eureka-client.version>4.1.3</spring-cloud-starter-netflix-eureka-client.version>
         <spring-cloud-starter-bootstrap.version>4.1.3</spring-cloud-starter-bootstrap.version>
+        <spring-cloud-circuitbreaker.version>3.1.1</spring-cloud-circuitbreaker.version>
         <reactor-test.version>3.6.1</reactor-test.version>
         <spring-web.version>6.1.2</spring-web.version>
         <lombok.version>1.18.30</lombok.version>
@@ -49,6 +50,11 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bootstrap</artifactId>
             <version>${spring-cloud-starter-bootstrap.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-circuitbreaker-reactor-resilience4j</artifactId>
+            <version>${spring-cloud-circuitbreaker.version}</version>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>

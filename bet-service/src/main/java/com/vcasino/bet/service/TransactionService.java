@@ -58,8 +58,7 @@ public class TransactionService {
 
             return response;
         } catch (FeignException e) {
-            handleFeignError(e);
-            throw betException(e);
+            throw feignException(e);
         } catch (Exception e) {
             throw betException(e);
         }
@@ -114,16 +113,16 @@ public class TransactionService {
         }
     }
 
-    private void handleFeignError(FeignException e) {
+    private AppException feignException(FeignException e) {
         if (e.status() == 400) {
             try {
                 String message = objectMapper.readTree(e.contentUTF8()).get("message").asText();
-                throw new AppException(message, HttpStatus.BAD_REQUEST);
+                return new AppException(message, HttpStatus.BAD_REQUEST);
             } catch (JsonProcessingException ex) {
-                throw betException(e);
+                return betException(e);
             }
         }
-        throw betException(e);
+        return betException(e);
     }
 
     private AppException betException(Exception e) {

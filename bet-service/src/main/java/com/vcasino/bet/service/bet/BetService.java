@@ -7,6 +7,7 @@ import com.vcasino.bet.dto.response.PaginatedResponse;
 import com.vcasino.bet.entity.Bet;
 import com.vcasino.bet.mapper.BetMapper;
 import com.vcasino.bet.repository.BetRepository;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -31,6 +32,7 @@ public class BetService {
     private final BetMapper betMapper;
 
     @Async("betTaskExecutor")
+    @CircuitBreaker(name = "wallet")
     public CompletableFuture<BetResponse> addBetToProcessing(BetRequest request, Long userId) {
         return CompletableFuture.supplyAsync(() -> processingService.processBetPlace(request, userId),
                 CompletableFuture.delayedExecutor(3, TimeUnit.SECONDS));
