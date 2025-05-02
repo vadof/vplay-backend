@@ -37,8 +37,8 @@ public class CircuitBreakerConfiguration {
 
     private CircuitBreakerConfig createDefaultCircuitBreakerConfig() {
         return CircuitBreakerConfig.custom()
-                .slidingWindowSize(4)
-                .minimumNumberOfCalls(2)
+                .slidingWindowSize(100)
+                .minimumNumberOfCalls(50)
                 .failureRateThreshold(50)
                 .waitDurationInOpenState(Duration.ofSeconds(10))
                 .permittedNumberOfCallsInHalfOpenState(10)
