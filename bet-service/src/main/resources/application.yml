@@ -1,5 +1,5 @@
 server:
-  port: 8500
+  port: 8300
 
 spring:
   profiles:
@@ -65,3 +65,7 @@ config:
     region: us-east-1
     access-key: test
     secret-key: test
+  redis:
+    hostName: ${REDIS_HOSTNAME}
+    port: ${REDIS_PORT}
+    password: ${REDIS_PASSWORD}

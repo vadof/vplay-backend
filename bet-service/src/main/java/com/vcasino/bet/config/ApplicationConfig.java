@@ -13,6 +13,7 @@ public class ApplicationConfig {
 
     private Boolean production;
     private String clientUrl;
+    private Redis redis;
 
     private S3 s3;
 
@@ -24,6 +25,14 @@ public class ApplicationConfig {
         private String region;
         private String accessKey;
         private String secretKey;
+    }
+
+    @Setter
+    @Getter
+    public static class Redis {
+        private String hostName;
+        private Integer port;
+        private String password;
     }
 
 }

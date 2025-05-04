@@ -2,7 +2,7 @@ package com.vcasino.clicker.service.video;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vcasino.clicker.config.ApiKeys;
+import com.vcasino.clicker.config.ApplicationConfig;
 import com.vcasino.clicker.config.IntegratedService;
 import com.vcasino.clicker.dto.youtube.VideoInfo;
 import com.vcasino.clicker.exception.AppException;
@@ -24,8 +24,8 @@ public class YoutubeService extends VideoService {
     private final RedisService redisService;
     private final static String VIDEO_INFO_CACHE_KEY = "youtube_video:";
 
-    public YoutubeService(RestTemplate restTemplate, ApiKeys apiKeys, ObjectMapper objectMapper, RedisService redisService) {
-        super(restTemplate, apiKeys, objectMapper);
+    public YoutubeService(RestTemplate restTemplate, ApplicationConfig applConfig, ObjectMapper objectMapper, RedisService redisService) {
+        super(restTemplate, applConfig.getYoutubeApiKey(), objectMapper);
         this.redisService = redisService;
     }
 
@@ -34,7 +34,7 @@ public class YoutubeService extends VideoService {
         if (cachedVideoInfo != null) return cachedVideoInfo;
 
         String url = "https://www.googleapis.com/youtube/v3/videos?id=%s&part=contentDetails&key=%s"
-                .formatted(videoId, apiKeys.getYoutubeApiKey());
+                .formatted(videoId, youtubeApiKey);
 
         String jsonResponse = restTemplate.getForObject(url, String.class);
 

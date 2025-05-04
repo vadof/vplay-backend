@@ -1,5 +1,5 @@
 server:
-  port: 8400
+  port: 8500
 
 spring:
   profiles:
@@ -36,3 +36,7 @@ config:
   client-url: ${CLIENT_URL}
   jwt:
     public-key-path: ${PUBLIC_KEY_PATH}
+  redis:
+    hostName: ${REDIS_HOSTNAME}
+    port: ${REDIS_PORT}
+    password: ${REDIS_PASSWORD}

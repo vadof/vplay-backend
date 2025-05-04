@@ -1,5 +1,5 @@
 server:
-  port: 8111
+  port: 8200
 
 spring:
   profiles:
@@ -60,5 +60,9 @@ eureka:
     preferIpAddress: true
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
-youtube:
-  api-key: ${YOUTUBE_API_KEY}
+config:
+  redis:
+    hostName: ${REDIS_HOSTNAME}
+    port: ${REDIS_PORT}
+    password: ${REDIS_PASSWORD}
+  youtube-api-key: ${YOUTUBE_API_KEY}

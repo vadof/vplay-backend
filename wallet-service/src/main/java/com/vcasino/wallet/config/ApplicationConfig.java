@@ -1,4 +1,4 @@
-package com.vcasino.notification.config;
+package com.vcasino.wallet.config;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,15 +11,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "config")
 public class ApplicationConfig {
 
-    private String clientUrl;
-    private JwtProperties jwt;
     private Redis redis;
-
-    @Setter
-    @Getter
-    public static class JwtProperties {
-        private String publicKeyPath;
-    }
 
     @Setter
     @Getter
@@ -28,4 +20,5 @@ public class ApplicationConfig {
         private Integer port;
         private String password;
     }
+
 }

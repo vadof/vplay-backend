@@ -1,5 +1,6 @@
 package com.vcasino.bet.config.redis;
 
+import com.vcasino.bet.config.ApplicationConfig;
 import com.vcasino.bet.service.MatchWebsocketService;
 import com.vcasino.commonredis.config.JedisConfig;
 import com.vcasino.commonredis.enums.Channel;
@@ -17,10 +18,12 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 public class RedisConfig {
 
     private final MatchWebsocketService matchWebsocketService;
+    private final ApplicationConfig config;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
-        return JedisConfig.buildJedisConnectionFactory();
+        return JedisConfig.buildJedisConnectionFactory(config.getRedis().getHostName(),
+                config.getRedis().getPort(), config.getRedis().getPassword());
     }
 
     @Bean

@@ -9,7 +9,7 @@ import java.time.Duration;
 
 public class JedisConfig {
 
-    public static JedisConnectionFactory buildJedisConnectionFactory() {
+    public static JedisConnectionFactory buildJedisConnectionFactory(String hostName, Integer port, String password) {
         JedisPoolConfig poolConfig = new JedisPoolConfig();
         poolConfig.setMaxTotal(50);
         poolConfig.setMaxIdle(10);
@@ -22,8 +22,8 @@ public class JedisConfig {
                 .usePooling()
                 .build();
 
-        RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration("localhost", 6379);
-        redisConfig.setPassword("my_password");
+        RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(hostName, port);
+        redisConfig.setPassword(password);
 
         return new JedisConnectionFactory(redisConfig, clientConfig);
     }

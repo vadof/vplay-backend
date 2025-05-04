@@ -1,5 +1,5 @@
 server:
-  port: 8300
+  port: 8400
 
 spring:
   profiles:
@@ -50,3 +50,9 @@ eureka:
   instance:
     preferIpAddress: true
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+config:
+  redis:
+    hostName: ${REDIS_HOSTNAME}
+    port: ${REDIS_PORT}
+    password: ${REDIS_PASSWORD}

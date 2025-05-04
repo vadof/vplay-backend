@@ -1,14 +1,24 @@
 package com.vcasino.clicker.config;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
-@Configuration
+@Setter
+@Getter
+@Component
+@ConfigurationProperties(prefix = "config")
 public class ApplicationConfig {
 
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
+    private Redis redis;
+    private String youtubeApiKey;
+    @Setter
+    @Getter
+    public static class Redis {
+        private String hostName;
+        private Integer port;
+        private String password;
     }
+
 }
