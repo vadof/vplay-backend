@@ -16,6 +16,7 @@ import org.openqa.selenium.WebDriver;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,8 +28,8 @@ public class CsMatchParser extends MatchParser {
     private final List<String> pistolPrefixes = List.of("cz75", "deagle", "elite", "five", "glock", "hkp2000", "p250", "revolver", "tec9", "usp");
     private Document matchPageDocument;
 
-    public CsMatchParser(String matchPage) throws ParserException {
-        super(matchPage);
+    public CsMatchParser(String matchPage, URL seleniumUrl) throws ParserException {
+        super(matchPage, seleniumUrl);
     }
 
     @Override

@@ -22,8 +22,6 @@ public class OddsServiceApplication {
     @PostConstruct
     void setSystemProperties() {
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-        // TODO set with .env
-        System.setProperty("webdriver.chrome.driver", "C:\\chromedriver\\chromedriver.exe");
     }
 
 }

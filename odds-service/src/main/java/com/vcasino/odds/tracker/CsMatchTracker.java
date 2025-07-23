@@ -1,5 +1,6 @@
 package com.vcasino.odds.tracker;
 
+import com.vcasino.odds.config.ApplicationConfig;
 import com.vcasino.odds.entity.Match;
 import com.vcasino.odds.entity.MatchMap;
 import com.vcasino.odds.entity.enums.MatchStatus;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +27,7 @@ import java.util.Optional;
 @Slf4j
 public class CsMatchTracker {
 
+    private final ApplicationConfig appConfig;
     private final Map<String, MatchParser> watchList = new HashMap<>();
     private final CsOddsService oddsService;
     private final MatchMapRepository matchMapRepository;
@@ -43,7 +46,7 @@ public class CsMatchTracker {
 
         try {
             log.info("Prepare to start tracking Match#{}", match.getId());
-            CsMatchParser matchParser = new CsMatchParser(match.getMatchPage());
+            CsMatchParser matchParser = new CsMatchParser(match.getMatchPage(), URI.create(appConfig.getSeleniumUrl()).toURL());
 
             watchList.put(match.getMatchPage(), matchParser);
             log.info("Start tracking Match#{}", match.getId());

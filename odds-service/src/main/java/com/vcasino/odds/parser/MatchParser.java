@@ -1,12 +1,15 @@
 package com.vcasino.odds.parser;
 
 import com.vcasino.odds.exception.ParserException;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 
 public abstract class MatchParser {
@@ -14,9 +17,11 @@ public abstract class MatchParser {
     private static final Logger log = LoggerFactory.getLogger(MatchParser.class);
     protected WebDriver mainDriver;
     protected final String matchPage;
+    protected final URL seleniumUrl;
 
-    public MatchParser(String matchPage) throws ParserException {
+    public MatchParser(String matchPage, URL seleniumUrl) throws ParserException {
         this.matchPage = matchPage;
+        this.seleniumUrl = seleniumUrl;
 
         Optional<WebDriver> webDriverOptional = startDriver(matchPage);
         if (webDriverOptional.isEmpty()) {
@@ -28,11 +33,15 @@ public abstract class MatchParser {
     }
 
     protected Optional<WebDriver> startDriver(String page) {
-        ChromeOptions options = new ChromeOptions();
+        ChromeOptions options = getOptions();
 
         int attempts = 3;
         while (attempts > 0) {
-            ChromeDriver driver = new ChromeDriver(options);
+            WebDriver driver = new RemoteWebDriver(seleniumUrl, options);
+            ((JavascriptExecutor) driver).executeScript(
+                    "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
+            );
+
             boolean success = false;
             try {
                 driver.get(page);
@@ -60,6 +69,17 @@ public abstract class MatchParser {
         if (mainDriver != null) {
             mainDriver.close();
         }
+    }
+
+    private ChromeOptions getOptions() {
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless=new");
+        options.addArguments("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36");
+        options.setExperimentalOption("excludeSwitches", List.of("enable-automation"));
+        options.setExperimentalOption("useAutomationExtension", false);
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        return options;
     }
 
     public abstract void updateMatchPage(boolean updateWithPageRefresh) throws ParserException;
