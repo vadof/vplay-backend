@@ -24,8 +24,8 @@ public class YoutubeService extends VideoService {
     private final RedisService redisService;
     private final static String VIDEO_INFO_CACHE_KEY = "youtube_video:";
 
-    public YoutubeService(RestTemplate restTemplate, ApplicationConfig applConfig, ObjectMapper objectMapper, RedisService redisService) {
-        super(restTemplate, applConfig.getYoutubeApiKey(), objectMapper);
+    public YoutubeService(RestTemplate restTemplate, ApplicationConfig appConfig, ObjectMapper objectMapper, RedisService redisService) {
+        super(restTemplate, appConfig.getYoutubeApiKey(), objectMapper);
         this.redisService = redisService;
     }
 

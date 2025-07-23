@@ -10,9 +10,9 @@ spring:
   application:
     name: bet-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/bet_service?tcpKeepAlive=true
-    username: postgres
-    password: admin
+    url: jdbc:postgresql://${DB_URL:localhost}:5432/${DB_NAME:bet_service}?tcpKeepAlive=true
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:admin}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 50
@@ -29,7 +29,7 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/changelog-master.xml
   kafka:
-    bootstrap-servers: localhost:29092
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:29092}
   cloud:
     openfeign:
       httpclient:
@@ -49,22 +49,14 @@ management:
     prometheus:
       enabled: true
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
-  instance:
-    preferIpAddress: true
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
-
 config:
   client-url: ${CLIENT_URL}
   s3:
-    bucket: local-bucket
-    endpoint: http://localhost:4566
-    region: us-east-1
-    access-key: test
-    secret-key: test
+    bucket: ${S3_BUCKET_NAME}
+    endpoint: ${S3_ENDPOINT}
+    region: ${S3_REGION}
+    access-key: ${S3_ACCESS_KEY}
+    secret-key: ${S3_SECRET_KEY}
   redis:
     hostName: ${REDIS_HOSTNAME}
     port: ${REDIS_PORT}

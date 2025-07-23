@@ -2,6 +2,8 @@ FROM openjdk:21
 
 WORKDIR /app
 
-COPY target/clicker-0.0.1-SNAPSHOT.jar /app/clicker.jar
+EXPOSE 8200
+
+COPY target/*.jar clicker.jar
 
 ENTRYPOINT ["java", "-jar", "clicker.jar"]

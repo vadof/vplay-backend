@@ -102,7 +102,7 @@ public class ClickerServiceTest {
 
         long lastAccountSyncTime = 0;
         long currentUnixTime = 10;
-        long tapTime = 11;
+        long tapTime = 15;
 
         account.getLevel().setEarnPerTap(1);
         account.setLastSyncDate(getTimestamp(lastAccountSyncTime));

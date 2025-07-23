@@ -7,24 +7,10 @@ datasources:
     url: http://prometheus:9090
     isDefault: true
 
-  - name: PostgreSQL
-    type: postgres
-    access: proxy
-    url: postgres:5432
-    database: user_service
-    user: postgres
-    secureJsonData:
-      password: admin
-    jsonData:
-      sslmode: "disable"
-      postgresVersion: 1300
-      timescaledb: false
-    isDefault: false
-
   - name: Redis
     type: redis-datasource
     access: proxy
-    url: redis://redis:6379
+    url: http://redis:6379
     jsonData:
       client: standalone
       timeout: 5000
@@ -35,7 +21,7 @@ datasources:
   - name: Loki
     type: loki
     access: proxy
-    url: loki:3100
+    url: http://loki:3100
     jsonData:
       maxLines: 1000
     isDefault: false

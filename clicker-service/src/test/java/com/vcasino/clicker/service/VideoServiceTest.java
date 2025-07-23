@@ -1,7 +1,7 @@
 package com.vcasino.clicker.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vcasino.clicker.config.ApiKeys;
+import com.vcasino.clicker.config.ApplicationConfig;
 import com.vcasino.clicker.config.IntegratedService;
 import com.vcasino.clicker.dto.youtube.VideoInfo;
 import com.vcasino.clicker.exception.AppException;
@@ -42,7 +42,7 @@ public class VideoServiceTest {
     RedisService redisService;
 
     @Mock
-    ApiKeys apiKeys;
+    ApplicationConfig appConfig;
 
     @Mock
     ObjectMapper objectMapper;

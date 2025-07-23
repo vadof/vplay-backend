@@ -2,6 +2,8 @@ FROM openjdk:21
 
 WORKDIR /app
 
-COPY target/user-0.0.1-SNAPSHOT.jar /app/user.jar
+EXPOSE 8100
+
+COPY target/*.jar user.jar
 
 ENTRYPOINT ["java", "-jar", "user.jar"]

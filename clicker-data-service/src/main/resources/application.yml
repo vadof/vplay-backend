@@ -1,5 +1,6 @@
 server:
   port: 8250
+  address: 0.0.0.0
 
 spring:
   profiles:
@@ -10,9 +11,9 @@ spring:
   application:
     name: clicker-data-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/clicker_service
-    username: postgres
-    password: admin
+    url: jdbc:postgresql://${DB_URL:localhost}:5432/${DB_NAME:clicker_service}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:admin}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 20
@@ -32,7 +33,7 @@ spring:
         order_updates: true
         batch_versioned_data: true
   kafka:
-    bootstrap-servers: localhost:29092
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:29092}
 
 management:
   endpoints:
@@ -44,7 +45,7 @@ management:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}
   instance:
     preferIpAddress: true
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
